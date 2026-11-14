@@ -370,7 +370,7 @@ footer a{color:var(--tx3)}
 </header>
 
 <main class="wrap">
-  <div class="demo" id="demo"><b>Modo demostración.</b> Ya puedes escuchar las primeras canciones. La emisión 24 horas con locutores y las cuentas se activarán cuando el servidor de la radio esté en marcha.</div>
+  <div class="demo" id="demo" style="display:none"></div>
   <div class="pub" data-formato="banner"></div>
 
   <!-- EN DIRECTO -->
@@ -808,7 +808,7 @@ function metadatos(){
       artwork:[{src:"icons/icon-512.png", sizes:"512x512", type:"image/png"}]});
   } catch(e){}
 }
-let RADIO_WEB = false, RADIO_WEB_LLAMADA = false;
+let RADIO_WEB = false, RADIO_WEB_LLAMADA = false, HIST_WEB = [];
 function siguienteWeb(){
   const lista = CATALOGO.filter(c => !c.adultos || progActual().id === "sinfiltros");
   let c; do { c = lista[Math.floor(Math.random() * lista.length)]; } while (lista.length > 1 && cancionActual && c.id === cancionActual.id);
@@ -817,7 +817,7 @@ function siguienteWeb(){
 async function escucharDirecto(){
   if (!STREAM && CATALOGO.length){
     if (RADIO_WEB && !audio.paused){ audio.pause(); estado(false); return; }
-    RADIO_WEB = true; cancionActual = null; RADIO_WEB_LLAMADA = true; try { await escucharCancion(siguienteWeb()); } finally { RADIO_WEB_LLAMADA = false; } return;
+    RADIO_WEB = true; RADIO_WEB_LLAMADA = true; try { await escucharCancion(siguienteWeb()); } finally { RADIO_WEB_LLAMADA = false; } actualizarAhora(); return;
   }
   if (!STREAM){ toast("La emisión se activará cuando el servidor de la radio esté en marcha."); return; }
   if (modo === "directo" && !audio.paused){ audio.pause(); audio.removeAttribute("src"); audio.load(); estado(false); return; }
@@ -831,6 +831,7 @@ async function escucharCancion(c){
     if (audio.paused){ try { await audio.play(); estado(true); } catch(e){} } else { audio.pause(); estado(false); }
     return;
   }
+  if (RADIO_WEB_LLAMADA && cancionActual) HIST_WEB = [cancionActual, ...HIST_WEB].slice(0, 4);
   modo = "carta"; cancionActual = c; pintarBarra();
   audio.src = c.audio;
   if (!RADIO_WEB_LLAMADA) RADIO_WEB = false;
@@ -841,7 +842,7 @@ $("#pplay").addEventListener("click", () => {
   if (modo === "carta" && cancionActual) escucharCancion(cancionActual); else escucharDirecto();
 });
 $("#bigplay").addEventListener("click", escucharDirecto);
-audio.addEventListener("ended", () => { estado(false); if (modo === "carta") { $("#pprog").value = 0; if (RADIO_WEB) { cancionActual = null; RADIO_WEB_LLAMADA = true; escucharCancion(siguienteWeb()).finally(() => RADIO_WEB_LLAMADA = false); } } });
+audio.addEventListener("ended", () => { estado(false); if (modo === "carta") { $("#pprog").value = 0; if (RADIO_WEB) { RADIO_WEB_LLAMADA = true; escucharCancion(siguienteWeb()).finally(() => { RADIO_WEB_LLAMADA = false; actualizarAhora(); }); } } });
 audio.addEventListener("timeupdate", () => { if (modo === "carta" && audio.duration) $("#pprog").value = Math.round(1000 * audio.currentTime / audio.duration); });
 $("#pprog").addEventListener("input", e => { if (audio.duration) audio.currentTime = audio.duration * e.target.value / 1000; });
 audio.addEventListener("error", () => { if (audio.getAttribute("src")) { estado(false); toast(modo === "directo" ? "Se ha cortado la señal. Pulsa para reconectar." : "No se pudo cargar la canción."); } });
@@ -884,9 +885,11 @@ async function actualizarAhora(){
   pintarDirecto();
   let actual, hist = [];
   if (!NOWPLAYING){
-    const i = Math.floor(Date.now() / 180000) % DEMO_CANCIONES.length, c = DEMO_CANCIONES[i];
+    const aptas = DEMO_CANCIONES.filter(x => !x.adultos || progActual().id === "sinfiltros");
+    const i = Math.floor(Date.now() / 180000) % aptas.length;
+    const c = (RADIO_WEB && cancionActual) ? cancionActual : aptas[i];
     actual = {t:c.titulo, a:c.artista, art:""};
-    hist = [1,2,3,4].map(k => DEMO_CANCIONES[(i - k + DEMO_CANCIONES.length * 4) % DEMO_CANCIONES.length]).map(x => ({t:x.titulo, a:x.artista}));
+    hist = (HIST_WEB.length ? HIST_WEB : [1,2,3,4].map(k => aptas[(i - k + aptas.length * 4) % aptas.length])).map(x => ({t:x.titulo, a:x.artista}));
   } else {
     try {
       const d = await (await fetch(NOWPLAYING, {cache:"no-store"})).json();
