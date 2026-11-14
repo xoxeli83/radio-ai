@@ -25,7 +25,7 @@
       "velocidad": 0.95,
       "motor": "azure",
       "voz_azure": "es-ES-XimenaNeural",
-      "ritmo_azure": "+10%",
+      "ritmo_azure": "+22%",
       "tono_azure": "+4%"
     },
     "lia": {
@@ -35,7 +35,7 @@
       "velocidad": 0.95,
       "motor": "azure",
       "voz_azure": "es-ES-LiaNeural",
-      "ritmo_azure": "+12%",
+      "ritmo_azure": "+24%",
       "tono_azure": "+4%"
     },
     "bruno": {
@@ -45,7 +45,7 @@
       "velocidad": 1.08,
       "motor": "azure",
       "voz_azure": "es-ES-AlvaroNeural",
-      "ritmo_azure": "+10%",
+      "ritmo_azure": "+22%",
       "tono_azure": "+0%"
     },
     "marea": {
@@ -55,7 +55,7 @@
       "velocidad": 1.12,
       "motor": "azure",
       "voz_azure": "es-ES-TrianaNeural",
-      "ritmo_azure": "+4%",
+      "ritmo_azure": "+14%",
       "tono_azure": "+0%"
     },
     "kilo": {
@@ -65,7 +65,7 @@
       "velocidad": 0.92,
       "motor": "azure",
       "voz_azure": "es-ES-ArnauNeural",
-      "ritmo_azure": "+12%",
+      "ritmo_azure": "+24%",
       "tono_azure": "+2%"
     },
     "atlas": {
@@ -75,7 +75,7 @@
       "velocidad": 1.0,
       "motor": "azure",
       "voz_azure": "es-ES-DarioNeural",
-      "ritmo_azure": "+12%",
+      "ritmo_azure": "+24%",
       "tono_azure": "+2%"
     },
     "eco": {
@@ -85,7 +85,7 @@
       "velocidad": 1.0,
       "motor": "azure",
       "voz_azure": "es-ES-NilNeural",
-      "ritmo_azure": "+8%",
+      "ritmo_azure": "+20%",
       "tono_azure": "+2%"
     },
     "sarcasmo": {
@@ -95,7 +95,7 @@
       "velocidad": 0.9,
       "motor": "azure",
       "voz_azure": "es-ES-EliasNeural",
-      "ritmo_azure": "+8%",
+      "ritmo_azure": "+18%",
       "tono_azure": "-2%"
     }
   },

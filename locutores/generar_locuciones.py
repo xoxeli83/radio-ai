@@ -242,8 +242,7 @@ def _uso(motor, n=0):
 def _ssml(texto, loc):
     from xml.sax.saxutils import escape
     voz = loc["voz_azure"]
-    # «…» = pausa corta: da ritmo de locutor de radio en vez de lectura plana
-    cuerpo = escape(texto).replace("…", '<break time="300ms"/>')
+    cuerpo = escape(texto)
     pros = f'<prosody rate="{loc.get("ritmo_azure", "+0%")}" pitch="{loc.get("tono_azure", "+0%")}">{cuerpo}</prosody>'
     if loc.get("estilo_azure"):
         pros = f'<mstts:express-as style="{loc["estilo_azure"]}" styledegree="{loc.get("intensidad_azure", 1.3)}">{pros}</mstts:express-as>'
