@@ -109,7 +109,7 @@ if [[ ! -f $D/claves.env ]]; then
 AZURACAST_API_KEY=
 # Voces de los locutores (Azure, plan gratuito F0): clave y región del recurso «Voz»
 AZURE_SPEECH_KEY=
-AZURE_SPEECH_REGION=westeurope
+AZURE_SPEECH_REGION=northeurope
 # Opcional: Claude escribe los textos de los locutores y opina en el análisis de canciones
 ANTHROPIC_API_KEY=
 EOF

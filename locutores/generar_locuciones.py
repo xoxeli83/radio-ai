@@ -263,7 +263,7 @@ def voz_nube(texto, loc, wav):
             if _uso("azure") + len(texto) > int(os.environ.get("AZURE_LIMITE_MES", "480000")):
                 print("  (límite mensual gratuito de Azure alcanzado: uso Piper hasta el mes que viene)")
                 return False
-            region = os.environ.get("AZURE_SPEECH_REGION", "westeurope")
+            region = os.environ.get("AZURE_SPEECH_REGION", "northeurope")
             req = urllib.request.Request(
                 f"https://{region}.tts.speech.microsoft.com/cognitiveservices/v1", data=_ssml(pronunciar(texto), loc).encode("utf-8"),
                 headers={"Ocp-Apim-Subscription-Key": os.environ["AZURE_SPEECH_KEY"], "Content-Type": "application/ssml+xml",
