@@ -521,11 +521,85 @@ def mantenimiento():
         time.sleep(3600)
 
 
+def programa_en(hora):
+    """Programa (de config.json de los locutores) que suena a esa hora."""
+    gl = _locutores()
+    for p in gl.cargar_config()["programas"]:
+        if p["ini"] <= hora < p["fin"]:
+            return p
+    return None
+
+
+def hora_madrid():
+    from zoneinfo import ZoneInfo
+    return dt.datetime.now(ZoneInfo("Europe/Madrid"))
+
+
+def emitir_mensajes():
+    """Graba los mensajes aprobados y los mete en las locuciones del programa en antena (o del siguiente con locutor).
+    Los retira de la radio cuando su programa ha terminado."""
+    gl = _locutores()
+    import interaccion
+    cfg = gl.cargar_config()
+    ahora_m = hora_madrid()
+    actual = programa_en(ahora_m.hour)
+    destino_prog = actual if actual and actual.get("locutor") and actual["fin"] - ahora_m.hour >= 1 else None
+    if not destino_prog:
+        for h in range(1, 24):
+            p = programa_en((ahora_m.hour + h) % 24)
+            if p and p.get("locutor"):
+                destino_prog = p; break
+    with db() as c:
+        pendientes = c.execute("SELECT * FROM mensajes WHERE estado='aprobado' ORDER BY revisado LIMIT 6").fetchall()
+    for m in pendientes:
+        prog = destino_prog
+        cancion = None
+        if m["cancion_id"]:
+            with db() as c:
+                e = c.execute("SELECT * FROM envios WHERE id=? AND estado='admitida'", (m["cancion_id"],)).fetchone()
+            if e and (EMITIDAS / f"{e['id']}.mp3").exists() and (not e["adultos"] or prog["id"] == "sinfiltros"):
+                cancion = e
+        datos = {"nombre": m["nombre"], "ciudad": m["ciudad"], "texto": m["texto"], "para": m["para"]}
+        if cancion:
+            datos.update({"titulo": cancion["titulo"], "artista": cancion["artista"]})
+        carpeta = DATOS / "oyentes"; carpeta.mkdir(exist_ok=True)
+        mp3 = carpeta / f"mensaje-{m['id']}.mp3"
+        interaccion.grabar_mensaje(datos, prog["locutor"], cfg, mp3, EMITIDAS / f"{cancion['id']}.mp3" if cancion else None)
+        ruta = f"oyentes/{prog['id']}/{mp3.name}"
+        azura_subir(ruta, mp3.read_bytes())
+        azura_a_lista(ruta, f"Locuciones - {prog['nombre']}")
+        with db() as c:
+            c.execute("UPDATE mensajes SET estado='en_antena', programa=?, ruta=?, en_antena=? WHERE id=?", (prog["id"], ruta, ahora(), m["id"]))
+    # Retirar los de programas ya terminados
+    with db() as c:
+        en_antena = c.execute("SELECT * FROM mensajes WHERE estado='en_antena'").fetchall()
+    for m in en_antena:
+        actual_id = actual["id"] if actual else None
+        horas = (dt.datetime.now() - dt.datetime.fromisoformat(m["en_antena"][:19])).total_seconds() / 3600
+        if m["programa"] != actual_id and horas > 0.5 or horas > 26:
+            try:
+                azura("PUT", f"/station/{AZURA_ST}/files/batch", {"do": "delete", "files": [m["ruta"]], "dirs": []})
+            except Exception as e:
+                print(f"[oyentes] no se pudo retirar {m['ruta']}: {e}", file=sys.stderr)
+            with db() as c:
+                c.execute("UPDATE mensajes SET estado='emitido' WHERE id=?", (m["id"],))
+
+
+def oyentes():
+    while True:
+        try:
+            if AZURA_URL and AZURA_KEY:
+                emitir_mensajes()
+        except Exception as e:
+            print(f"[oyentes] {e}", file=sys.stderr)
+        time.sleep(600)
+
+
 def arrancar_hilos():
     with db() as c:
         for r in c.execute("SELECT id FROM envios WHERE estado IN ('recibida','analizando')"):
             cola.put(r["id"])
-    for f in (trabajador, escuchas, mantenimiento):
+    for f in (trabajador, escuchas, mantenimiento, oyentes):
         threading.Thread(target=f, daemon=True).start()
 
 
@@ -913,6 +987,51 @@ async def anuncio_clic(request: Request):
     return RedirectResponse(a["url"], status_code=302)
 
 
+@requiere_cuenta
+async def mensaje_radio(request: Request):
+    """Mensaje o dedicatoria de un oyente. Se revisa en el panel antes de leerlo en antena."""
+    u = request.state.u
+    d = await json_de(request)
+    texto = re.sub(r"\s+", " ", str(d.get("texto") or "")).strip()[:220]
+    if d.get("web"):
+        return JSONResponse({"ok": True})
+    if len(texto) < 3:
+        return error("Escribe tu mensaje.")
+    if limite(f"msg:{u['id']}", 3, 86400):
+        return error("Puedes mandar hasta 3 mensajes al día.", 429)
+    cid = d.get("cancion_id")
+    if cid:
+        with db() as c:
+            if not c.execute("SELECT 1 FROM envios WHERE id=? AND estado='admitida'", (int(cid),)).fetchone():
+                cid = None
+    with db() as c:
+        c.execute("INSERT INTO mensajes(creado, usuario_id, nombre, ciudad, texto, para, cancion_id) VALUES (?,?,?,?,?,?,?)",
+                  (ahora(), u["id"], str(d.get("nombre") or u["artista"] or "")[:40].strip(), str(d.get("ciudad") or u["ciudad"] or "")[:40].strip(),
+                   texto, str(d.get("para") or "")[:40].strip(), int(cid) if cid else None))
+    correo.aviso_admin(f"[{correo.NOMBRE}] Nuevo mensaje de oyente", texto)
+    return JSONResponse({"ok": True})
+
+
+async def actualidad(request: Request):
+    """Datos reales para que los locutores comenten la actualidad de la radio."""
+    out = {}
+    top = calcular_top40()
+    if top:
+        out["top1"] = {k: top[0][k] for k in ("titulo", "artista")}
+    desde = (dt.date.today() - dt.timedelta(days=7)).isoformat()
+    with db() as c:
+        r = c.execute("""SELECT e.titulo, e.artista, sum(d.megusta) m FROM cancion_dias d JOIN envios e ON e.id=d.envio_id
+                         WHERE d.dia>=? AND e.estado='admitida' GROUP BY e.id ORDER BY m DESC LIMIT 1""", (desde,)).fetchone()
+        if r and r["m"]:
+            out["mas_gusta"] = {"titulo": r["titulo"], "artista": r["artista"]}
+        nuevos = c.execute("""SELECT e.artista, e.origen FROM envios e WHERE e.estado='admitida' AND e.revisado>=?
+                              AND NOT EXISTS (SELECT 1 FROM envios x WHERE x.usuario_id=e.usuario_id AND x.estado='admitida' AND x.revisado<?)
+                              GROUP BY e.usuario_id LIMIT 5""", (desde, desde)).fetchall()
+        out["creadores_nuevos"] = [dict(n) for n in nuevos]
+        out["canciones_semana"] = c.execute("SELECT count(*) FROM envios WHERE estado='admitida' AND revisado>=?", (desde,)).fetchone()[0]
+    return JSONResponse(out)
+
+
 async def contacto(request: Request):
     d = await json_de(request)
     datos = {k: str(d.get(k, "")).strip()[:lim] for k, lim in {"tipo": 80, "nombre": 80, "telefono": 30, "empresa": 120, "email": 120, "mensaje": 2000}.items()}
@@ -1080,7 +1199,7 @@ async def admin_envios(request: Request):
 def azura(metodo, ruta, datos):
     if not (AZURA_URL and AZURA_KEY):
         raise RuntimeError("Falta configurar AzuraCast (AZURACAST_URL y AZURACAST_API_KEY).")
-    req = urllib.request.Request(f"{AZURA_URL}/api{ruta}", data=json.dumps(datos).encode(), method=metodo,
+    req = urllib.request.Request(f"{AZURA_URL}/api{ruta}", data=json.dumps(datos).encode() if datos is not None else None, method=metodo,
                                  headers={"X-API-Key": AZURA_KEY, "Content-Type": "application/json"})
     with urllib.request.urlopen(req, timeout=180) as resp:
         t = resp.read().decode()
@@ -1091,10 +1210,44 @@ def azura_subir(ruta, contenido: bytes):
     return azura("POST", f"/station/{AZURA_ST}/files", {"path": ruta, "file": base64.b64encode(contenido).decode()})
 
 
+def azura_lista_id(nombre):
+    for p in azura("GET", f"/station/{AZURA_ST}/playlists", None) or []:
+        if p.get("name") == nombre:
+            return p["id"]
+    return None
+
+
+def azura_a_lista(ruta, nombre_lista):
+    pid = azura_lista_id(nombre_lista)
+    if pid:
+        azura("PUT", f"/station/{AZURA_ST}/files/batch", {"do": "playlist", "files": [ruta], "dirs": [], "playlists": [pid]})
+
+
 def mp3_normalizado(origen, destino, titulo, artista, comentario=""):
     subprocess.run(["ffmpeg", "-y", "-v", "error", "-i", str(origen), "-map", "0:a", "-map_metadata", "-1",
                     "-metadata", f"title={titulo}", "-metadata", f"artist={artista}", "-metadata", f"comment={comentario}",
                     "-ar", "44100", "-ac", "2", "-b:a", "192k", str(destino)], check=True)
+
+
+def version_con_entradilla(r, prog, limpio):
+    """MP3 para la radio con la presentación del locutor sobre el arranque. La escucha a la carta usa el limpio.
+    Si no hay locutor en ese programa o falla la voz, se emite la canción tal cual."""
+    if E("ENTRADILLAS", "1") != "1":
+        return limpio
+    destino = DATOS / "emision" / f"{r['id']}.mp3"
+    destino.parent.mkdir(exist_ok=True)
+    try:
+        _locutores()
+        import interaccion
+        with db() as c:
+            nueva = not c.execute("SELECT 1 FROM envios WHERE usuario_id=? AND estado='admitida' AND id<>?", (r["usuario_id"], r["id"])).fetchone()
+        texto = interaccion.presentar_cancion(limpio, destino, {"titulo": r["titulo"], "artista": r["artista"], "origen": r["origen"]}, prog, nueva)
+        if texto:
+            print(f"[entradilla] {r['id']}: {texto}", file=sys.stderr)
+            return destino
+    except Exception as e:
+        print(f"[entradilla] sin voz para {r['id']}: {e}", file=sys.stderr)
+    return limpio
 
 
 def avisar(r, admitida, programa=None, motivo=None):
@@ -1131,7 +1284,7 @@ async def admin_accion(request: Request):
         try:
             mp3_normalizado(ARCHIVOS / r["archivo"], final, r["titulo"], r["artista"], f"Creado con {r['herramienta']}")
             ruta = f"musica/{prog}/{slug(r['artista'])}-{slug(r['titulo'])}-{eid}.mp3"
-            azura_subir(ruta, final.read_bytes())
+            azura_subir(ruta, version_con_entradilla(r, prog, final).read_bytes())
         except Exception as e:
             return error(f"No se pudo subir a la emisora: {e}", 502)
         with db() as c:
@@ -1307,6 +1460,22 @@ async def admin_cunas(request: Request):
 
 
 @solo_admin
+async def admin_mensajes(request: Request):
+    if request.method == "POST":
+        d = await json_de(request)
+        nuevo = {"aprobar": "aprobado", "rechazar": "rechazado"}.get(d.get("accion"))
+        if not nuevo:
+            return error("Acción no válida.")
+        with db() as c:
+            c.execute("UPDATE mensajes SET estado=?, revisado=? WHERE id=? AND estado='pendiente'", (nuevo, ahora(), int(d.get("id", 0))))
+        return JSONResponse({"ok": True})
+    with db() as c:
+        rs = c.execute("""SELECT m.*, e.titulo, e.artista, u.email FROM mensajes m LEFT JOIN envios e ON e.id=m.cancion_id
+                          LEFT JOIN usuarios u ON u.id=m.usuario_id ORDER BY m.id DESC LIMIT 200""").fetchall()
+    return JSONResponse({"mensajes": [dict(r) for r in rs]})
+
+
+@solo_admin
 async def admin_contactos(request: Request):
     with db() as c:
         if request.method == "POST":
@@ -1409,6 +1578,8 @@ app = Starlette(
         R("/api/novedades", novedades), R("/api/top40", top40), R("/api/votar", votar, methods=["POST"]),
         R("/api/anuncios", anuncio), R("/api/anuncios/{id:int}/img", anuncio_img), R("/api/anuncios/{id:int}/clic", anuncio_clic),
         R("/api/contacto", contacto, methods=["POST"]),
+        R("/api/radio/mensaje", mensaje_radio, methods=["POST"]), R("/api/radio/actualidad", actualidad),
+        R("/api/admin/oyentes", admin_mensajes, methods=["GET", "POST"]),
         R("/api/publicidad/tarifas", tarifas), R("/api/publicidad/pedido", crear_pedido, methods=["POST"]),
         R("/api/stripe/webhook", stripe_webhook, methods=["POST"]),
         R("/admin", panel),

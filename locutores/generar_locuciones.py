@@ -221,7 +221,40 @@ def pronunciar(texto):
     return texto
 
 
+def voz_nube(texto, loc, wav):
+    """Voces de pago (opcionales), más naturales que Piper. Se activan en config.json con "motor" en cada locutor:
+       "elevenlabs" + "voz_elevenlabs" (id de voz) y la variable ELEVENLABS_API_KEY, u
+       "openai" + "voz_openai" (alloy, nova, onyx…) y la variable OPENAI_API_KEY.
+       Si falla, se usa Piper."""
+    motor = loc.get("motor", "piper")
+    try:
+        if motor == "elevenlabs" and os.environ.get("ELEVENLABS_API_KEY") and loc.get("voz_elevenlabs"):
+            req = urllib.request.Request(
+                f"https://api.elevenlabs.io/v1/text-to-speech/{loc['voz_elevenlabs']}?output_format=mp3_44100_128",
+                data=json.dumps({"text": texto, "model_id": loc.get("modelo_elevenlabs", "eleven_multilingual_v2")}).encode(),
+                headers={"xi-api-key": os.environ["ELEVENLABS_API_KEY"], "Content-Type": "application/json", "Accept": "audio/mpeg"})
+        elif motor == "openai" and os.environ.get("OPENAI_API_KEY") and loc.get("voz_openai"):
+            req = urllib.request.Request(
+                "https://api.openai.com/v1/audio/speech",
+                data=json.dumps({"model": loc.get("modelo_openai", "gpt-4o-mini-tts"), "voice": loc["voz_openai"], "input": texto,
+                                 "instructions": loc.get("estilo_voz", "Locutor de radio en español de España, cercano y con energía."),
+                                 "response_format": "mp3"}).encode(),
+                headers={"Authorization": f"Bearer {os.environ['OPENAI_API_KEY']}", "Content-Type": "application/json"})
+        else:
+            return False
+        with urllib.request.urlopen(req, timeout=120) as r:
+            mp3 = Path(str(wav) + ".mp3"); mp3.write_bytes(r.read())
+        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(mp3), str(wav)], check=True)
+        mp3.unlink(missing_ok=True)
+        return True
+    except Exception as e:
+        print(f"  (voz {motor} no disponible, uso Piper: {str(e)[:120]})")
+        return False
+
+
 def sintetizar(texto, loc, wav):
+    if loc.get("motor", "piper") != "piper" and voz_nube(texto, loc, wav):
+        return
     texto = pronunciar(texto)
     modelo = ruta_voz(loc["voz"])
     extra = []
@@ -352,6 +385,61 @@ class Azura:
 
 
 # ----------------------------------------------------------------------------
+# Relevos entre programas y actualidad de la radio (módulo interaccion.py)
+# ----------------------------------------------------------------------------
+def leer_actualidad():
+    url = os.environ.get("PLATAFORMA_URL", "http://127.0.0.1:8100").rstrip("/") + "/api/radio/actualidad"
+    try:
+        with urllib.request.urlopen(url, timeout=15) as r:
+            return json.load(r)
+    except Exception as e:
+        print(f"  (sin datos de actualidad: {e})")
+        return {}
+
+
+def extras_interaccion(cfg, az, args):
+    import interaccion as it
+    print("\n=== Relevos entre programas ===")
+    carpeta = SALIDA / "relevos"
+    shutil.rmtree(carpeta, ignore_errors=True); carpeta.mkdir(parents=True)
+    hechos = []
+    for prog, guion in it.relevos(cfg):
+        for lid, t in guion:
+            print(f"  [{prog['id']}] {cfg['locutores'][lid]['nombre']}: {t}")
+        if args.solo_textos:
+            continue
+        mp3 = carpeta / f"relevo-{prog['id']}.mp3"
+        it.grabar_dialogo(guion, cfg, mp3)
+        hechos.append((prog, mp3))
+    if az:
+        for prog, mp3 in hechos:
+            destino = f"relevos/{prog['id']}"
+            az.borrar_carpeta(destino)
+            az.subir(mp3, f"{destino}/{mp3.name}", az.lista_id(f"Relevo - {prog['nombre']}"))
+        print("  → relevos subidos")
+
+    print("\n=== Actualidad de la radio ===")
+    datos = leer_actualidad()
+    textos = it.textos_actualidad(datos, cfg)
+    if not textos:
+        print("  (todavía no hay datos reales que contar)")
+        return
+    for prog in cfg["programas"]:
+        if not prog.get("locutor"):
+            continue
+        loc = cfg["locutores"][prog["locutor"]]
+        t = random.choice(textos)
+        print(f"  [{prog['id']}] {t}")
+        if args.solo_textos:
+            continue
+        wav, mp3 = SALIDA / prog["id"] / "actualidad.wav", SALIDA / prog["id"] / "zz-actualidad.mp3"
+        wav.parent.mkdir(parents=True, exist_ok=True)
+        sintetizar(t, loc, wav); a_mp3(wav, mp3); wav.unlink(missing_ok=True)
+        if az:
+            az.subir(mp3, f"locuciones/{prog['id']}/{mp3.name}", az.lista_id(f"Locuciones - {prog['nombre']}"))
+
+
+# ----------------------------------------------------------------------------
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--solo-textos", action="store_true")
@@ -409,6 +497,8 @@ def main():
                 az.subir(especial, f"especiales/top40/{especial.name}", az.lista_id("Especial - Top 40 semanal"))
                 print("  → programa especial del Top 40 subido")
 
+    if not args.programa:
+        extras_interaccion(cfg, az, args)
     print("\nListo.")
 
 

@@ -221,6 +221,17 @@
     "Sube tu canción. Si pasa la selección, sonará en la radio, se podrá escuchar a la carta y competirá en el Top 40.":
       "Submit your song. If it's selected, it will play on the radio, be available on demand and compete in the Top 40.",
 
+    // Mensajes a la radio
+    "Mándale un mensaje a la radio": "Send a message to the radio", "Saludos y dedicatorias: el locutor los lee en antena.": "Shout-outs and dedications: the host reads them on air.",
+    "Tu mensaje": "Your message", "(máximo 220 caracteres)": "(max 220 characters)", "¡Hola desde Vigo! Me encanta la radio…": "Hi from Vigo! Love the radio…",
+    "¿Dedicas una canción?": "Dedicate a song?", "Sin dedicatoria": "No dedication", "Para": "For", "Mi hermana Ana": "My sister Ana",
+    "Desde dónde escribes": "Where are you writing from", "Vigo": "Vigo", "Enviar a la radio": "Send to the radio",
+    "Revisamos los mensajes antes de leerlos. Necesitas una cuenta.": "We review messages before reading them. You need an account.",
+    "Escribe tu mensaje.": "Write your message.", "Entra para mandar mensajes a la radio.": "Sign in to send messages to the radio.",
+    "Los mensajes a la radio se activarán cuando la plataforma esté en marcha.": "Messages to the radio will be enabled once the platform is up.",
+    "¡Mensaje enviado!": "Message sent!", "Lo revisamos y el locutor lo leerá en antena. Atento a la radio.": "We'll review it and the host will read it on air. Stay tuned.",
+    "Dedicar en la radio": "Dedicate on the radio",
+
     // Mensajes
     "Completa todos los campos obligatorios.": "Please fill in all required fields.", "Indica de quién es la canción.": "Tell us who owns the song.",
     "Marca todas las autorizaciones.": "Tick all the permissions.", "El archivo supera 25 MB.": "The file is larger than 25 MB.",
@@ -249,6 +260,7 @@
     [/^Escuchar (.+)$/, "Listen to $1"],
     [/^(.+), locutor IA$/, "$1, AI host"],
     [/^Subes como (.+)\.$/, "Submitting as $1."],
+    [/^(.+) lee los saludos y dedicatorias en antena\.$/, "$1 reads shout-outs and dedications on air."],
     [/^Evolución de (.+) en 30 días$/, "$1 over the last 30 days"],
   ];
 

@@ -51,7 +51,7 @@ th{color:var(--tx3);font-weight:500}td img{max-width:180px;max-height:60px;borde
 </head>
 <body>
 <header><div class="wrap hb"><h1 style="margin:0 12px 0 0">Crazy rAdIo · Panel</h1>
-  <nav class="secs" id="secs"><a href="#canciones" class="on">Canciones</a><a href="#pedidos">Pedidos</a><a href="#publicidad">Banners</a><a href="#cunas">Cuñas de radio</a><a href="#mensajes">Mensajes</a></nav>
+  <nav class="secs" id="secs"><a href="#canciones" class="on">Canciones</a><a href="#pedidos">Pedidos</a><a href="#publicidad">Banners</a><a href="#cunas">Cuñas de radio</a><a href="#oyentes">Oyentes</a><a href="#mensajes">Mensajes</a></nav>
 </div></header>
 <main class="wrap">
  <section class="sec on" id="s-canciones">
@@ -99,6 +99,7 @@ th{color:var(--tx3);font-weight:500}td img{max-width:180px;max-height:60px;borde
   <div id="tablaCunas"></div>
  </section>
 
+ <section class="sec" id="s-oyentes"><p class="a" style="margin-top:14px">Mensajes y dedicatorias de los oyentes. Los aprobados los lee el locutor del programa en antena (o del siguiente) en los próximos 10 minutos; si dedican una canción, suena justo después.</p><div id="listaOyentes"></div></section>
  <section class="sec" id="s-mensajes"><div id="listaMensajes" style="margin-top:14px"></div></section>
 </main>
 <script>
@@ -150,6 +151,19 @@ function tarjeta(e){
     </div>
    </div></div>`;
 }
+const EST_OY={pendiente:["Por revisar","var(--a3)"],aprobado:["Aprobado · se grabará en breve","var(--ok)"],en_antena:["En antena","var(--ok)"],emitido:["Emitido","var(--tx3)"],rechazado:["Rechazado","var(--ko)"]};
+async function cargarOyentes(){
+  const d=await (await fetch("api/admin/oyentes",{cache:"no-store"})).json();
+  $("#listaOyentes").innerHTML=d.mensajes.length?d.mensajes.map(m=>{const e=EST_OY[m.estado]||[m.estado,"var(--tx3)"];return `<div class="msg ${m.estado==="pendiente"?"nuevo":""}">
+    <b>${esc(m.nombre||"Oyente")}</b>${m.ciudad?" · "+esc(m.ciudad):""} · <span style="color:${e[1]}">${e[0]}</span>${m.programa?" · "+esc(m.programa):""} <span class="a" style="font-size:12px">· ${esc(m.email||"")} · ${esc((m.creado||"").replace("T"," ").slice(0,16))}</span>
+    <p style="white-space:pre-wrap;margin:8px 0;color:var(--tx2)">«${esc(m.texto)}»</p>
+    ${m.titulo?`<div class="a" style="font-size:13px">🎵 Dedica «${esc(m.titulo)}» de ${esc(m.artista)}${m.para?" a "+esc(m.para):""}</div>`:(m.para?`<div class="a" style="font-size:13px">Para: ${esc(m.para)}</div>`:"")}
+    ${m.estado==="pendiente"?`<div style="margin-top:8px;display:flex;gap:8px"><button class="btn" data-oy="aprobar" data-id="${m.id}">Aprobar para antena</button><button class="btn" data-oy="rechazar" data-id="${m.id}">Rechazar</button></div>`:""}</div>`}).join(""):`<div class="vacio">Todavía no hay mensajes de oyentes.</div>`;
+}
+document.addEventListener("click",async ev=>{
+  const oy=ev.target.closest("[data-oy]");
+  if(oy){ await fetch("api/admin/oyentes",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({accion:oy.dataset.oy,id:+oy.dataset.id})}); cargarOyentes(); }
+});
 document.addEventListener("click",async ev=>{
   const t=ev.target.closest("[data-e]"); if(t){estado=t.dataset.e; cargar(); return;}
   const b=ev.target.closest("[data-a]"); if(!b) return;
@@ -169,7 +183,7 @@ function seccion(){
   const s=(location.hash||"#canciones").slice(1);
   document.querySelectorAll(".sec").forEach(x=>x.classList.toggle("on",x.id==="s-"+s));
   document.querySelectorAll("#secs a").forEach(a=>a.classList.toggle("on",a.getAttribute("href")==="#"+s));
-  if(s==="pedidos") cargarPedidos(); if(s==="publicidad") cargarAnuncios(); if(s==="cunas") cargarCunas(); if(s==="mensajes") cargarMensajes();
+  if(s==="pedidos") cargarPedidos(); if(s==="publicidad") cargarAnuncios(); if(s==="cunas") cargarCunas(); if(s==="mensajes") cargarMensajes(); if(s==="oyentes") cargarOyentes();
 }
 window.addEventListener("hashchange",seccion);
 

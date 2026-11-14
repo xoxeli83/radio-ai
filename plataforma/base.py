@@ -51,6 +51,8 @@ CREATE TABLE IF NOT EXISTS contactos(id INTEGER PRIMARY KEY, creado TEXT, tipo T
 CREATE TABLE IF NOT EXISTS pedidos(id INTEGER PRIMARY KEY, creado TEXT, paquete TEXT, nombre_paquete TEXT, base_cent INTEGER, iva_cent INTEGER,
   total_cent INTEGER, empresa TEXT, nif TEXT, direccion TEXT, contacto TEXT, email TEXT, telefono TEXT, url TEXT, texto TEXT,
   programa TEXT, imagen TEXT, audio TEXT, estado TEXT, stripe_sesion TEXT, pagado TEXT, activado TEXT, anuncio_id INTEGER, notas TEXT);
+CREATE TABLE IF NOT EXISTS mensajes(id INTEGER PRIMARY KEY, creado TEXT, usuario_id INTEGER, nombre TEXT, ciudad TEXT, texto TEXT,
+  para TEXT, cancion_id INTEGER, estado TEXT DEFAULT 'pendiente', programa TEXT, ruta TEXT, en_antena TEXT, revisado TEXT);
 CREATE INDEX IF NOT EXISTS ix_estado ON envios(estado);
 """
 

@@ -329,6 +329,7 @@ textarea{min-height:90px;resize:vertical}
 .ptxt .a{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pvol{display:flex;align-items:center;gap:8px;color:var(--tx3)}
 .pvol input{width:110px;padding:0;accent-color:var(--a3)}
+.msgradio{margin-top:18px;border-top:4px solid var(--prog,var(--violeta))}.msgradio-cab{display:flex;gap:12px;align-items:center;margin-bottom:12px}.msgradio-cab .avL{width:54px;height:54px;border:3px solid var(--prog,var(--violeta))}
 .suno-emb{margin:18px 0 6px;max-width:620px}.suno-emb iframe{width:100%;height:240px;border:0;border-radius:14px;background:#000}
 .modos label{align-items:flex-start}
 .prog-carta{width:160px;padding:0;accent-color:var(--a3)}
@@ -397,6 +398,20 @@ footer a{color:var(--tx3)}
       <div class="stat"><b id="stOyentes">—</b><span>oyentes ahora</span></div>
       <div class="stat"><b>24/7</b><span>emisión continua</span></div>
       <div class="stat"><b id="stProgs">9</b><span>programas al día</span></div>
+    </div>
+    <div class="card msgradio">
+      <div class="msgradio-cab"><div id="msgLocAv"></div><div><h3 style="margin:0">Mándale un mensaje a la radio</h3><p class="nota" style="margin:2px 0 0" id="msgLocTxt">Saludos y dedicatorias: el locutor los lee en antena.</p></div></div>
+      <form class="f" id="fMensaje" novalidate>
+        <div><label for="mTexto">Tu mensaje <small>(máximo 220 caracteres)</small></label><textarea id="mTexto" maxlength="220" rows="3" placeholder="¡Hola desde Vigo! Me encanta la radio…"></textarea></div>
+        <div class="f2">
+          <div><label for="mCancion">¿Dedicas una canción? <small>(opcional)</small></label><select id="mCancion"><option value="">Sin dedicatoria</option></select></div>
+          <div><label for="mPara">Para <small>(opcional)</small></label><input id="mPara" maxlength="40" placeholder="Mi hermana Ana"></div>
+        </div>
+        <div><label for="mCiudad">Desde dónde escribes <small>(opcional)</small></label><input id="mCiudad" maxlength="40" placeholder="Vigo"></div>
+        <div class="oculto-bot" aria-hidden="true"><input id="mWeb" tabindex="-1" autocomplete="off"></div>
+        <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><button class="btn pri" type="submit">Enviar a la radio</button><span class="nota">Revisamos los mensajes antes de leerlos. Necesitas una cuenta.</span></div>
+        <div id="resMensaje"></div>
+      </form>
     </div>
     <div class="cab"><h2>Recién llegadas</h2><a href="#explorar">Ver todas →</a></div>
     <div class="rejilla" id="recientes" style="margin-top:14px"></div>
@@ -932,6 +947,7 @@ async function cargarCancion(id){
         <button class="btn mg ${c.yo_megusta ? "on" : ""}" type="button" id="btnMg">♥ <span id="nMg">${num(c.megusta)}</span></button>
         ${c.es_mia ? "" : `<button class="btn" type="button" id="btnVoto" ${c.yo_votado ? "disabled" : ""}>${c.yo_votado ? "Votada esta semana" : "Votar para el Top 40"}</button>`}
         <button class="btn sec" type="button" id="btnCompartir">Compartir</button>
+        <button class="btn sec" type="button" id="btnDedicar">Dedicar en la radio</button>
       </div>
       ${!c.audio && c.suno_id ? `<div class="suno-emb"><iframe id="sunoFrame" src="https://suno.com/embed/${esc(c.suno_id)}" title="${esc(c.titulo)} en Suno" loading="lazy" allow="autoplay; encrypted-media"></iframe><p class="nota">Suena con el reproductor de Suno. Esta canción se escucha a la carta, no en la radio.</p></div>` : ""}
       <div class="stats" style="max-width:520px"><div class="stat"><b>${num(c.reproducciones)}</b><span>reproducciones</span></div><div class="stat"><b>${num(c.megusta)}</b><span>me gusta</span></div><div class="stat"><b>${num(c.visitas)}</b><span>visitas</span></div></div>
@@ -951,6 +967,7 @@ async function cargarCancion(id){
     try { await api("/api/votar", {json:{id:c.id}}); bv.textContent = "Votada esta semana"; bv.disabled = true; toast("¡Voto registrado para el Top 40 de esta semana!"); }
     catch(e){ toast(e.message); }
   });
+  $("#btnDedicar").addEventListener("click", () => { DEDICAR = {id:c.id, texto:`${c.titulo} · ${c.artista}`}; location.hash = "#directo"; });
   $("#btnCompartir").addEventListener("click", async () => {
     try { if (navigator.share) await navigator.share({title:c.titulo, text:`${c.titulo} · ${c.artista} en Crazy rAdIo`, url}); else { await navigator.clipboard.writeText(url); toast("Enlace copiado."); } }
     catch(e){ }
@@ -1271,6 +1288,38 @@ $("#fContacto").addEventListener("submit", async e => {
   catch(err){ res.innerHTML = `<div class="aviso ko">${esc(err.message)}</div>`; }
 });
 
+/* ================================================================ mensajes a la radio */
+let CANCIONES_MSG = false, DEDICAR = null;
+async function prepararMensaje(){
+  const p = progActual(), L = p.locutor && LOCUTORES[p.locutor];
+  $(".msgradio").style.setProperty("--prog", p.color);
+  $("#msgLocAv").innerHTML = L ? avatarLocutor(p.locutor) : "";
+  $("#msgLocTxt").textContent = L ? `${L.nombre} lee los saludos y dedicatorias en antena.` : "Saludos y dedicatorias: el locutor los lee en antena.";
+  if (YO && !$("#mCiudad").value && YO.ciudad) $("#mCiudad").value = YO.ciudad;
+  if (API && !CANCIONES_MSG){
+    CANCIONES_MSG = true;
+    try { const l = await api("/api/canciones?orden=populares&limite=60");
+      $("#mCancion").insertAdjacentHTML("beforeend", l.map(c => `<option value="${c.id}">${esc(c.titulo)} · ${esc(c.artista)}</option>`).join("")); } catch(e){}
+  }
+  if (DEDICAR){
+    if (![...$("#mCancion").options].some(o => o.value == DEDICAR.id)) $("#mCancion").insertAdjacentHTML("beforeend", `<option value="${DEDICAR.id}">${esc(DEDICAR.texto)}</option>`);
+    $("#mCancion").value = DEDICAR.id; DEDICAR = null;
+    setTimeout(() => { $(".msgradio").scrollIntoView({behavior:"smooth", block:"center"}); $("#mPara").focus({preventScroll:true}); }, 300);
+  }
+}
+$("#fMensaje").addEventListener("submit", async e => {
+  e.preventDefault();
+  const res = $("#resMensaje"), texto = $("#mTexto").value.trim();
+  if (texto.length < 3) return toast("Escribe tu mensaje.");
+  if (!API){ res.innerHTML = `<div class="aviso">Los mensajes a la radio se activarán cuando la plataforma esté en marcha.</div>`; return; }
+  if (!sesion.get()) return necesitaCuenta("Entra para mandar mensajes a la radio.");
+  try {
+    await api("/api/radio/mensaje", {json:{texto, ciudad:$("#mCiudad").value.trim(), para:$("#mPara").value.trim(), cancion_id:$("#mCancion").value || null, web:$("#mWeb").value}});
+    res.innerHTML = `<div class="aviso ok"><b>¡Mensaje enviado!</b> Lo revisamos y el locutor lo leerá en antena. Atento a la radio.</div>`;
+    e.target.reset();
+  } catch(err){ res.innerHTML = `<div class="aviso ko">${esc(err.message)}</div>`; }
+});
+
 /* ================================================================ navegación */
 const VISTAS = ["directo","explorar","cancion","artista","top40","parrilla","locutores","enviar","entrar","panel","anunciate","pago-ok","info"];
 async function ruta(){
@@ -1281,7 +1330,7 @@ async function ruta(){
   VISTAS.forEach(x => { const el = $("#v-" + x); if (el) el.classList.toggle("on", x === v); });
   $$("#menu a").forEach(a => a.classList.toggle("on", a.getAttribute("href") === "#" + v));
   window.scrollTo({top:0});
-  if (v === "directo") cargarRecientes();
+  if (v === "directo") { cargarRecientes(); prepararMensaje(); }
   if (v === "explorar") cargarCatalogo();
   if (v === "cancion") cargarCancion(param);
   if (v === "artista") cargarArtista(param);

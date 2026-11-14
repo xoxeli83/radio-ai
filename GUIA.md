@@ -177,6 +177,24 @@ Antes de abrir al público:
 
 ---
 
+## Los locutores
+
+Cada locutor conduce su programa y:
+- **Presenta cada canción** sobre su arranque, bajando la música mientras habla. Se graba al admitirla en el panel. La escucha a la carta usa la versión sin voz. Para desactivarlo: `ENTRADILLAS=0` en `plataforma.env`.
+- **Se pasa el relevo** con el locutor siguiente en un diálogo corto al empezar cada programa (listas «Relevo - …» de AzuraCast).
+- **Lee los mensajes y dedicatorias de los oyentes** que escriben desde la portada de la web. Los apruebas en el panel, pestaña **Oyentes**. En menos de 10 minutos se graban y suenan en el programa en antena; si dedican una canción, suena justo después. Al acabar el programa se retiran.
+- **Comenta la actualidad de la radio** con datos reales: número uno del Top 40, la que más gusta, creadores nuevos.
+- **Saluda, da la hora de la emisora y anima a participar**, con frases nuevas cada día.
+
+Todo se regenera solo cada madrugada (05:10). Para ver los textos sin grabar: `python3 locutores/generar_locuciones.py --solo-textos`.
+
+**Voces más naturales (opcional, de pago).** En `locutores/config.json`, en cada locutor:
+- ElevenLabs: `"motor": "elevenlabs", "voz_elevenlabs": "ID_DE_LA_VOZ"` y `ELEVENLABS_API_KEY=` en `claves.env`.
+- OpenAI: `"motor": "openai", "voz_openai": "nova"` y `OPENAI_API_KEY=` en `claves.env`.
+Si la voz de pago falla, se usa Piper (gratis) automáticamente.
+
+Después de actualizar, vuelve a ejecutar `sudo /opt/czyradio/configurar.sh` para crear las listas de relevos.
+
 ## Mantenimiento
 
 | Qué | Dónde |

@@ -102,6 +102,19 @@ def main():
                     schedule_items=franja(p))
         enlazar(f"locuciones/{p['id']}", pid)
 
+    # Relevos: diálogo entre locutores al empezar cada programa (una vez, en sus primeros 15 minutos)
+    carpeta("relevos")
+    for p in CFG["programas"]:
+        if not p["locutor"]:
+            continue
+        carpeta(f"relevos/{p['id']}")
+        ini = p["ini"] * 100
+        pid = lista(f"Relevo - {p['nombre']}", order="sequential", weight=25,
+                    schedule_items=[{"start_time": ini, "end_time": ini + 15, "days": TODOS, "loop_once": True}])
+        enlazar(f"relevos/{p['id']}", pid)
+
+    # Mensajes y dedicatorias de oyentes: la plataforma los graba y los deja en locuciones/<programa>/oyentes
+
     # Cuñas publicitarias: una cada 20 minutos, todo el día (se crean desde el panel → Cuñas de radio)
     carpeta("publicidad")
     pid = lista("Publicidad", type="once_per_x_minutes", play_per_minutes=20, order="shuffle")
