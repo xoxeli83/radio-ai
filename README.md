@@ -1,4 +1,4 @@
-# AI Radio Global
+# Crazy rAdIo
 
 Radio online 24/7 de música creada con inteligencia artificial, con programas por géneros, locutores virtuales, Top 40 y envío de canciones por los creadores.
 
@@ -21,7 +21,10 @@ locutores/
 servidor/
   instalar_servidor.sh         instala todo: AzuraCast, Caddy (HTTPS), plataforma, locutores
   configurar_azuracast.py      crea carpetas y listas por programa con sus horarios
-docs/legal/                    borradores de condiciones y privacidad (revisar con abogado)
+docs/legal/                    condiciones de participación, de anunciantes y privacidad (revisar con abogado)
+docs/tarifas-publicidad.md     precios de publicidad y referencias de mercado
+docs/derechos-herramientas-ia.md  qué canciones se admiten según Suno, Udio, ElevenLabs...
+docs/correos-plataformas.md    correos en inglés para Suno y ElevenLabs
 .github/workflows/pages.yml    publica la web en GitHub Pages automáticamente
 ```
 

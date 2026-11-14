@@ -37,21 +37,21 @@ COMUNES = {
         "Estás escuchando {P}. Al micrófono, {L}. Lo que viene ahora es {G} creado con inteligencia artificial.",
     ],
     "indicativo": [
-        "{E}. La radio donde los próximos éxitos los crea la inteligencia artificial.",
+        "{E}. Ei Ai music internet radio: la radio donde los próximos éxitos los crea la inteligencia artificial.",
         "Sigues en {E}. Música creada con inteligencia artificial, las veinticuatro horas.",
         "Con {L}, en {P}. Esto es {E}.",
         "{E}: música nueva, creadores nuevos, todos los días.",
     ],
     "promo_envia": [
-        "¿Creas canciones con inteligencia artificial? Envíanos la tuya desde la web. Si pasa la selección, sonará aquí y entrará en el Top 40.",
+        "¿Creas canciones con inteligencia artificial? Súbela en ce zeta i griega radio punto com. Si pasa la selección, sonará aquí y entrará en el Top 40.",
         "Tu canción puede ser la próxima. Entra en la web de {E}, pulsa en envía tu canción y cuéntanos de dónde sale.",
     ],
     "promo_top": [
-        "Recuerda que el Top 40 lo decides tú. Vota tus canciones favoritas en la web. Y no, las posiciones no se pueden comprar.",
+        "Recuerda que el Top 40 lo decides tú. Dale a me gusta y vota tus canciones favoritas en la web. Y no, las posiciones no se pueden comprar.",
         "Cada tarde, a las seis, el Top 40 de la comunidad. Las canciones más votadas de la semana, una a una.",
     ],
     "promo_app": [
-        "Llévate {E} en el móvil: entra en la web y pulsa instalar. En el coche, conéctalo por Bluetooth y listo.",
+        "Llévate {E} en el móvil: entra en ce zeta i griega radio punto com y pulsa instalar. Y escucha cualquier canción a la carta cuando quieras.",
     ],
     "transparencia": [
         "Te lo decimos claro: soy un locutor virtual con voz sintética. La música también está creada con inteligencia artificial. Los creadores, en cambio, son muy reales.",
@@ -208,6 +208,7 @@ def hablantes(nombre):
 
 
 PRONUNCIACION = [
+    (r"\bCrazy rAdIo\b", "Créisi Rádio"), (r"\bczyradio\b", "créisi rádio"),
     (r"\bAI\b", "Ei Ai"), (r"\bIA\b", "i a"), (r"\bTop 40\b", "Top cuarenta"),
     (r"\bDJ\b", "diyei"), (r"\bChill\b", "Chil"), (r"\bHits\b", "Jits"), (r"\bShow\b", "Chou"),
     (r"\bUrban\b", "Árban"), (r"\bStation\b", "Esteishon"), (r"\bBluetooth\b", "blutuz"),

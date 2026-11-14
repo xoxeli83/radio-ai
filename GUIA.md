@@ -1,156 +1,207 @@
-# AI Radio Global: puesta en marcha
+# Crazy rAdIo: puesta en marcha
 
-Todo es gratuito. Lo que va a tu nombre (cuentas, tarjeta, condiciones) tienes que hacerlo tú; el resto ya está hecho y automatizado.
-Tiempo total: unas 2 horas, la mayoría esperando instalaciones.
+El código, la web, la radio, los locutores IA, el análisis de canciones, las cuentas de usuario y la publicidad ya están hechos.
+Lo que va a tu nombre (dominios, cuentas, tarjetas, contratos) tienes que hacerlo tú. Esta guía lo ordena.
 
-| Paso | Qué | Quién | Tiempo |
+| Paso | Qué | Coste | Tiempo |
 |---|---|---|---|
-| 1 | Cuenta de Oracle Cloud (servidor gratis) | Tú, con tarjeta | 10 min |
-| 2 | Crear el servidor | Tú, siguiendo la guía | 10 min |
-| 3 | Abrir los puertos en Oracle | Tú, 2 clics | 5 min |
-| 4 | Dominio gratis en DuckDNS + instalar todo | Un comando | 30 min |
-| 5 | Ajustes de AzuraCast en el navegador | Tú | 10 min |
-| 5 bis | Correo para registrar usuarios (Brevo, gratis) | Tú | 10 min |
-| 6 | Revisar canciones, banners y cuñas | Panel | cuando quieras |
-| 7 | Conectar la web con el servidor | Claude | 2 min |
-| 8 | Que suene en el coche | Altas en directorios | 15 min |
+| 1 | Comprar czyradio.com y czyradio.es | unos 10–15 €/año cada uno | 10 min |
+| 2 | Cuenta de Oracle Cloud y servidor | gratis (Always Free) | 20 min |
+| 3 | DNS del dominio | gratis | 10 min |
+| 4 | Instalar todo en el servidor | un comando | 30 min |
+| 5 | Ajustes de AzuraCast | gratis | 10 min |
+| 6 | Correo (Brevo) | gratis hasta 300 correos/día | 10 min |
+| 7 | Web en czyradio.com | gratis (GitHub Pages) | 5 min |
+| 8 | Cobros de publicidad (Stripe) | comisión por pago | 20 min |
+| 9 | Derechos y licencias | ver punto 9 | antes de abrir |
+| 10 | En el coche | gratis | 15 min |
 
 ---
 
-## 1. Cuenta de Oracle Cloud
+## 1. Dominios
 
-1. Entra en <https://signup.cloud.oracle.com>.
-2. Regístrate con tu correo. Piden **tarjeta**, pero el plan «Always Free» no cobra.
-3. **Región de inicio:** elige una con capacidad para servidores ARM gratuitos (por ejemplo, *Germany Central (Frankfurt)* o *Spain Central (Madrid)*). No se puede cambiar después.
+Compra **czyradio.com** y **czyradio.es** en el registrador que prefieras (Cloudflare, Namecheap, DonDominio, IONOS...). El `.es` lo gestiona Red.es y vale cualquier registrador acreditado.
 
-## 2. Crear el servidor
+- **czyradio.com** es el principal.
+- **czyradio.es** solo redirige a czyradio.com (en el registrador: *redirección web* 301 a `https://czyradio.com`).
+- Crea el correo **hola@czyradio.com** como *reenvío* a tu correo de siempre (casi todos los registradores lo incluyen gratis). Es el contacto de la web y de los anunciantes.
 
-1. Consola de Oracle → **Compute → Instances → Create instance**.
-2. **Image:** Canonical Ubuntu 24.04.
-3. **Shape:** *Ampere* → `VM.Standard.A1.Flex` → **2 OCPU y 12 GB** (es el máximo gratuito desde agosto de 2026).
-4. **SSH keys:** «Generate a key pair» → descarga la clave privada y guárdala bien.
-5. **Create.** Si sale *Out of capacity*, vuelve a intentarlo más tarde o cambia de *availability domain*.
-6. Apunta la **IP pública** que aparece.
+## 2. Oracle Cloud: el servidor gratis
 
-## 3. Abrir los puertos en Oracle
+1. <https://signup.cloud.oracle.com>. Piden tarjeta, pero el plan *Always Free* no cobra.
+2. **Región:** *Spain Central (Madrid)* o *Germany Central (Frankfurt)*. No se puede cambiar después.
+3. **Compute → Instances → Create instance**
+   - Image: **Canonical Ubuntu 24.04**
+   - Shape: *Ampere* `VM.Standard.A1.Flex`, **2 OCPU y 12 GB**
+   - SSH keys: *Generate a key pair* y guarda la clave privada.
+   - Si sale *Out of capacity*, reintenta más tarde o cambia de *availability domain*.
+4. Apunta la **IP pública**.
+5. **Virtual cloud network → Security Lists → Default → Add Ingress Rules:** origen `0.0.0.0/0`, TCP, puertos `80,443,2022`.
 
-Instancia → **Virtual cloud network** → **Security Lists** → *Default Security List* → **Add Ingress Rules**:
+## 3. DNS del dominio
 
-- Source CIDR `0.0.0.0/0`, TCP, Destination port `80,443,2022`
+En el panel DNS de **czyradio.com**:
 
-## 4. Dominio gratis e instalación
+| Tipo | Nombre | Valor | Para qué |
+|---|---|---|---|
+| A | `@` | 185.199.108.153 | web (GitHub Pages) |
+| A | `@` | 185.199.109.153 | web |
+| A | `@` | 185.199.110.153 | web |
+| A | `@` | 185.199.111.153 | web |
+| CNAME | `www` | xoxeli83.github.io | web |
+| A | `radio` | **IP de Oracle** | emisora, plataforma y panel |
 
-1. Entra en <https://www.duckdns.org> con tu cuenta de Google o GitHub.
-2. Crea un subdominio, por ejemplo `airadio` → quedará `airadio.duckdns.org`. Copia el **token**.
-3. Conéctate al servidor (Windows: PowerShell):
-   ```
-   ssh -i ruta\a\tu-clave.key ubuntu@IP_DEL_SERVIDOR
-   ```
-4. Sube el proyecto y lanza la instalación:
-   ```
-   git clone https://github.com/xoxeli83/radio-ai.git
-   cd radio-ai
-   sudo bash servidor/instalar_servidor.sh airadio TU_TOKEN_DUCKDNS
-   ```
-   El instalador de AzuraCast hace un par de preguntas: pulsa **Intro** en todas.
+Los cambios tardan de minutos a unas horas. Comprueba con `ping radio.czyradio.com` que responde la IP de Oracle antes del paso 4.
 
-## 5. Ajustes de AzuraCast (navegador)
+## 4. Instalar todo
 
-1. Abre `https://airadio.duckdns.org` y crea el **usuario administrador**.
-2. **Crear emisora:** nombre `AI Radio Global`, **nombre corto `airadio`** (exactamente ese), zona horaria *Europe/Madrid*.
-3. **Administración → Ajustes del sistema:** URL base `https://airadio.duckdns.org`. **No** actives Let's Encrypt en AzuraCast: el HTTPS ya lo pone Caddy.
-4. **Tu usuario (arriba a la derecha) → Claves API → Añadir.** Copia la clave.
+Desde Windows (PowerShell):
+```
+ssh -i ruta\a\tu-clave.key ubuntu@IP_DE_ORACLE
+```
+Y en el servidor:
+```
+git clone https://github.com/xoxeli83/radio-ai.git
+cd radio-ai
+sudo bash servidor/instalar_servidor.sh radio.czyradio.com
+```
+El instalador de AzuraCast hace un par de preguntas: **Intro** en todas.
+
+Al terminar muestra el **usuario y la clave del panel de revisión**. Guárdalos.
+
+Queda instalado en `/opt/czyradio`:
+- AzuraCast (la emisora) detrás de Caddy, que pone el HTTPS solo.
+- La plataforma (servicio `czyradio-plataforma`) en `https://radio.czyradio.com/plataforma/`.
+- Los locutores IA, que se regeneran cada día a las 05:10.
+
+## 5. Ajustes de AzuraCast
+
+1. Abre `https://radio.czyradio.com` y crea el **usuario administrador**.
+2. **Crear emisora:** nombre `Crazy rAdIo`, **nombre corto `czyradio`** (exactamente ese), zona horaria *Europe/Madrid*.
+3. **Administración → Ajustes del sistema:** URL base `https://radio.czyradio.com`. **No** actives Let's Encrypt en AzuraCast.
+4. **Tu usuario → Claves API → Añadir.** Copia la clave.
 5. En el servidor:
    ```
-   sudo nano /opt/airadio/claves.env      # pega la clave en AZURACAST_API_KEY= y guarda (Ctrl+O, Intro, Ctrl+X)
-   sudo /opt/airadio/configurar.sh
+   sudo nano /opt/czyradio/claves.env     # pega la clave en AZURACAST_API_KEY=
+   sudo /opt/czyradio/configurar.sh
    ```
-   Crea las carpetas y listas de cada programa, genera la voz de los 8 locutores y conecta la plataforma con la emisora.
+   Crea los programas, la lista **Publicidad** (una cuña cada 20 min), la voz de los 8 locutores y conecta la plataforma.
 
-## 5 bis. Correo para registrar usuarios
+## 6. Correo (registro de usuarios y avisos)
 
-Los usuarios se registran sin contraseña: reciben un **código de 6 cifras** en su correo. Para enviar esos correos hace falta un servicio SMTP. La opción gratuita recomendada es **Brevo**:
+Los usuarios se registran con **correo + contraseña** y verifican el correo con un **código de 6 cifras**. Los mismos códigos sirven para recuperar la contraseña y cambiar de correo.
 
-1. Crea una cuenta gratuita en <https://www.brevo.com> y verifica el correo remitente (por ejemplo, uno de tu dominio).
-2. En Brevo: **SMTP y API → SMTP**. Copia el usuario y genera una clave SMTP.
-3. En el servidor, `sudo nano /opt/airadio/plataforma.env`:
+1. Cuenta gratuita en <https://www.brevo.com>.
+2. **Remitentes y dominios:** añade el dominio `czyradio.com` y crea en el DNS los registros que te pida (SPF, DKIM, DMARC). Así los correos no van a spam.
+3. **SMTP y API → SMTP:** copia el usuario y genera una clave.
+4. `sudo nano /opt/czyradio/plataforma.env`:
    ```
    SMTP_HOST=smtp-relay.brevo.com
    SMTP_PUERTO=587
-   SMTP_USUARIO=el-usuario-de-brevo
-   SMTP_CLAVE=la-clave-smtp
-   CORREO_REMITENTE=AI Radio Global <radio@tudominio.es>
-   CORREO_ADMIN=tu-correo        # aquí te llegan los mensajes de anunciantes
+   SMTP_USUARIO=usuario-de-brevo
+   SMTP_CLAVE=clave-smtp
+   CORREO_REMITENTE=Crazy rAdIo <hola@czyradio.com>
+   CORREO_ADMIN=tu-correo
    ```
-4. `sudo systemctl restart airadio-plataforma`
+5. `sudo systemctl restart czyradio-plataforma`
 
-Mientras no haya SMTP, los códigos solo aparecen en el registro del servidor (`journalctl -u airadio-plataforma`), así que nadie puede registrarse.
+Sin SMTP los códigos solo salen en `journalctl -u czyradio-plataforma` y nadie puede registrarse.
 
-Con la cuenta, cada usuario puede enviar canciones (hasta 5 al día), ver su revisión en **Mi cuenta**, votar (un voto por canción y semana, nunca a sí mismo) y borrar su cuenta. Recibe un correo cuando su canción se admite o se rechaza.
+## 7. La web en czyradio.com
 
-## 6. Canciones: las envía la gente y la IA propone
+1. GitHub → repositorio `radio-ai` → **Settings → Pages → Custom domain:** `czyradio.com` → *Save*. Cuando aparezca el certificado, marca **Enforce HTTPS**.
+2. Pídeme que conecte la web con el servidor (cambio el bloque `CONFIG` de `web/index.html` a `https://radio.czyradio.com`) o hazlo tú:
+   ```js
+   servidor: "https://radio.czyradio.com",
+   api: "https://radio.czyradio.com/plataforma",
+   ```
+   La web se publica sola uno o dos minutos después de cada cambio.
 
-1. Los creadores entran con su correo verificado y suben su canción desde la web (**Envía tu canción**).
-2. La plataforma la analiza sola:
-   - calidad técnica: formato, volumen (LUFS), picos, saturación, silencios y duración;
-   - ritmo y energía aproximados;
-   - **letra transcrita** con Whisper e idioma detectado;
-   - **lenguaje explícito**: si lo hay, propone *AI Sin Filtros* (22–24 h) y la marca **+18**;
-   - posibles insultos de odio, que siempre marca para revisión;
-   - con `ANTHROPIC_API_KEY`, además, Claude opina sobre el encaje y afina el programa.
-3. En el **panel de revisión** (`https://airadio.duckdns.org/plataforma/admin`, con el usuario y la clave que muestra el instalador) ves las canciones **ordenadas por la puntuación de la IA**, con su programa propuesto. Las escuchas y pulsas **Admitir**: la canción se normaliza, se le ponen título y artista y entra sola en la carpeta de su programa. O **Rechazar** con un motivo, que verá el creador.
-4. El creador ve el estado y el informe del análisis en **Mi cuenta**, y recibe un correo con el resultado.
+Qué tiene la web:
+- **Directo**, recién llegadas, parrilla, locutores y Top 40.
+- **Explorar** y escuchar a la carta cualquier canción admitida, con me gusta y votos.
+- **Ficha de cada canción** y **página pública de cada artista** (`#artista-nick`).
+- **Mi cuenta:** resumen con gráfica de 30 días (visitas, escuchas, me gusta, votos, minutos en la radio), mis canciones con estadísticas, perfil (foto, nick, ciudad, bio, enlaces, perfil público), correo, contraseña, avisos, cerrar sesión y borrar cuenta.
+- **Envía tu canción** con la declaración de derechos (punto 9).
+- **Anúnciate** con tarifas y pago online.
 
-También puedes subir canciones tuyas directamente en AzuraCast → **Medios**, en `musica/<programa>`. Lo explícito va solo a `musica/sinfiltros`.
+## 8. Cobrar la publicidad (Stripe)
 
-## 7. Votos y Top 40
+Tarifas iniciales (sin IVA; detalle y referencias en `docs/tarifas-publicidad.md`):
 
-- Los oyentes votan en la web (Top 40 y **Vota las novedades**) con su cuenta verificada: un voto por canción y semana, como máximo 30 al día, y nunca a sus propias canciones.
-- Lista = **40 % votos** de los últimos 7 días + **35 % escuchas** (oyentes reales mientras suena) + **25 % valoración editorial** (nota del análisis). Dos plazas para creadores nuevos.
-- Cada lunes se guardan las posiciones (para las subidas y bajadas) y se prepara el **especial del domingo** con el locutor Atlas.
+| Producto | Precio |
+|---|---|
+| Banner horizontal, 1 mes (máx. 3 anunciantes rotando) | 49 € |
+| Banner, 10.000 impresiones | 60 € |
+| Banner cuadrado destacado, 1 mes | 69 € |
+| Cuña de radio, 1 mes (3 por hora, grabación con voz IA incluida) | 59 € |
+| Patrocinio de un programa, 1 mes | 129 € |
 
-## 7 ter. Publicidad (para cobrar)
+Se cambian sin tocar código con `TARIFAS_JSON` en `plataforma.env`.
 
-Todo se gestiona en el panel (`/plataforma/admin`):
+Alta en Stripe:
+1. Cuenta en <https://dashboard.stripe.com/register> con los datos fiscales de Besting (o de la sociedad que facture).
+2. **Ajustes → Facturación:** activa las facturas automáticas (la plataforma las pide en cada pago).
+3. **Desarrolladores → Claves API:** copia la *clave secreta* (`sk_live_...`).
+4. **Desarrolladores → Webhooks → Añadir endpoint:**
+   - URL: `https://radio.czyradio.com/plataforma/api/stripe/webhook`
+   - Evento: `checkout.session.completed`
+   - Copia el *secreto de firma* (`whsec_...`).
+5. En `/opt/czyradio/plataforma.env`:
+   ```
+   STRIPE_SECRET_KEY=sk_live_...
+   STRIPE_WEBHOOK_SECRET=whsec_...
+   IVA=0.21
+   ```
+6. `sudo systemctl restart czyradio-plataforma`
 
-- **Banners** (pestaña Banners): subes la imagen del anunciante (728×90 horizontal o 300×250 cuadrado), el enlace, las fechas y, si quieres, un máximo de impresiones. Salen en la web en los huecos «Publicidad»: arriba de cada página, junto al directo y en el Top 40. Se cuentan **impresiones y clics** sin cookies ni datos personales, así que no hace falta aviso de cookies. Hay un **informe CSV** por anunciante para enviárselo y facturar. Cuando no hay anuncios, el hueco invita a anunciarse.
-- **Cuñas de radio** (pestaña Cuñas): subes el audio del anunciante o escribes el texto y lo graba un locutor IA. La cuña va a la lista **Publicidad** de AzuraCast, que suena una vez cada 20 minutos.
-- **Mensajes**: lo que envían las empresas desde la página **Anúnciate** de la web. También llega a `CORREO_ADMIN`.
+Cómo funciona:
+1. La empresa elige producto en **Anúnciate**, sube su banner o su audio (o escribe el texto de la cuña) y paga con tarjeta.
+2. Stripe confirma el pago, le envía la factura y el pedido queda **Pagado** en el panel, pestaña **Pedidos**.
+3. Revisas el material y pulsas **Activar**: el banner empieza a salir o la cuña entra en la lista Publicidad (con voz IA si mandó texto). Al terminar el periodo se retira sola.
+4. Sin Stripe configurado, el pedido queda como **pendiente de transferencia**: cobras tú y pulsas **Marcar pagado**.
 
-Los precios los decides tú. Lo habitual es cobrar por periodo (semana o mes) o por cada mil impresiones; apúntalo en «Notas internas» de cada anuncio.
+Banners y cuñas también se pueden dar de alta a mano en las pestañas **Banners** y **Cuñas**. Cada anunciante tiene un **informe CSV** de impresiones y clics. No se usan cookies.
 
-**Google AdSense** no admite webs en `github.io`. Si más adelante lo quieres, hace falta un dominio propio y añadir un aviso de cookies.
+## 9. Derechos de las canciones
 
-## 7 bis. Conectar la web
+Al enviar una canción, el creador indica **con qué herramienta la hizo, con qué plan y de quién es**, y marca seis casillas obligatorias (es suya, descarga oficial, autoriza la emisión y la escucha a la carta, se hace responsable, es mayor de edad, acepta las condiciones). La plataforma aplica estas reglas antes de analizarla:
 
-La web publicada está en `https://xoxeli83.github.io/radio-ai/`. Cuando el servidor esté en marcha, en `web/index.html`, bloque `CONFIG`:
-```js
-servidor: "https://airadio.duckdns.org",
-api: "https://airadio.duckdns.org/plataforma",
-```
-Al subir el cambio a GitHub, la web se actualiza sola en uno o dos minutos.
+| Herramienta | Se admite | No se admite |
+|---|---|---|
+| Suno | Planes **Pro o Premier**, descarga oficial | Plan gratuito (la canción es de Suno) |
+| Udio | Descargada **antes del 5-11-2025** | Posterior (Udio ya no permite descargas ni uso comercial) |
+| ElevenLabs Music | Licencia **Enterprise** que autorice radio | Planes normales (excluyen radio) |
+| Hecha por el creador / otras | Revisión manual | Titularidad de la plataforma o desconocida |
 
-## 8. En el coche
+En el panel cada canción muestra su **titularidad**, y puedes **retirarla** de la radio en cualquier momento.
 
-- **Ya mismo:** la app del móvil por Bluetooth o con cable. El título y el artista salen en la pantalla del coche.
-- **Android Auto / CarPlay sin app propia:** da de alta la emisora en
-  - <https://www.radio-browser.info> (gratis; la usan muchas apps de radio),
-  - TuneIn → *Broadcasters → Add a station*.
-  
-  URL de la señal: `https://airadio.duckdns.org/listen/airadio/radio.mp3`
-- **App propia en Android Auto y CarPlay:** fase 2, cuando haya oyentes. Google Play cobra un pago único de alta y Apple una cuota anual; CarPlay pide además un permiso de Apple para apps de audio.
+¿Avisar a las plataformas? Si la canción es del usuario según sus condiciones, no hace falta. Aun así, conviene presentarles el proyecto antes de abrir: en `docs/correos-plataformas.md` tienes los correos para **Suno** y **ElevenLabs**, en inglés y listos para enviar.
+
+Antes de abrir al público:
+- [ ] **SGAE / AGEDI / AIE:** licencia de radio por internet. Que la música sea de IA no exime de pedirla.
+- [ ] **Abogado:** revisión de `docs/legal/` (condiciones, privacidad y condiciones para anunciantes).
+- [ ] **Marca:** registrar «Crazy rAdIo» en la OEPM (y en la EUIPO si sales fuera).
+- [ ] Respuesta de Suno y ElevenLabs (si contestan).
+
+## 10. En el coche
+
+- **Ya:** la web se instala como app en el móvil (*Añadir a pantalla de inicio*) y suena por Bluetooth o cable, con título y artista en la pantalla del coche.
+- **Android Auto / CarPlay sin app propia:** da de alta la emisora en <https://www.radio-browser.info> y en TuneIn (*Broadcasters → Add a station*). URL de la señal:
+  `https://radio.czyradio.com/listen/czyradio/radio.mp3`
+- **App propia:** fase 2, cuando haya oyentes (Google Play cobra un alta única y Apple una cuota anual).
 
 ---
 
 ## Mantenimiento
 
-- **Locutores:** se regeneran solos cada día a las 05:10 con frases nuevas. Para cambiar voces, nombres o programas: `/opt/airadio/locutores/config.json`. Muestras de voces: <https://rhasspy.github.io/piper-samples/>.
-- **Textos con IA (opcional):** con una clave de la API de Anthropic en `claves.env`, Claude escribe frases más variadas (tiene un coste pequeño por uso). Sin clave se usan las plantillas gratuitas.
-- **Top 40 semanal:** cuando haya votaciones reales, rellena `locutores/top40.json` (formato en `top40.ejemplo.json`). Cada día se monta el programa completo (locutor + canciones, del 40 al 1), que se emite el domingo a las 18:00.
-- **Programas de la web:** si cambias la parrilla en `config.json`, cambia también `PROGRAMAS` en `web/index.html`.
+| Qué | Dónde |
+|---|---|
+| Panel de revisión | `https://radio.czyradio.com/plataforma/admin` |
+| Ajustes de la plataforma | `/opt/czyradio/plataforma.env` → `sudo systemctl restart czyradio-plataforma` |
+| Registro de la plataforma | `journalctl -u czyradio-plataforma -f` |
+| Locutores (voces, nombres, programas) | `/opt/czyradio/locutores/config.json` |
+| Base de datos | `/opt/czyradio/datos/` (cópiala de vez en cuando) |
+| Actualizar el código | `cd ~/radio-ai && git pull && sudo bash servidor/instalar_servidor.sh radio.czyradio.com` |
 
-## Antes de abrir al público
-
-- [ ] Licencia de SGAE para radio por internet (webcasting). Que la música sea de IA no exime de derechos.
-- [ ] Revisión por un abogado de los textos de `docs/legal/`.
-- [ ] Comprobar que el nombre «AI Radio Global» está libre (marca y dominio) o elegir otro.
+Con `ANTHROPIC_API_KEY` en `claves.env`, Claude además revisa cada canción y escribe frases más variadas para los locutores (coste pequeño por uso). Sin clave todo funciona con las plantillas gratuitas.

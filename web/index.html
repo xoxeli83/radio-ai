@@ -3,52 +3,58 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AI Radio Global</title>
-<meta name="description" content="Radio online 24/7 con canciones creadas con inteligencia artificial, locutores virtuales y listas de éxitos.">
-<meta name="theme-color" content="#0d0b1a">
+<title>Crazy rAdIo · AI Music Internet Radio</title>
+<meta name="description" content="Radio online 24/7 con canciones creadas con inteligencia artificial: locutores virtuales, escucha a la carta, Top 40 votado por la comunidad. Sube tu canción.">
+<meta name="theme-color" content="#0B1026">
+<meta property="og:title" content="Crazy rAdIo · AI Music Internet Radio">
+<meta property="og:description" content="La radio de la música creada con IA. Escucha, vota y sube tu canción.">
+<meta property="og:image" content="og-image.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icons/icon-192.png">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.ico" sizes="48x48">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 <!-- ======================================================================
-     CONFIGURACIÓN DE LA RADIO — lo único que hay que tocar para ponerla en marcha
+     CONFIGURACIÓN — lo único que hay que tocar para conectar la web con el servidor
      ====================================================================== -->
 <script id="config">
 const CONFIG = {
-  nombre: "AI Radio Global",
-  lema: "La radio donde los próximos éxitos los crea la inteligencia artificial",
+  nombre: "Crazy rAdIo",
+  lema: "AI Music Internet Radio",
 
   // Servidor AzuraCast (déjalo vacío para el modo demostración)
-  // Ejemplo: "https://airadio.duckdns.org"
+  // Ejemplo: "https://radio.czyradio.com"
   servidor: "",
-  emisora: "airadio",            // nombre corto de la emisora en AzuraCast
+  emisora: "czyradio",           // nombre corto de la emisora en AzuraCast
   // URL directa del audio. Si se deja vacía se usa servidor + /listen/emisora/radio.mp3
   streamUrl: "",
 
   zonaHoraria: "Europe/Madrid",
 
   // Plataforma (subida de canciones, análisis IA, votos y Top 40).
-  // Ejemplo: "https://airadio-api.duckdns.org". Vacío = modo demostración.
+  // Ejemplo: "https://radio.czyradio.com/plataforma". Vacío = modo demostración.
   api: "",
-  emailContacto: "radio@ejemplo.com",
+  emailContacto: "hola@czyradio.com",
 };
 
 // Parrilla diaria (hora de la emisora). fin = 24 significa medianoche.
 const PROGRAMAS = [
-  { ini: 0,  fin: 7,  id: "noche",   nombre: "Noche IA",              genero: "Música continua",       locutor: null,      color: "#6c63ff", desc: "Selección musical automática de todos los géneros, sin interrupciones." },
-  { ini: 7,  fin: 10, id: "morning", nombre: "AI Morning Show",       genero: "Variado",               locutor: "nova",    color: "#ffd60a", desc: "Para empezar el día: novedades, lo más votado y buen humor." },
-  { ini: 10, fin: 12, id: "pop",     nombre: "AI Pop Hits",           genero: "Pop · Dance",           locutor: "lia",     color: "#ff3d81", desc: "Pop comercial, dance y canciones pegadizas." },
-  { ini: 12, fin: 14, id: "rock",    nombre: "AI Rock Station",       genero: "Rock · Indie · Metal",  locutor: "bruno",   color: "#ff5a36", desc: "Rock clásico, alternativo, metal y nuevas bandas virtuales." },
-  { ini: 14, fin: 16, id: "chill",   nombre: "AI Chill & Electronic", genero: "Chillout · Electrónica",locutor: "marea",   color: "#2ec4b6", desc: "Chillout, house, electrónica y ambient para bajar revoluciones." },
-  { ini: 16, fin: 18, id: "urban",   nombre: "AI Urban",              genero: "Rap · Trap · Reguetón", locutor: "kilo",    color: "#9b5de5", desc: "Rap, trap, reguetón y música urbana." },
-  { ini: 18, fin: 20, id: "top40",   nombre: "Top 40 AI",             genero: "Lo más votado",         locutor: "atlas",   color: "#ff8a3d", desc: "La lista de éxitos de la comunidad, posición a posición." },
-  { ini: 20, fin: 22, id: "estrenos",nombre: "Estrenos y descubrimientos", genero: "Novedades",        locutor: "eco",     color: "#4cc9f0", desc: "Las canciones recién admitidas y los nuevos creadores." },
-  { ini: 22, fin: 24, id: "sinfiltros", nombre: "AI Sin Filtros",     genero: "Humor · Sátira · +18",  locutor: "sarcasmo",color: "#e63946", desc: "Canciones humorísticas, satíricas e irreverentes. Contenido explícito, solo para adultos.", adultos: true },
+  { ini: 0,  fin: 7,  id: "noche",   nombre: "Noche IA",              genero: "Música continua",       locutor: null,      color: "#3A4BD9", desc: "Selección musical automática de todos los géneros, sin interrupciones." },
+  { ini: 7,  fin: 10, id: "morning", nombre: "AI Morning Show",       genero: "Variado",               locutor: "nova",    color: "#00D4FF", desc: "Para empezar el día: novedades, lo más votado y buen humor." },
+  { ini: 10, fin: 12, id: "pop",     nombre: "AI Pop Hits",           genero: "Pop · Dance",           locutor: "lia",     color: "#B24DFF", desc: "Pop comercial, dance y canciones pegadizas." },
+  { ini: 12, fin: 14, id: "rock",    nombre: "AI Rock Station",       genero: "Rock · Indie · Metal",  locutor: "bruno",   color: "#8A00FF", desc: "Rock clásico, alternativo, metal y nuevas bandas virtuales." },
+  { ini: 14, fin: 16, id: "chill",   nombre: "AI Chill & Electronic", genero: "Chillout · Electrónica",locutor: "marea",   color: "#00B3D6", desc: "Chillout, house, electrónica y ambient para bajar revoluciones." },
+  { ini: 16, fin: 18, id: "urban",   nombre: "AI Urban",              genero: "Rap · Trap · Reguetón", locutor: "kilo",    color: "#6A00D9", desc: "Rap, trap, reguetón y música urbana." },
+  { ini: 18, fin: 20, id: "top40",   nombre: "Top 40 AI",             genero: "Lo más votado",         locutor: "atlas",   color: "#C04DFF", desc: "La lista de éxitos de la comunidad, posición a posición." },
+  { ini: 20, fin: 22, id: "estrenos",nombre: "Estrenos y descubrimientos", genero: "Novedades",        locutor: "eco",     color: "#33DDFF", desc: "Las canciones recién admitidas y los nuevos creadores." },
+  { ini: 22, fin: 24, id: "sinfiltros", nombre: "AI Sin Filtros",     genero: "Humor · Sátira · +18",  locutor: "sarcasmo",color: "#FF3D7F", desc: "Canciones humorísticas, satíricas e irreverentes. Contenido explícito, solo para adultos.", adultos: true },
 ];
 
 const LOCUTORES = {
@@ -76,202 +82,266 @@ const TOP_EJEMPLO = [
   { t: "Flow sin batería",   a: "Ritmo Remoto",     g: "Urban",        v: 815,  mov: 0 },
 ];
 </script>
-
 <style>
 :root{
-  --bg:#0d0b1a; --bg2:#15122a; --card:#1b1735; --line:#2c2752;
-  --tx:#f4f1ff; --tx2:#b7b0d9; --tx3:#8a83b0;
-  --a1:#ff3d81; --a2:#ff8a3d; --a3:#ffd60a; --ok:#2ec4b6;
-  --grad:linear-gradient(90deg,var(--a1),var(--a2) 55%,var(--a3));
-  --r:16px; --player-h:84px;
-  --safe-b:env(safe-area-inset-bottom,0px);
+  /* Colores corporativos de Crazy rAdIo */
+  --navy:#0B1026; --violeta:#8A00FF; --violeta2:#B24DFF; --cian:#00D4FF; --gris:#E6E8F2;
+  --bg:#0B1026; --bg2:#10163A; --card:#151C42; --card2:#1B2350; --line:#27306A;
+  --tx:#FFFFFF; --tx2:#C9CCE2; --tx3:#8C92BB;
+  --a1:#8A00FF; --a2:#B24DFF; --a3:#00D4FF; --ok:#2EE6A6; --ko:#FF6B8A;
+  --grad:linear-gradient(90deg,var(--violeta),var(--violeta2) 50%,var(--cian));
+  --r:16px; --player-h:84px; --safe-b:env(safe-area-inset-bottom,0px);
+  --f2:Poppins,Inter,system-ui,sans-serif;
 }
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:var(--tx);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;font-size:16px;line-height:1.5}
 body{padding-bottom:calc(var(--player-h) + var(--safe-b) + 12px);min-height:100vh;
-  background:radial-gradient(1200px 600px at 85% -10%,rgba(255,61,129,.18),transparent 60%),
-             radial-gradient(900px 500px at -10% 10%,rgba(108,99,255,.18),transparent 60%),var(--bg);}
-h1,h2,h3{font-family:"Space Grotesk",Inter,sans-serif;line-height:1.15;margin:0 0 .5em}
-a{color:var(--a3)}
+  background:radial-gradient(1200px 600px at 85% -10%,rgba(138,0,255,.28),transparent 60%),radial-gradient(900px 500px at -10% 10%,rgba(0,212,255,.10),transparent 60%),var(--bg)}
+h1,h2,h3{font-family:var(--f2);line-height:1.15;margin:0 0 .5em}
+a{color:var(--cian)}
 button{font:inherit;cursor:pointer}
-.wrap{max-width:1080px;margin:0 auto;padding:0 18px}
+img{max-width:100%}
+.wrap{max-width:1120px;margin:0 auto;padding:0 18px}
+.oculto{display:none!important}
 
 /* Cabecera */
-header{position:sticky;top:0;z-index:20;background:rgba(13,11,26,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-.hbar{display:flex;align-items:center;gap:14px;height:62px}
-.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--tx);font-family:"Space Grotesk",Inter,system-ui,sans-serif;font-weight:700;font-size:19px;white-space:nowrap}
-.logo svg{flex:none}
-nav{display:flex;gap:4px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
-nav::-webkit-scrollbar{display:none}
-nav a{color:var(--tx2);text-decoration:none;padding:8px 12px;border-radius:999px;font-size:14px;font-weight:500;white-space:nowrap}
-nav a:hover{color:var(--tx);background:var(--card)}
-nav a.on{color:#0d0b1a;background:var(--a3)}
+header{position:sticky;top:0;z-index:20;background:rgba(11,16,38,.88);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.hbar{display:flex;align-items:center;gap:12px;height:64px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;white-space:nowrap}
+.logo img{display:block}.logo .wm{height:26px;width:auto}
+nav#menu{display:flex;gap:2px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+nav#menu::-webkit-scrollbar{display:none}
+nav#menu a{color:var(--tx2);text-decoration:none;padding:8px 11px;border-radius:999px;font-size:14px;font-weight:500;white-space:nowrap}
+nav#menu a:hover{color:var(--tx);background:var(--card)}
+nav#menu a.on{color:#fff;background:var(--violeta)}
+.usu{display:flex;align-items:center;gap:8px}
+.chipU{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--card);color:var(--tx);border-radius:999px;padding:4px 12px 4px 4px;text-decoration:none;font-size:14px;font-weight:600;white-space:nowrap}
+.chipU .av{width:30px;height:30px;font-size:13px}
 #btnInstalar{display:none;border:1px solid var(--line);background:var(--card);color:var(--tx);border-radius:999px;padding:7px 12px;font-size:13px;white-space:nowrap}
-@media (max-width:760px){
+@media (max-width:900px){
   .hbar{height:auto;flex-wrap:wrap;padding:10px 0 6px;gap:8px}
-  nav{order:3;width:100%;margin-left:0;padding-bottom:4px}
-  #btnInstalar{margin-left:auto}
+  nav#menu{order:3;width:100%;margin-left:0;padding-bottom:4px}
+  .usu{margin-left:auto}
 }
 
-/* Aviso demo */
-.demo{margin:16px 0 0;padding:10px 14px;border:1px dashed var(--a2);border-radius:12px;color:var(--tx2);font-size:14px;background:rgba(255,138,61,.07)}
-.demo b{color:var(--a2)}
-
-/* Secciones */
+/* Elementos comunes */
+.demo{margin:16px 0 0;padding:10px 14px;border:1px dashed var(--cian);border-radius:12px;color:var(--tx2);font-size:14px;background:rgba(0,212,255,.06)}
+.demo b{color:var(--cian)}
 section.vista{display:none;padding:26px 0 10px;animation:in .25s ease}
 section.vista.on{display:block}
 @keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-.sub{color:var(--tx2);margin:-4px 0 22px;max-width:680px}
+.sub{color:var(--tx2);margin:-4px 0 22px;max-width:720px}
+.nota{color:var(--tx3);font-size:13px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line);background:var(--bg2);color:var(--tx);padding:10px 18px;border-radius:999px;font-weight:600;text-decoration:none;font-size:15px}
+.btn:hover{border-color:var(--tx3)}
+.btn.pri{background:var(--violeta);color:#fff;border-color:transparent}
+.btn.pri:hover{background:var(--violeta2)}
+.btn.sec{background:transparent}
+.btn.peq{padding:6px 12px;font-size:13px}
+.btn.ko{color:var(--ko)}
+.btn:disabled{opacity:.5;cursor:default}
+.pill{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:5px 10px;border-radius:999px;background:rgba(255,255,255,.08)}
+.dot{width:8px;height:8px;border-radius:50%;background:#ff2d55;animation:pulse 1.6s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,45,85,.6)}70%{box-shadow:0 0 0 9px rgba(255,45,85,0)}100%{box-shadow:0 0 0 0 rgba(255,45,85,0)}}
+.ia-tag{display:inline-block;font-size:11px;font-weight:600;padding:2px 7px;border-radius:6px;background:rgba(46,196,182,.15);color:var(--ok);margin-left:6px;vertical-align:middle}
+.adult{display:inline-block;font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px;background:rgba(230,57,70,.18);color:var(--ko);margin-left:6px;vertical-align:middle}
+.av{width:46px;height:46px;border-radius:50%;flex:none;display:grid;place-items:center;font-family:var(--f2);font-weight:700;color:#fff;overflow:hidden;background:var(--grad)}
+.av img{width:100%;height:100%;object-fit:cover}
+.aviso{margin-bottom:14px;padding:10px 14px;border-radius:12px;background:rgba(108,99,255,.12);border:1px solid rgba(108,99,255,.35);color:var(--tx2);font-size:14px}
+.aviso.ok{background:rgba(46,196,182,.12);border-color:rgba(46,196,182,.4)}
+.aviso.ko{background:rgba(230,57,70,.12);border-color:rgba(230,57,70,.4);color:#ffc2c7}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.tabs button,.tabs a{border:1px solid var(--line);background:var(--card);color:var(--tx2);border-radius:999px;padding:7px 14px;font-size:14px;text-decoration:none}
+.tabs .on{background:var(--tx);color:var(--bg);border-color:var(--tx)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:18px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.stat b{display:block;font-family:var(--f2);font-size:24px}
+.stat span{color:var(--tx3);font-size:13px}
+.vacio{color:var(--tx3);padding:30px 0;text-align:center}
+
+/* Publicidad */
+.pub{margin:18px auto 0;text-align:center}
+.pub .et{display:block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--tx3);margin-bottom:4px}
+.pub a{display:inline-block;line-height:0}.pub img{height:auto;border-radius:10px;border:1px solid var(--line)}
+.pub .casa{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;border:1px dashed var(--line);border-radius:12px;padding:14px;color:var(--tx2);font-size:14px;text-decoration:none;line-height:1.4}
+.pub .casa b{color:var(--cian)}
+.pub[data-formato="cuadrado"]{max-width:300px}
 
 /* Directo */
 .hero{display:grid;grid-template-columns:1.3fr 1fr;gap:18px}
 @media (max-width:860px){.hero{grid-template-columns:1fr}}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px}
 .onair{position:relative;overflow:hidden;padding:26px}
 .onair::before{content:"";position:absolute;inset:0;background:var(--prog,#ff3d81);opacity:.13;pointer-events:none}
-.pill{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:5px 10px;border-radius:999px;background:rgba(255,255,255,.08);color:var(--tx)}
-.dot{width:8px;height:8px;border-radius:50%;background:#ff2d55;box-shadow:0 0 0 0 rgba(255,45,85,.7);animation:pulse 1.6s infinite}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,45,85,.6)}70%{box-shadow:0 0 0 9px rgba(255,45,85,0)}100%{box-shadow:0 0 0 0 rgba(255,45,85,0)}}
 .onair h1{font-size:clamp(28px,4.6vw,44px);margin:16px 0 6px}
 .onair .gen{color:var(--tx2);font-weight:500}
 .locline{display:flex;align-items:center;gap:12px;margin-top:20px}
-.ava{width:46px;height:46px;border-radius:50%;flex:none;display:grid;place-items:center;font-family:"Space Grotesk",Inter,system-ui,sans-serif;font-weight:700;color:#0d0b1a}
-.ia-tag{display:inline-block;font-size:11px;font-weight:600;padding:2px 7px;border-radius:6px;background:rgba(46,196,182,.15);color:var(--ok);margin-left:6px;vertical-align:middle}
-.adult{display:inline-block;font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px;background:rgba(230,57,70,.18);color:#ff6b75;margin-left:6px}
-.bigplay{margin-top:24px;display:inline-flex;align-items:center;gap:12px;border:0;border-radius:999px;padding:14px 26px 14px 18px;background:var(--grad);color:#1a0d12;font-weight:700;font-size:17px;box-shadow:0 10px 30px rgba(255,61,129,.25)}
+.bigplay{margin-top:24px;display:inline-flex;align-items:center;gap:12px;border:0;border-radius:999px;padding:14px 26px 14px 18px;background:var(--grad);color:#fff;font-weight:700;font-size:17px;box-shadow:0 10px 30px rgba(138,0,255,.35)}
 .bigplay svg{width:26px;height:26px}
-.eq{display:inline-flex;gap:3px;align-items:flex-end;height:16px}
-.eq i{width:3px;background:currentColor;border-radius:2px;animation:eq 1s infinite ease-in-out}
-.eq i:nth-child(2){animation-delay:.2s}.eq i:nth-child(3){animation-delay:.4s}.eq i:nth-child(4){animation-delay:.1s}
-@keyframes eq{0%,100%{height:4px}50%{height:16px}}
-.paused .eq i{animation:none;height:4px}
-.side h3{font-size:15px;color:var(--tx2);font-weight:600;font-family:Inter;text-transform:uppercase;letter-spacing:.06em}
+.side h3{font-size:14px;color:var(--tx2);font-weight:600;font-family:Inter;text-transform:uppercase;letter-spacing:.06em}
 .song{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
 .song:last-child{border-bottom:0}
-.cov{width:44px;height:44px;border-radius:10px;flex:none;background:var(--bg2);display:grid;place-items:center;overflow:hidden}
-.cov img{width:100%;height:100%;object-fit:cover}
-.song .t{font-weight:600;line-height:1.25}
-.song .a{color:var(--tx3);font-size:14px}
+.cov{width:44px;height:44px;border-radius:10px;flex:none;background:var(--bg2);display:grid;place-items:center;overflow:hidden;font-family:var(--f2);font-weight:700;color:#fff}
+.t{font-weight:600;line-height:1.25}.a{color:var(--tx3);font-size:14px}
 .next{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:16px;padding-top:14px;border-top:1px solid var(--line);color:var(--tx2);font-size:14px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
-.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
-.stat b{display:block;font-family:"Space Grotesk",Inter,system-ui,sans-serif;font-size:24px}
-.stat span{color:var(--tx3);font-size:13px}
-.cta{margin-top:18px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;background:linear-gradient(120deg,rgba(255,61,129,.16),rgba(255,214,10,.10));border:1px solid var(--line);border-radius:var(--r);padding:20px}
-.cta h3{margin:0 0 4px}
-.cta p{margin:0;color:var(--tx2)}
-.btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--bg2);color:var(--tx);padding:11px 18px;border-radius:999px;font-weight:600;text-decoration:none}
-.btn.pri{background:var(--a3);color:#0d0b1a;border-color:transparent}
+.cta{margin-top:18px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;background:linear-gradient(120deg,rgba(138,0,255,.25),rgba(0,212,255,.10));border:1px solid var(--line);border-radius:var(--r);padding:20px}
+.cta h3{margin:0 0 4px}.cta p{margin:0;color:var(--tx2)}
+.cab{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:34px}
+.cab h2{margin:0}
 
-/* Parrilla */
+/* Tarjetas de canción */
+.rejilla{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:14px}
+.tc{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column}
+.tc .portada{aspect-ratio:1/1;position:relative;display:grid;place-items:center;font-family:var(--f2);font-size:46px;font-weight:700;color:rgba(255,255,255,.85);text-decoration:none}
+.tc .play{position:absolute;right:10px;bottom:10px;width:46px;height:46px;border-radius:50%;border:0;background:var(--tx);color:var(--bg);display:grid;place-items:center;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+.tc .play svg{width:20px;height:20px}
+.tc .info{padding:12px 14px 14px}
+.tc .info a{color:var(--tx);text-decoration:none}
+.tc .info .a a{color:var(--tx3)}
+.tc .met{display:flex;gap:12px;color:var(--tx3);font-size:13px;margin-top:6px}
+.filtros{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
+.filtros input,.filtros select{max-width:280px}
+
+/* Ficha y perfil */
+.ficha{display:grid;grid-template-columns:300px minmax(0,1fr);gap:26px;align-items:start}
+.ficha > *{min-width:0}
+@media (max-width:760px){.ficha{grid-template-columns:minmax(0,1fr)}.ficha .portada{max-width:320px}}
+.ficha .portada{aspect-ratio:1/1;border-radius:20px;display:grid;place-items:center;font-family:var(--f2);font-size:90px;font-weight:700;color:rgba(255,255,255,.85)}
+.ficha h1{font-size:clamp(28px,4vw,42px);margin:6px 0}
+.acciones{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}
+.btn.mg.on{background:rgba(138,0,255,.25);border-color:var(--violeta2);color:#fff}
+.perfilcab{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.perfilcab .av{width:120px;height:120px;font-size:44px}
+.redes{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+
+/* Top 40 */
+.chart{display:grid;gap:8px}
+.row{display:grid;grid-template-columns:52px minmax(0,1fr) auto auto auto;gap:14px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 16px}
+.row.r2{grid-template-columns:minmax(0,1fr) auto}
+.pos{font-family:var(--f2);font-size:26px;font-weight:700;text-align:center}
+.row:first-child .pos{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.mov{font-size:13px;font-weight:600;min-width:52px;text-align:right}
+.up{color:var(--ok)}.down{color:var(--ko)}.eqm{color:var(--tx3)}.new{color:var(--a3)}
+.votos{color:var(--tx3);font-size:13px;text-align:right}
+.gtag{font-size:12px;color:var(--tx3);margin-left:6px}
+.row a{color:var(--tx);text-decoration:none}
+@media (max-width:620px){.row:not(.r2){grid-template-columns:34px minmax(0,1fr) auto auto!important;gap:8px;padding:10px 12px}.row .votos{display:none}.pos{font-size:20px}.mov{min-width:0}}
+
+/* Parrilla y locutores */
 .grid-prog{display:grid;gap:10px}
 .prog{display:grid;grid-template-columns:110px 1fr auto;gap:16px;align-items:center;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--c);border-radius:14px;padding:14px 16px}
 .prog.now{background:linear-gradient(90deg,rgba(255,255,255,.06),var(--card));border-color:var(--c)}
-.prog .h{font-family:"Space Grotesk",Inter,system-ui,sans-serif;font-weight:700;font-size:18px}
-.prog .n{font-weight:600}
-.prog .d{color:var(--tx3);font-size:14px}
-.prog .l{color:var(--tx2);font-size:14px;text-align:right}
+.prog .h{font-family:var(--f2);font-weight:700;font-size:18px}
+.prog .n{font-weight:600}.prog .d{color:var(--tx3);font-size:14px}.prog .l{color:var(--tx2);font-size:14px;text-align:right}
 @media (max-width:620px){.prog{grid-template-columns:78px 1fr}.prog .l{grid-column:2;text-align:left}}
-.nota{color:var(--tx3);font-size:13px;margin-top:14px}
-
-/* Locutores */
 .locs{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
-.loc .ava{width:64px;height:64px;font-size:24px;margin-bottom:12px}
-.loc h3{margin:0}
-.loc .rol{color:var(--tx2);font-size:14px;margin:2px 0 10px}
-.loc p{margin:0;color:var(--tx2);font-size:14px}
-.loc .hor{margin-top:12px;font-size:13px;color:var(--tx3)}
+.loc .av{width:64px;height:64px;font-size:24px;margin-bottom:12px}
+.loc h3{margin:0}.loc .rol{color:var(--tx2);font-size:14px;margin:2px 0 10px}.loc p{margin:0;color:var(--tx2);font-size:14px}.loc .hor{margin-top:12px;font-size:13px;color:var(--tx3)}
 
-/* Top 40 */
-.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
-.tabs button{border:1px solid var(--line);background:var(--card);color:var(--tx2);border-radius:999px;padding:7px 14px;font-size:14px}
-.tabs button.on{background:var(--tx);color:var(--bg);border-color:var(--tx)}
-.chart{display:grid;gap:8px}
-.row{display:grid;grid-template-columns:52px 1fr auto auto;gap:14px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 16px}
-.pos{font-family:"Space Grotesk",Inter,system-ui,sans-serif;font-size:26px;font-weight:700;text-align:center}
-.row:nth-child(1) .pos{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
-.mov{font-size:13px;font-weight:600;min-width:52px;text-align:right}
-.up{color:var(--ok)}.down{color:#ff6b75}.eqm{color:var(--tx3)}.new{color:var(--a3)}
-.votos{color:var(--tx3);font-size:13px;text-align:right}
-.gtag{font-size:12px;color:var(--tx3);margin-left:6px}
-@media (max-width:620px){.row:not(.r2){grid-template-columns:34px minmax(0,1fr) auto auto!important;gap:8px;padding:10px 12px}.row .votos{display:none}.pos{font-size:20px}.mov{min-width:0}}
-.pub{margin:18px auto 0;text-align:center}
-.pub .et{display:block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--tx3);margin-bottom:4px}
-.pub a{display:inline-block;line-height:0}.pub img{max-width:100%;height:auto;border-radius:10px;border:1px solid var(--line)}
-.pub .casa{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;border:1px dashed var(--line);border-radius:12px;padding:14px;color:var(--tx2);font-size:14px;text-decoration:none;line-height:1.4}
-.pub .casa b{color:var(--a3)}
-.pub[data-formato="cuadrado"]{max-width:300px}
-.codigo{font-size:28px;letter-spacing:10px;text-align:center;font-family:"Space Grotesk",Inter,sans-serif}
-.aviso{margin-bottom:14px;padding:10px 14px;border-radius:12px;background:rgba(108,99,255,.12);border:1px solid rgba(108,99,255,.35);color:var(--tx2);font-size:14px}
-
-/* Formulario */
-form{display:grid;gap:14px;max-width:760px}
+/* Formularios */
+form.f{display:grid;gap:14px;max-width:760px}
 .f2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 @media (max-width:620px){.f2{grid-template-columns:1fr}}
 label{display:block;font-size:14px;font-weight:600;margin-bottom:6px}
 label small{font-weight:400;color:var(--tx3)}
 input,select,textarea{width:100%;background:var(--bg2);border:1px solid var(--line);color:var(--tx);border-radius:12px;padding:11px 13px;font:inherit}
-input:focus,select:focus,textarea:focus{outline:2px solid var(--a3);outline-offset:1px}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--cian);outline-offset:1px}
 textarea{min-height:90px;resize:vertical}
 .chk{display:flex;gap:10px;align-items:flex-start;font-weight:400;font-size:14px;color:var(--tx2)}
 .chk input{width:18px;height:18px;margin-top:2px;flex:none;accent-color:var(--a3)}
-.warn{display:none;padding:10px 14px;border-radius:12px;background:rgba(230,57,70,.12);border:1px solid rgba(230,57,70,.4);color:#ffb3b9;font-size:14px}
-.result{display:none;margin-top:6px}
-.result pre{white-space:pre-wrap;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:14px;font-size:13px;color:var(--tx2);max-height:320px;overflow:auto}
+.opc{display:grid;gap:8px}
+.opc label{display:flex;gap:10px;align-items:flex-start;font-weight:400;font-size:14px;color:var(--tx2);background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:0;cursor:pointer}
+.opc input{width:18px;height:18px;margin-top:2px;flex:none;accent-color:var(--a3)}
+.opc b{color:var(--tx)}
+.bloque{border:1px solid var(--line);border-radius:16px;padding:16px;display:grid;gap:14px}
+.bloque h3{margin:0;font-size:17px}
+.codigo{font-size:28px;letter-spacing:10px;text-align:center;font-family:var(--f2)}
 .pasos{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:0 0 24px;max-width:860px}
 .paso{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;font-size:13px;color:var(--tx2)}
-.paso b{display:block;color:var(--tx);font-family:"Space Grotesk",Inter,system-ui,sans-serif;font-size:15px}
+.paso b{display:block;color:var(--tx);font-family:var(--f2);font-size:15px}
 @media (max-width:760px){.pasos{grid-template-columns:1fr 1fr}}
+.oculto-bot{position:absolute;left:-9999px}
+.caja{max-width:480px}
 
-/* Info */
+/* Panel del usuario */
+.ptabs{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 20px;border-bottom:1px solid var(--line);padding-bottom:10px}
+.ptabs button{border:0;background:transparent;color:var(--tx2);padding:8px 14px;border-radius:10px;font-weight:600}
+.ptabs button.on{background:var(--card);color:var(--tx)}
+.grafico{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:16px}
+.grafico svg{width:100%;height:auto;display:block;margin-top:10px}
+.tabla{width:100%;border-collapse:collapse;font-size:14px}
+.tabla th,.tabla td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+.tabla th{color:var(--tx3);font-weight:500;font-size:13px}
+.tabla td.n{text-align:right;font-variant-numeric:tabular-nums}
+.scroll{overflow-x:auto}
+.avatarbox{display:flex;gap:16px;align-items:center}
+.avatarbox .av{width:88px;height:88px;font-size:32px}
+
+/* Tarifas */
+.tarifas{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.tarifa{display:flex;flex-direction:column;gap:8px}
+.tarifa .precio{font-family:var(--f2);font-size:32px;font-weight:700}
+.tarifa .precio small{font-size:14px;color:var(--tx3);font-weight:500}
+.tarifa p{margin:0;color:var(--tx2);font-size:14px;flex:1}
+.tarifa.sel{border-color:var(--cian);box-shadow:0 0 0 1px var(--cian)}
+
+/* Información */
 .info{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
-.info p{color:var(--tx2);font-size:15px;margin:0}
+.info p,.info li{color:var(--tx2);font-size:15px}
+.info p{margin:0}
+.info ul{margin:6px 0 0;padding-left:18px}
 
 /* Reproductor fijo */
-.player{position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(21,18,42,.94);backdrop-filter:blur(14px);border-top:1px solid var(--line);padding-bottom:var(--safe-b)}
+.player{position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(16,22,58,.96);backdrop-filter:blur(14px);border-top:1px solid var(--line);padding-bottom:var(--safe-b)}
 .pbar{display:flex;align-items:center;gap:14px;height:var(--player-h)}
-.pplay{width:52px;height:52px;border-radius:50%;border:0;background:var(--grad);display:grid;place-items:center;flex:none;color:#1a0d12}
+.pplay{width:52px;height:52px;border-radius:50%;border:0;background:var(--grad);display:grid;place-items:center;flex:none;color:#fff}
 .pplay svg{width:24px;height:24px}
 .pinfo{min-width:0;flex:1;display:flex;align-items:center;gap:12px}
 .pinfo .cov{width:52px;height:52px}
 .ptxt{min-width:0}
-.ptxt .t{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ptxt .a{color:var(--tx3);font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ptxt .t{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ptxt .a{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pvol{display:flex;align-items:center;gap:8px;color:var(--tx3)}
 .pvol input{width:110px;padding:0;accent-color:var(--a3)}
-@media (max-width:620px){.pvol{display:none}}
-.live{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;letter-spacing:.06em;color:#ff6b75}
+.prog-carta{width:160px;padding:0;accent-color:var(--a3)}
+@media (max-width:620px){.pvol,.prog-carta{display:none}}
+.live{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;letter-spacing:.06em;color:#ff6b75;white-space:nowrap}
+.live.carta{color:var(--cian)}
+.eq{display:inline-flex;gap:3px;align-items:flex-end;height:16px}
+.eq i{width:3px;background:currentColor;border-radius:2px;animation:eq 1s infinite ease-in-out}
+.eq i:nth-child(2){animation-delay:.2s}.eq i:nth-child(3){animation-delay:.4s}.eq i:nth-child(4){animation-delay:.1s}
+@keyframes eq{0%,100%{height:4px}50%{height:16px}}
+.paused .eq i{animation:none;height:4px}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--player-h) + var(--safe-b) + 16px);background:var(--tx);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:14px;font-weight:500;opacity:0;pointer-events:none;transition:.25s;z-index:40;max-width:90vw;text-align:center}
 .toast.on{opacity:1}
 footer{color:var(--tx3);font-size:13px;padding:30px 0 10px;text-align:center}
-.ios{display:none;margin-top:10px;font-size:13px;color:var(--tx3)}
+footer a{color:var(--tx3)}
+
 </style>
 </head>
 <body>
-
 <header>
   <div class="wrap hbar">
-    <a class="logo" href="#directo" aria-label="Inicio">
-      <svg width="34" height="34" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="#1b1735"/><path d="M14 30a18 18 0 0 1 36 0" stroke="#ffd60a" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M20 30a12 12 0 0 1 24 0" stroke="#ff8a3d" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M26 30a6 6 0 0 1 12 0" stroke="#ff3d81" stroke-width="3.5" fill="none" stroke-linecap="round"/><circle cx="32" cy="32" r="3.5" fill="#fff"/><text x="32" y="53" text-anchor="middle" font-family="Space Grotesk,Arial" font-weight="700" font-size="13" fill="#fff">AI</text></svg>
-      <span id="marca">AI Radio Global</span>
-    </a>
+    <a class="logo" href="#directo" aria-label="Crazy rAdIo, inicio"><img src="favicon.svg" width="36" height="36" alt=""><img class="wm" src="wordmark_blanco.svg" alt="crazy rAdIo" width="133" height="26"></a>
     <nav id="menu">
       <a href="#directo">En directo</a>
+      <a href="#explorar">Explorar</a>
+      <a href="#top40">Top 40</a>
       <a href="#parrilla">Programación</a>
       <a href="#locutores">Locutores</a>
-      <a href="#top40">Top 40</a>
-      <a href="#enviar">Envía tu canción</a>
-      <a href="#cuenta" id="navCuenta">Mi cuenta</a>
+      <a href="#enviar">Sube tu canción</a>
       <a href="#anunciate">Anúnciate</a>
-      <a href="#info">Información</a>
     </nav>
-    <button id="btnInstalar" type="button">Instalar app</button>
+    <div class="usu">
+      <button id="btnInstalar" type="button">Instalar app</button>
+      <a class="btn pri peq" href="#entrar" id="btnEntrar">Entrar</a>
+      <a class="chipU oculto" href="#panel" id="chipUsuario"></a>
+    </div>
   </div>
 </header>
 
 <main class="wrap">
-  <div class="demo" id="demo"><b>Modo demostración.</b> La emisión real se activará cuando el servidor de la radio esté en marcha. Programación, locutores y lista son de ejemplo.</div>
-
+  <div class="demo" id="demo"><b>Modo demostración.</b> La emisión y las cuentas se activarán cuando el servidor de la radio esté en marcha. Las canciones que ves son de ejemplo.</div>
   <div class="pub" data-formato="banner"></div>
 
   <!-- EN DIRECTO -->
@@ -283,10 +353,7 @@ footer{color:var(--tx3);font-size:13px;padding:30px 0 10px;text-align:center}
         <div class="gen" id="progGenero"></div>
         <p class="sub" id="progDesc" style="margin:10px 0 0"></p>
         <div class="locline" id="progLoc"></div>
-        <button class="bigplay" id="bigplay" type="button" aria-label="Escuchar en directo">
-          <svg viewBox="0 0 24 24" fill="currentColor" id="bigicon"><path d="M8 5v14l11-7z"/></svg>
-          <span id="bigtxt">Escuchar en directo</span>
-        </button>
+        <button class="bigplay" id="bigplay" type="button"><svg viewBox="0 0 24 24" fill="currentColor" id="bigicon"><path d="M8 5v14l11-7z"/></svg><span id="bigtxt">Escuchar en directo</span></button>
       </div>
       <div class="card side">
         <h3>Sonando ahora</h3>
@@ -301,19 +368,49 @@ footer{color:var(--tx3);font-size:13px;padding:30px 0 10px;text-align:center}
       <div class="stat"><b>24/7</b><span>emisión continua</span></div>
       <div class="stat"><b id="stProgs">9</b><span>programas al día</span></div>
     </div>
+    <div class="cab"><h2>Recién llegadas</h2><a href="#explorar">Ver todas →</a></div>
+    <div class="rejilla" id="recientes" style="margin-top:14px"></div>
     <div class="pub" data-formato="cuadrado"></div>
     <div class="cta">
-      <div><h3>¿Creas música con IA?</h3><p>Envía tu canción. Si pasa la selección, sonará en la radio y entrará en el Top 40.</p></div>
-      <a class="btn pri" href="#enviar">Envía tu canción</a>
+      <div><h3>¿Creas música con IA?</h3><p>Sube tu canción. Si pasa la selección, sonará en la radio, se podrá escuchar a la carta y competirá en el Top 40.</p></div>
+      <a class="btn pri" href="#enviar">Sube tu canción</a>
     </div>
+  </section>
+
+  <!-- EXPLORAR -->
+  <section class="vista" id="v-explorar">
+    <h2>Explorar</h2>
+    <p class="sub">Todas las canciones que suenan en Crazy rAdIo. Escúchalas cuando quieras, dales me gusta y descubre a sus creadores.</p>
+    <div class="filtros">
+      <input id="buscar" type="search" placeholder="Buscar canción o artista" aria-label="Buscar">
+      <select id="orden" aria-label="Ordenar"><option value="recientes">Más recientes</option><option value="populares">Más populares</option></select>
+    </div>
+    <div class="tabs" id="generos"></div>
+    <div class="rejilla" id="catalogo"></div>
+  </section>
+
+  <!-- FICHA DE CANCIÓN -->
+  <section class="vista" id="v-cancion"><div id="fichaCancion"></div></section>
+
+  <!-- PERFIL DE ARTISTA -->
+  <section class="vista" id="v-artista"><div id="fichaArtista"></div></section>
+
+  <!-- TOP 40 -->
+  <section class="vista" id="v-top40">
+    <h2>Top 40</h2>
+    <p class="sub">La lista combina votos de la semana (40 %), escuchas en la radio y a la carta (35 %) y valoración editorial (25 %). Las posiciones no se pueden comprar.</p>
+    <div class="aviso" id="avisoTop">Lista de <b>ejemplo</b> con canciones y artistas ficticios.</div>
+    <div class="tabs" id="tabsTop"></div>
+    <div class="chart" id="chart"></div>
+    <div class="pub" data-formato="banner"></div>
   </section>
 
   <!-- PROGRAMACIÓN -->
   <section class="vista" id="v-parrilla">
     <h2>Programación</h2>
-    <p class="sub">Todos los días, hora de España peninsular (<span id="tzTxt"></span>). Hora en la emisora ahora: <b id="horaEmisora"></b>.</p>
+    <p class="sub">Todos los días, hora de España peninsular. Hora en la emisora ahora: <b id="horaEmisora"></b>.</p>
     <div class="grid-prog" id="parrilla"></div>
-    <p class="nota">Los programas los conducen locutores virtuales generados con inteligencia artificial. El programa para adultos se emite a partir de las 22:00.</p>
+    <p class="nota">Los programas los conducen locutores virtuales creados con inteligencia artificial. El programa para adultos se emite de 22:00 a 24:00.</p>
   </section>
 
   <!-- LOCUTORES -->
@@ -323,158 +420,257 @@ footer{color:var(--tx3);font-size:13px;padding:30px 0 10px;text-align:center}
     <div class="locs" id="locs"></div>
   </section>
 
-  <!-- TOP 40 -->
-  <section class="vista" id="v-top40">
-    <h2>Top 40 AI</h2>
-    <p class="sub">La lista combina votos válidos (40 %), escuchas reales (35 %) y valoración editorial (25 %). Las posiciones no se pueden comprar.</p>
-    <div class="aviso" id="avisoTop">Lista de <b>ejemplo</b> con canciones y artistas ficticios. Las votaciones reales empezarán cuando se abra la comunidad de creadores.</div>
-    <div class="tabs" id="tabs"></div>
-    <div class="chart" id="chart"></div>
-    <div class="pub" data-formato="banner"></div>
-    <div id="bloqueNov" style="display:none;margin-top:34px">
-      <h2>Vota las novedades</h2>
-      <p class="sub">Canciones recién admitidas. Tu voto cuenta para el Top 40 de la semana: un voto por canción y semana.</p>
-      <div class="chart" id="novedades"></div>
+  <!-- SUBIR CANCIÓN -->
+  <section class="vista" id="v-enviar">
+    <h2>Sube tu canción</h2>
+    <p class="sub">Aceptamos canciones creadas total o parcialmente con IA, siempre que <b>sean tuyas</b> según las condiciones de la herramienta que usaste. Nuestra IA analiza la calidad, la letra y el lenguaje, y propone en qué programa encaja; después la revisa una persona.</p>
+    <div class="pasos">
+      <div class="paso"><b>1 · Enviada</b>Recibimos la canción y tu declaración.</div>
+      <div class="paso"><b>2 · Analizada</b>Calidad, letra y lenguaje.</div>
+      <div class="paso"><b>3 · Revisada</b>Derechos y encaje.</div>
+      <div class="paso"><b>4 · En antena</b>Suena en su programa y a la carta.</div>
+      <div class="paso"><b>5 · Top 40</b>Recibe me gusta y votos.</div>
+    </div>
+    <div class="aviso" id="puertaEnvio">Para subir canciones necesitas una cuenta con el correo verificado. Es gratis. <a href="#entrar">Entra o crea tu cuenta</a>.</div>
+    <form class="f oculto" id="fEnvio" novalidate>
+      <p class="nota" id="comoQuien" style="margin:0"></p>
+      <div class="bloque">
+        <h3>La canción</h3>
+        <div class="f2">
+          <div><label for="fTitulo">Título</label><input id="fTitulo" required maxlength="120"></div>
+          <div><label for="fArtista">Nombre artístico <small>(como aparecerá)</small></label><input id="fArtista" required maxlength="80"></div>
+        </div>
+        <div class="f2">
+          <div><label for="fGenero">Género</label><select id="fGenero" required><option value="">Elige…</option><option>Pop / Dance</option><option>Rock / Indie / Metal</option><option>Chillout / Electrónica</option><option>Rap / Trap / Urbano</option><option>Humor / Sátira</option><option>Otro</option></select></div>
+          <div><label for="fIdioma">Idioma de la letra</label><select id="fIdioma" required><option value="">Elige…</option><option>Español</option><option>Inglés</option><option>Gallego</option><option>Catalán</option><option>Euskera</option><option>Portugués</option><option>Francés</option><option>Instrumental</option><option>Otro</option></select></div>
+        </div>
+        <div><label for="fArchivo">Archivo de audio <small>(MP3, WAV, FLAC, M4A u OGG · máximo 25 MB)</small></label><input id="fArchivo" type="file" accept="audio/*,.mp3,.wav,.flac,.m4a,.ogg" required></div>
+        <div class="f2">
+          <div><label for="fOrigen">Desde dónde <small>(opcional)</small></label><input id="fOrigen" maxlength="60" placeholder="Vigo, España"></div>
+          <div><label for="fLetra">¿Quién escribió la letra?</label><select id="fLetra" required><option value="">Elige…</option><option>La escribí yo</option><option>Generada por la IA</option><option>Mixta (yo + IA)</option><option>Es de otra persona, con su permiso</option><option>Instrumental, sin letra</option></select></div>
+        </div>
+        <div><label for="fNotas">Sobre la canción <small>(opcional · se verá en su ficha y la puede leer el locutor)</small></label><textarea id="fNotas" maxlength="600"></textarea></div>
+      </div>
+
+      <div class="bloque">
+        <h3>Derechos: ¿de quién es la canción?</h3>
+        <p class="nota" style="margin:0">Las herramientas de IA deciden en sus condiciones a quién pertenece cada canción. Solo podemos emitir las que son tuyas.</p>
+        <div class="f2">
+          <div><label for="fHerr">Herramienta</label><select id="fHerr" required><option value="">Elige…</option><option>Suno</option><option>Udio</option><option>ElevenLabs Music</option><option value="Otra">Otra herramienta</option><option value="Ninguna">Ninguna: composición propia</option></select></div>
+          <div><label for="fPlan">Plan con el que la generaste</label><select id="fPlan" required><option value="">Elige primero la herramienta</option></select></div>
+        </div>
+        <div><label for="fDescarga">Fecha en que la descargaste <small>(desde la propia herramienta)</small></label><input id="fDescarga" type="date" required></div>
+        <div class="opc" id="opcTitularidad">
+          <label><input type="radio" name="tit" value="mia"> <span><b>Es mía.</b> La generé con un plan de pago cuyas condiciones me ceden la titularidad y permiten el uso comercial.</span></label>
+          <label><input type="radio" name="tit" value="propia"> <span><b>Es una composición mía</b> (sin IA generativa o con IA solo como apoyo).</span></label>
+          <label><input type="radio" name="tit" value="plataforma"> <span><b>Es de la plataforma.</b> La generé con un plan gratuito o la plataforma conserva los derechos.</span></label>
+          <label><input type="radio" name="tit" value="nose"> <span><b>No lo sé.</b></span></label>
+        </div>
+        <div class="aviso ko oculto" id="avisoDerechos"></div>
+        <div class="aviso oculto" id="infoDerechos"></div>
+      </div>
+
+      <div class="bloque">
+        <h3>Autorizaciones</h3>
+        <label class="chk"><input type="checkbox" id="c1"> Declaro que la canción es mía según las condiciones de la herramienta, que no contiene material de terceros sin permiso y que no imita la voz de personas reales.</label>
+        <label class="chk"><input type="checkbox" id="c2"> La descargué por el canal oficial de la herramienta (no con programas de terceros).</label>
+        <label class="chk"><input type="checkbox" id="c3"> Autorizo gratis su emisión en la radio online y en sus programas, y que se mencione mi nombre artístico.</label>
+        <label class="chk"><input type="checkbox" id="c4"> Autorizo que se pueda escuchar a la carta en la web y en la app, y que reciba me gusta y votos.</label>
+        <label class="chk"><input type="checkbox" id="c5"> Soy mayor de 18 años o cuento con autorización de mi padre, madre o tutor.</label>
+        <label class="chk"><input type="checkbox" id="c6"> Acepto las <a href="#info">condiciones de participación y la política de privacidad</a>.</label>
+      </div>
+      <div class="oculto-bot" aria-hidden="true"><input id="fWeb" tabindex="-1" autocomplete="off"></div>
+      <div><button class="btn pri" type="submit" id="btnEnviar">Enviar canción</button> <span id="progreso" class="nota" style="margin-left:10px"></span></div>
+      <div id="resEnvio"></div>
+    </form>
+  </section>
+
+  <!-- ENTRAR / REGISTRO -->
+  <section class="vista" id="v-entrar">
+    <div class="caja">
+      <div class="tabs" id="tabsEntrar"><button type="button" data-t="entrar" class="on">Entrar</button><button type="button" data-t="registro">Crear cuenta</button></div>
+      <form class="f" id="fEntrar" novalidate>
+        <h2>Entrar</h2>
+        <div><label for="eUsuario">Correo o nick</label><input id="eUsuario" required autocomplete="username"></div>
+        <div><label for="eClave">Contraseña</label><input id="eClave" type="password" required autocomplete="current-password"></div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><button class="btn pri" type="submit">Entrar</button><a href="#" id="lnkOlvido">¿Has olvidado la contraseña?</a></div>
+      </form>
+      <form class="f oculto" id="fRegistro" novalidate>
+        <h2>Crear cuenta</h2>
+        <p class="sub" style="margin:0">Gratis. Te enviaremos un código para verificar tu correo.</p>
+        <div><label for="rEmail">Correo electrónico</label><input id="rEmail" type="email" required autocomplete="email" maxlength="120"></div>
+        <div class="f2">
+          <div><label for="rNick">Nick <small>(tu dirección: #artista-nick)</small></label><input id="rNick" required maxlength="30" autocomplete="off" pattern="[a-z0-9][a-z0-9_.\-]{2,29}" placeholder="neonpulse"></div>
+          <div><label for="rArtista">Nombre artístico</label><input id="rArtista" maxlength="80" placeholder="Neon Pulse"></div>
+        </div>
+        <div><label for="rClave">Contraseña <small>(mínimo 8 caracteres, con letras y números)</small></label><input id="rClave" type="password" required autocomplete="new-password" minlength="8"></div>
+        <label class="chk"><input type="checkbox" id="rAcepto"> Acepto las condiciones de uso y la política de privacidad.</label>
+        <div><button class="btn pri" type="submit">Crear cuenta</button></div>
+      </form>
+      <form class="f oculto" id="fVerificar" novalidate>
+        <h2>Revisa tu correo</h2>
+        <p class="sub" id="txtVerificar" style="margin:0"></p>
+        <input id="vCodigo" class="codigo" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="······">
+        <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn pri" type="submit">Verificar</button><button class="btn" type="button" id="btnReenviar">Reenviar código</button></div>
+      </form>
+      <form class="f oculto" id="fRecuperar" novalidate>
+        <h2>Recuperar la contraseña</h2>
+        <div><label for="kEmail2">Correo de tu cuenta</label><input id="kEmail2" type="email" required></div>
+        <div id="bloqueNuevaClave" class="oculto" style="display:grid;gap:14px">
+          <p class="sub" style="margin:0" id="txtRecuperar"></p>
+          <input id="kCodigo" class="codigo" inputmode="numeric" maxlength="6" placeholder="······">
+          <div><label for="kClave">Contraseña nueva</label><input id="kClave" type="password" autocomplete="new-password" minlength="8"></div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn pri" type="submit" id="btnRecuperar">Enviarme un código</button><button class="btn" type="button" id="btnVolver">Volver</button></div>
+      </form>
     </div>
   </section>
 
-  <!-- MI CUENTA -->
-  <section class="vista" id="v-cuenta">
-    <div id="cuentaFuera">
-      <h2>Entra o regístrate</h2>
-      <p class="sub">Sin contraseñas: te enviamos un código de 6 cifras a tu correo. Así verificamos que el correo es tuyo. Con tu cuenta puedes enviar canciones, seguir su revisión y votar en el Top 40.</p>
-      <form id="fEntrar" novalidate style="max-width:460px">
-        <div><label for="eEmail">Correo electrónico</label><input id="eEmail" type="email" required maxlength="120" autocomplete="email"></div>
-        <div id="bloqueArtista" style="display:none"><label for="eArtista">Es tu primera vez: ¿con qué nombre artístico apareces? <small>(lo podrás cambiar)</small></label><input id="eArtista" maxlength="80"></div>
-        <div><button class="btn pri" type="submit" id="btnCodigo">Enviarme el código</button></div>
-      </form>
-      <form id="fCodigo" novalidate style="max-width:460px;display:none">
-        <p class="sub" id="txtCodigo" style="margin:0"></p>
-        <input id="eCodigo" class="codigo" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="······">
-        <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn pri" type="submit">Entrar</button><button class="btn" type="button" id="btnOtroCorreo">Usar otro correo</button></div>
+  <!-- PANEL DEL USUARIO -->
+  <section class="vista" id="v-panel">
+    <div class="perfilcab" id="panelCab"></div>
+    <div class="ptabs" id="ptabs">
+      <button type="button" data-p="resumen" class="on">Resumen</button>
+      <button type="button" data-p="canciones">Mis canciones</button>
+      <button type="button" data-p="perfil">Perfil</button>
+      <button type="button" data-p="cuenta">Cuenta y seguridad</button>
+    </div>
+    <div id="p-resumen">
+      <div class="stats" id="kpis" style="margin-top:0"></div>
+      <div class="grafico">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><b>Últimos 30 días</b>
+          <div class="tabs" id="tabsMetrica" style="margin:0"><button type="button" data-m="reproducciones" class="on">Reproducciones</button><button type="button" data-m="visitas">Visitas</button><button type="button" data-m="megusta">Me gusta</button><button type="button" data-m="minutos_radio">Minutos en radio</button></div></div>
+        <div id="grafico"></div>
+      </div>
+    </div>
+    <div id="p-canciones" class="oculto">
+      <div class="scroll"><table class="tabla" id="tablaCanciones"></table></div>
+      <div id="informeEnvio" style="margin-top:18px;max-width:760px"></div>
+      <p style="margin-top:20px"><a class="btn pri" href="#enviar">Subir otra canción</a></p>
+    </div>
+    <div id="p-perfil" class="oculto">
+      <form class="f" id="fPerfil" novalidate>
+        <div class="avatarbox"><div class="av" id="avPerfil"></div><div><label for="pAvatar">Foto o logo <small>(JPG o PNG, se recorta en cuadrado)</small></label><input id="pAvatar" type="file" accept="image/*"></div></div>
+        <div class="f2">
+          <div><label for="pNick">Nick</label><input id="pNick" required maxlength="30" pattern="[a-z0-9][a-z0-9_.\-]{2,29}"></div>
+          <div><label for="pArtista">Nombre artístico</label><input id="pArtista" maxlength="80"></div>
+        </div>
+        <div><label for="pCiudad">Ciudad y país</label><input id="pCiudad" maxlength="80"></div>
+        <div><label for="pBio">Biografía <small>(máximo 500 caracteres)</small></label><textarea id="pBio" maxlength="500"></textarea></div>
+        <div class="bloque"><h3>Enlaces</h3><div class="f2" id="pEnlaces"></div></div>
+        <label class="chk"><input type="checkbox" id="pPublico"> Mostrar mi perfil público con mis canciones</label>
+        <div><button class="btn pri" type="submit">Guardar perfil</button> <a id="verPerfil" href="#">Ver mi perfil público</a></div>
       </form>
     </div>
-    <div id="cuentaDentro" style="display:none">
-      <h2>Mi cuenta</h2>
-      <p class="sub" id="txtCuenta"></p>
-      <form id="fArtistaCuenta" style="display:grid;grid-template-columns:1fr auto;gap:10px;max-width:560px">
-        <input id="cArtista" maxlength="80" aria-label="Nombre artístico"><button class="btn" type="submit">Guardar nombre</button>
-      </form>
-      <h3 style="margin-top:26px">Mis canciones</h3>
-      <div class="chart" id="misEnvios"></div>
-      <div id="estadoEnvio" style="margin-top:18px;max-width:760px"></div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:28px">
-        <a class="btn pri" href="#enviar">Enviar otra canción</a>
-        <button class="btn" type="button" id="btnSalir">Cerrar sesión</button>
-        <button class="btn" type="button" id="btnBorrar" style="color:#ff6b75">Borrar mi cuenta</button>
+    <div id="p-cuenta" class="oculto">
+      <div class="f" style="display:grid;gap:18px;max-width:760px">
+        <form class="bloque" id="fEmail" novalidate>
+          <h3>Correo electrónico</h3>
+          <p class="nota" style="margin:0" id="txtEmailActual"></p>
+          <div class="f2"><div><label for="cNuevo">Correo nuevo</label><input id="cNuevo" type="email"></div><div><label for="cClaveEmail">Tu contraseña</label><input id="cClaveEmail" type="password" autocomplete="current-password"></div></div>
+          <div id="bloqueCodEmail" class="oculto"><label for="cCodigo">Código que te hemos enviado al correo nuevo</label><input id="cCodigo" class="codigo" inputmode="numeric" maxlength="6"></div>
+          <div><button class="btn" type="submit" id="btnEmail">Cambiar correo</button></div>
+        </form>
+        <form class="bloque" id="fClave" novalidate>
+          <h3>Contraseña</h3>
+          <div class="f2"><div><label for="cActual">Actual</label><input id="cActual" type="password" autocomplete="current-password"></div><div><label for="cNueva">Nueva</label><input id="cNueva" type="password" autocomplete="new-password" minlength="8"></div></div>
+          <div><button class="btn" type="submit">Cambiar contraseña</button></div>
+        </form>
+        <div class="bloque">
+          <h3>Avisos</h3>
+          <label class="chk"><input type="checkbox" id="cAvisos"> Recibir un correo cuando revisemos mis canciones</label>
+        </div>
+        <div class="bloque">
+          <h3>Sesión</h3>
+          <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" type="button" id="btnSalir">Cerrar sesión</button></div>
+        </div>
+        <form class="bloque" id="fBorrar" novalidate style="border-color:rgba(230,57,70,.4)">
+          <h3 style="color:var(--ko)">Borrar mi cuenta</h3>
+          <p class="nota" style="margin:0">Se borran tu cuenta, tu perfil, tus votos y me gusta, y las canciones que no se hayan admitido. Las canciones ya admitidas siguen sonando con tu nombre artístico, según la autorización que diste; puedes pedir que las retiremos escribiéndonos.</p>
+          <div><label for="bClave">Tu contraseña</label><input id="bClave" type="password" autocomplete="current-password"></div>
+          <div><button class="btn ko" type="submit">Borrar mi cuenta para siempre</button></div>
+        </form>
       </div>
     </div>
   </section>
 
   <!-- ANÚNCIATE -->
   <section class="vista" id="v-anunciate">
-    <h2>Anúnciate en la radio</h2>
-    <p class="sub">Llega a oyentes que descubren música nueva cada día, en la web, en el móvil y en el coche.</p>
-    <div class="info">
-      <div class="card"><h3>Banner en la web</h3><p>Formato horizontal 728×90 (se adapta al móvil) en la portada y en el Top 40. Pagas por periodo o por número de impresiones. Recibes un informe de impresiones y clics.</p></div>
-      <div class="card"><h3>Cuadrado 300×250</h3><p>Junto a la emisión en directo, la zona más vista de la web.</p></div>
-      <div class="card"><h3>Cuña de radio</h3><p>Tu anuncio en antena entre canciones. Nos mandas el audio o el texto y lo graba uno de nuestros locutores virtuales.</p></div>
-      <div class="card"><h3>Patrocinio de programa</h3><p>«AI Rock Station, con el patrocinio de…»: menciones del locutor y presencia en la web durante toda la franja.</p></div>
-    </div>
-    <h3 style="margin-top:28px">Pide información</h3>
-    <form id="fContacto" novalidate style="max-width:760px">
-      <div class="f2">
-        <div><label for="kNombre">Nombre</label><input id="kNombre" required maxlength="80"></div>
-        <div><label for="kEmpresa">Empresa</label><input id="kEmpresa" maxlength="120"></div>
+    <h2>Anúnciate en Crazy rAdIo</h2>
+    <p class="sub">Llega a oyentes que descubren música nueva cada día, en la web, en el móvil y en el coche. Contrata en dos minutos y paga con tarjeta. Revisamos tu anuncio y lo activamos en menos de 48 horas laborables.</p>
+    <div class="tarifas" id="tarifas"></div>
+    <p class="nota">Precios de lanzamiento, sin IVA (21 %). Recibes la factura por correo.</p>
+    <form class="f oculto" id="fPedido" novalidate style="margin-top:22px">
+      <h3 id="tituloPedido"></h3>
+      <div class="bloque oculto" id="bqBanner">
+        <div><label for="oUrl">Web a la que llevará el anuncio</label><input id="oUrl" type="url" placeholder="https://"></div>
+        <div><label for="oImagen">Imagen del anuncio <small id="medidas"></small></label><input id="oImagen" type="file" accept="image/png,image/jpeg,image/webp,image/gif"></div>
       </div>
-      <div class="f2">
-        <div><label for="kEmail">Correo electrónico</label><input id="kEmail" type="email" required maxlength="120"></div>
-        <div><label for="kTipo">Me interesa</label><select id="kTipo"><option>Banner en la web</option><option>Cuña de radio</option><option>Patrocinio de programa</option><option>Otra colaboración</option></select></div>
+      <div class="bloque oculto" id="bqCuna">
+        <div><label for="oAudio">Tu cuña en audio <small>(opcional · MP3/WAV, unos 20 segundos)</small></label><input id="oAudio" type="file" accept="audio/*"></div>
+        <div><label for="oTexto">…o el texto para que lo grabe un locutor <small>(unas 50 palabras)</small></label><textarea id="oTexto" maxlength="600"></textarea></div>
+        <div><label for="oLocutor">Voz</label><select id="oLocutor"></select></div>
       </div>
+      <div class="bloque oculto" id="bqPatrocinio">
+        <div><label for="oPrograma">Programa que quieres patrocinar</label><select id="oPrograma"></select></div>
+        <div><label for="oUrl2">Tu web</label><input id="oUrl2" type="url" placeholder="https://"></div>
+      </div>
+      <div class="bloque">
+        <h3>Datos de facturación</h3>
+        <div class="f2"><div><label for="oEmpresa">Empresa o nombre</label><input id="oEmpresa" required maxlength="120"></div><div><label for="oNif">NIF / CIF</label><input id="oNif" required maxlength="20"></div></div>
+        <div><label for="oDireccion">Dirección</label><input id="oDireccion" maxlength="200"></div>
+        <div class="f2"><div><label for="oContacto">Persona de contacto</label><input id="oContacto" maxlength="80"></div><div><label for="oTelefono">Teléfono</label><input id="oTelefono" maxlength="30"></div></div>
+        <div><label for="oEmail">Correo</label><input id="oEmail" type="email" required maxlength="120"></div>
+      </div>
+      <label class="chk"><input type="checkbox" id="oAcepto"> Acepto las condiciones de contratación: el anuncio se revisa antes de publicarse (no aceptamos contenidos ilegales, engañosos, de apuestas o para adultos fuera del horario +18) y, si no se aprueba, se devuelve el importe.</label>
+      <div class="oculto-bot" aria-hidden="true"><input id="oWeb" tabindex="-1" autocomplete="off"></div>
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><button class="btn pri" type="submit" id="btnPagar">Ir al pago</button><span class="nota" id="resumenPedido"></span></div>
+      <div id="resPedido"></div>
+    </form>
+    <h3 style="margin-top:34px">¿Buscas otra cosa?</h3>
+    <form class="f" id="fContacto" novalidate>
+      <div class="f2"><div><label for="kNombre">Nombre</label><input id="kNombre" required maxlength="80"></div><div><label for="kEmpresa">Empresa</label><input id="kEmpresa" maxlength="120"></div></div>
+      <div class="f2"><div><label for="kEmail">Correo</label><input id="kEmail" type="email" required maxlength="120"></div><div><label for="kTipo">Tema</label><select id="kTipo"><option>Campaña a medida</option><option>Colaboración</option><option>Prensa</option><option>Otro</option></select></div></div>
       <div><label for="kMensaje">Mensaje</label><textarea id="kMensaje" required maxlength="2000"></textarea></div>
-      <div style="position:absolute;left:-9999px" aria-hidden="true"><input id="kWeb" tabindex="-1" autocomplete="off"></div>
-      <div><button class="btn pri" type="submit">Enviar</button></div>
-      <div class="result" id="resContacto"></div>
+      <div class="oculto-bot" aria-hidden="true"><input id="kWeb" tabindex="-1" autocomplete="off"></div>
+      <div><button class="btn" type="submit">Enviar mensaje</button></div>
+      <div id="resContacto"></div>
     </form>
   </section>
 
-  <!-- ENVIAR -->
-  <section class="vista" id="v-enviar">
-    <h2>Envía tu canción</h2>
-    <p class="sub">Aceptamos canciones creadas total o parcialmente con Suno, Udio u otras herramientas de IA, siempre que tengas derecho a difundirlas.</p>
-    <div class="pasos">
-      <div class="paso"><b>1 · Enviada</b>Recibimos tu canción y tu declaración.</div>
-      <div class="paso"><b>2 · En revisión</b>Calidad, derechos y contenido.</div>
-      <div class="paso"><b>3 · Admitida</b>Entra en el catálogo.</div>
-      <div class="paso"><b>4 · En emisión</b>Suena en uno o varios programas.</div>
-      <div class="paso"><b>5 · Clasificada</b>Participa en el Top 40.</div>
+  <!-- PAGO CORRECTO -->
+  <section class="vista" id="v-pago-ok">
+    <div class="card" style="max-width:640px">
+      <h2>¡Pago recibido!</h2>
+      <p class="sub" style="margin:0">Gracias por anunciarte en Crazy rAdIo. Revisamos tu anuncio y lo activamos en menos de 48 horas laborables; te avisaremos por correo. La factura te llega aparte desde la pasarela de pago.</p>
+      <p style="margin-top:18px"><a class="btn pri" href="#directo">Volver a la radio</a></p>
     </div>
-    <div class="aviso" id="puertaEnvio" style="display:none">Para enviar canciones necesitas una cuenta con el correo verificado. Es gratis y no hay contraseñas. <a href="#cuenta">Entra o regístrate</a>.</div>
-    <form id="form" novalidate>
-      <p class="nota" id="comoQuien" style="margin:0"></p>
-      <div><label for="fArtista">Nombre artístico para esta canción</label><input id="fArtista" required maxlength="80"></div>
-      <div class="f2">
-        <div><label for="fTitulo">Título de la canción</label><input id="fTitulo" required maxlength="120"></div>
-        <div><label for="fGenero">Género</label>
-          <select id="fGenero" required>
-            <option value="">Elige…</option><option>Pop / Dance</option><option>Rock / Indie / Metal</option><option>Chillout / Electrónica</option><option>Rap / Trap / Urbano</option><option>Humor / Sátira</option><option>Otro</option>
-          </select></div>
-      </div>
-      <div class="f2">
-        <div><label for="fIdioma">Idioma de la letra</label>
-          <select id="fIdioma" required><option value="">Elige…</option><option>Español</option><option>Inglés</option><option>Gallego</option><option>Catalán</option><option>Euskera</option><option>Portugués</option><option>Francés</option><option>Instrumental</option><option>Otro</option></select></div>
-        <div><label for="fHerr">Herramienta utilizada</label>
-          <select id="fHerr" required><option value="">Elige…</option><option>Suno</option><option>Udio</option><option>ElevenLabs Music</option><option>Otra</option></select></div>
-      </div>
-      <div class="f2">
-        <div><label for="fPlan">Plan con el que la generaste</label>
-          <select id="fPlan" required><option value="">Elige…</option><option value="pago">De pago (Pro, Premier u otro)</option><option value="gratis">Gratuito</option><option value="nose">No lo sé</option></select></div>
-        <div><label for="fDescarga">Fecha de descarga <small>(desde la propia herramienta)</small></label><input id="fDescarga" type="date" required></div>
-      </div>
-      <div class="warn" id="warnPlan">Las canciones generadas con planes gratuitos no tienen autorización de uso comercial en Suno y en otras herramientas, así que no podemos emitirlas. Si la regeneraste o descargaste con un plan de pago, elige esa opción.</div>
-      <div><label for="fArchivo">Archivo de audio <small>(MP3, WAV, FLAC, M4A u OGG · máximo 25 MB)</small></label>
-        <input id="fArchivo" type="file" accept="audio/*,.mp3,.wav,.flac,.m4a,.ogg" required></div>
-      <div><label for="fOrigen">Desde dónde la envías <small>(ciudad y país, opcional: el locutor puede mencionarlo)</small></label><input id="fOrigen" maxlength="60" placeholder="Vigo, España"></div>
-      <div style="position:absolute;left:-9999px" aria-hidden="true"><label for="fWeb">No rellenar</label><input id="fWeb" tabindex="-1" autocomplete="off"></div>
-      <p class="nota" style="margin:0">Al enviarla, nuestra IA analiza la calidad del audio, transcribe la letra, detecta el lenguaje explícito y propone el programa. Después la revisa una persona.</p>
-      <div><label for="fLetra">¿Quién escribió la letra?</label>
-        <select id="fLetra" required><option value="">Elige…</option><option>La escribí yo</option><option>Generada por la IA</option><option>Mixta (yo + IA)</option><option>Es de otra persona, con su permiso</option><option>Instrumental, sin letra</option></select></div>
-      <div><label for="fNotas">Cuéntanos algo de la canción <small>(opcional, puede usarlo el locutor)</small></label><textarea id="fNotas" maxlength="600"></textarea></div>
-      <label class="chk"><input type="checkbox" id="c1" required> Declaro que tengo los derechos necesarios para difundir esta canción, que la descargué por el canal oficial de la herramienta y que no contiene material de terceros sin autorización.</label>
-      <label class="chk"><input type="checkbox" id="c2" required> Autorizo su emisión gratuita en la radio online, en sus programas y en las listas, y que se mencione mi nombre artístico.</label>
-      <label class="chk"><input type="checkbox" id="c3" required> Soy mayor de 18 años o cuento con autorización de mi padre, madre o tutor.</label>
-      <label class="chk"><input type="checkbox" id="c4" required> Acepto las condiciones de participación y la política de privacidad.</label>
-      <div><button class="btn pri" type="submit" id="btnEnviar">Enviar canción</button> <span id="progreso" style="color:var(--tx3);font-size:14px;margin-left:10px"></span></div>
-      <div class="result" id="result"></div>
-    </form>
   </section>
 
   <!-- INFORMACIÓN -->
   <section class="vista" id="v-info">
     <h2>Información</h2>
     <div class="info">
-      <div class="card"><h3>Qué es</h3><p><span class="nm"></span> es una radio online que emite las 24 horas canciones creadas con ayuda de inteligencia artificial por creadores de todo el mundo, con programas por géneros y una lista de éxitos votada por los oyentes.</p></div>
-      <div class="card"><h3>Transparencia sobre la IA</h3><p>Las canciones están generadas total o parcialmente con IA. Los locutores son personajes virtuales con voces sintéticas: no son personas reales y no imitan a nadie. No emitimos entrevistas ni declaraciones inventadas.</p></div>
-      <div class="card"><h3>Contenido para adultos</h3><p>El programa AI Sin Filtros puede incluir lenguaje explícito. Se emite a partir de las 22:00 y se identifica con la etiqueta +18.</p></div>
-      <div class="card"><h3>Escúchala en el móvil y en el coche</h3><p>Pulsa «Instalar app» (Android y ordenador) o, en iPhone, Compartir → «Añadir a pantalla de inicio». En el coche suena por Bluetooth con el título de cada canción, y pronto estará en las apps de radio compatibles con Android Auto y CarPlay.</p><div class="ios" id="iosHint"></div></div>
-      <div class="card"><h3>Derechos y reclamaciones</h3><p>Si crees que una canción vulnera tus derechos, escríbenos a <b class="em"></b> indicando el título y el motivo. La retiraremos de la emisión mientras lo revisamos.</p></div>
-      <div class="card"><h3>Contacto</h3><p>Creadores, anunciantes y colaboradores: <b class="em"></b></p></div>
+      <div class="card"><h3>Qué es</h3><p>Crazy rAdIo es una radio online que emite las 24 horas canciones creadas con ayuda de inteligencia artificial por creadores de todo el mundo, con programas por géneros, escucha a la carta y una lista de éxitos votada por la comunidad.</p></div>
+      <div class="card"><h3>Transparencia sobre la IA</h3><p>Las canciones están generadas total o parcialmente con IA. Los locutores son personajes virtuales con voces sintéticas: no son personas reales ni imitan a nadie. No emitimos entrevistas ni declaraciones inventadas.</p></div>
+      <div class="card"><h3>Derechos de las canciones</h3><p>Solo emitimos canciones que pertenecen a quien las sube según las condiciones de la herramienta usada:</p><ul><li><b>Suno:</b> planes Pro o Premier, descargadas por su botón oficial.</li><li><b>Udio:</b> solo descargadas antes del 5 de noviembre de 2025.</li><li><b>ElevenLabs Music:</b> solo con licencia Enterprise que permita radio.</li><li><b>Planes gratuitos:</b> no, porque la canción es de la plataforma.</li></ul></div>
+      <div class="card"><h3>Reclamaciones</h3><p>Si crees que una canción vulnera tus derechos, escríbenos a <b class="em"></b> con el título y el motivo. La retiramos mientras lo revisamos.</p></div>
+      <div class="card"><h3>Contenido para adultos</h3><p>El programa AI Sin Filtros puede incluir lenguaje explícito. Se emite de 22:00 a 24:00 y se identifica con la etiqueta +18.</p></div>
+      <div class="card"><h3>En el móvil y en el coche</h3><p>Pulsa «Instalar app» (Android y ordenador) o, en iPhone, Compartir → «Añadir a pantalla de inicio». En el coche suena por Bluetooth con el título de cada canción.</p><div class="nota" id="iosHint"></div></div>
+      <div class="card"><h3>Privacidad</h3><p>Usamos tu correo para tu cuenta y para avisarte de tus canciones. No usamos cookies de publicidad ni de análisis: los anuncios los servimos nosotros y solo contamos impresiones totales. Puedes borrar tu cuenta cuando quieras desde tu panel.</p></div>
+      <div class="card"><h3>Contacto</h3><p>Creadores, anunciantes y prensa: <b class="em"></b></p></div>
     </div>
   </section>
 
-  <footer><span class="nm"></span> · Radio online de música creada con IA · Locutores virtuales</footer>
+  <footer>Crazy rAdIo · Radio online de música creada con IA · Locutores virtuales · <a href="#info">Información y derechos</a> · <a href="#anunciate">Publicidad</a></footer>
 </main>
 
 <div class="player paused" id="player">
   <div class="wrap pbar">
-    <button class="pplay" id="pplay" type="button" aria-label="Reproducir">
-      <svg viewBox="0 0 24 24" fill="currentColor" id="picon"><path d="M8 5v14l11-7z"/></svg>
-    </button>
-    <div class="pinfo">
-      <div class="cov" id="pcov"></div>
-      <div class="ptxt"><div class="t" id="pt">—</div><div class="a" id="pa">—</div></div>
-    </div>
-    <div class="live"><span class="eq"><i></i><i></i><i></i><i></i></span> DIRECTO</div>
+    <button class="pplay" id="pplay" type="button" aria-label="Reproducir"><svg viewBox="0 0 24 24" fill="currentColor" id="picon"><path d="M8 5v14l11-7z"/></svg></button>
+    <div class="pinfo"><div class="cov" id="pcov"></div><div class="ptxt"><div class="t" id="pt">—</div><div class="a" id="pa">—</div></div></div>
+    <input type="range" class="prog-carta oculto" id="pprog" min="0" max="1000" value="0" aria-label="Posición">
+    <div class="live" id="plive"><span class="eq"><i></i><i></i><i></i><i></i></span> <span id="pmodo">DIRECTO</span></div>
     <div class="pvol"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 10v4h4l5 5V5L7 10H3zm13.5 2A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4z"/></svg><input type="range" id="vol" min="0" max="1" step="0.05" value="0.9" aria-label="Volumen"></div>
   </div>
 </div>
@@ -483,378 +679,622 @@ footer{color:var(--tx3);font-size:13px;padding:30px 0 10px;text-align:center}
 
 <script>
 (() => {
+"use strict";
 const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const DEMO = !CONFIG.servidor && !CONFIG.streamUrl;
+const num = n => Number(n || 0).toLocaleString("es-ES");
+const eur = n => Number(n || 0).toLocaleString("es-ES", {style:"currency", currency:"EUR"});
+const API = (CONFIG.api || "").replace(/\/$/, "");
+const DEMO_RADIO = !CONFIG.servidor && !CONFIG.streamUrl;
 const STREAM = CONFIG.streamUrl || (CONFIG.servidor ? `${CONFIG.servidor.replace(/\/$/,"")}/listen/${CONFIG.emisora}/radio.mp3` : "");
-const API = CONFIG.servidor ? `${CONFIG.servidor.replace(/\/$/,"")}/api/nowplaying/${CONFIG.emisora}` : "";
+const NOWPLAYING = CONFIG.servidor ? `${CONFIG.servidor.replace(/\/$/,"")}/api/nowplaying/${CONFIG.emisora}` : "";
+const GENEROS = {pop:"Pop", rock:"Rock", chill:"Chill", urban:"Urban", estrenos:"Estrenos", sinfiltros:"Humor +18", general:"Variado"};
+const PALETA = ["#8A00FF","#00D4FF","#B24DFF","#3A6BFF","#6A00D9","#00A8D6","#9B3DFF","#2B4BD9"];
 
-document.title = CONFIG.nombre;
-$("#marca").textContent = CONFIG.nombre;
-document.querySelectorAll(".nm").forEach(e => e.textContent = CONFIG.nombre);
-document.querySelectorAll(".em").forEach(e => e.textContent = CONFIG.emailContacto);
-$("#tzTxt").textContent = CONFIG.zonaHoraria;
-if (!DEMO) $("#demo").style.display = "none";
-else if (CONFIG.api) $("#demo").innerHTML = "<b>Emisión en pruebas.</b> Ya puedes enviar tus canciones y votar. La señal de radio se activará muy pronto.";
+$$(".em").forEach(e => e.textContent = CONFIG.emailContacto);
+if (API || !DEMO_RADIO) $("#demo").innerHTML = API && DEMO_RADIO ? "<b>Emisión en pruebas.</b> Ya puedes crear tu cuenta, subir canciones y votar. La señal de radio se activará muy pronto." : "";
+if (!$("#demo").innerHTML) $("#demo").style.display = "none";
 
-/* ---------- Hora de la emisora ---------- */
+/* ================================================================ utilidades */
+function toast(msg){ const t = $("#toast"); t.textContent = msg; t.classList.add("on"); clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove("on"), 4000); }
+function colorDe(texto){ let h = 0; for (const c of String(texto)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return PALETA[h % PALETA.length]; }
+function portadaFondo(t, a){ const c1 = colorDe(t), c2 = colorDe(a + "x"); return `background:linear-gradient(135deg,${c1},${c2})`; }
+function iniciales(t){ return esc(String(t || "?").trim().slice(0, 1).toUpperCase()); }
+function avatarHTML(url, nombre, extra=""){ return `<div class="av" ${extra}>${url ? `<img src="${esc(url)}" alt="" onerror="this.remove()">` : iniciales(nombre)}</div>`; }
+const sesion = { _t:null,
+  get(){ if (this._t) return this._t; try { return this._t = localStorage.getItem("czy_token"); } catch(e){ return null; } },
+  set(t){ this._t = t; try { t ? localStorage.setItem("czy_token", t) : localStorage.removeItem("czy_token"); } catch(e){} } };
+let YO = null;
+
+async function api(ruta, opc = {}){
+  if (!API) throw new Error("Disponible cuando la plataforma esté en marcha.");
+  const t = sesion.get();
+  opc.headers = Object.assign({}, opc.headers || {}, t ? {Authorization: "Bearer " + t} : {});
+  if (opc.json !== undefined){ opc.body = JSON.stringify(opc.json); opc.headers["Content-Type"] = "application/json"; opc.method = opc.method || "POST"; delete opc.json; }
+  const r = await fetch(API + ruta, opc);
+  const d = await r.json().catch(() => ({}));
+  if (r.status === 401 && t && !ruta.includes("/entrar")) { sesion.set(null); YO = null; pintarUsuario(); }
+  if (!r.ok){ const e = new Error(d.error || `Error ${r.status}`); e.datos = d; e.status = r.status; throw e; }
+  return d;
+}
+async function cargarYo(){ if (!API || !sesion.get()) { YO = null; return null; } try { YO = await api("/api/cuenta"); } catch(e){ YO = null; } return YO; }
+function pintarUsuario(){
+  $("#btnEntrar").classList.toggle("oculto", !!YO);
+  const c = $("#chipUsuario"); c.classList.toggle("oculto", !YO);
+  if (YO) c.innerHTML = `${avatarHTML(YO.avatar, YO.artista)}<span>${esc(YO.artista)}</span>`;
+}
+function necesitaCuenta(msg){ toast(msg || "Entra o crea tu cuenta para hacer esto."); location.hash = "#entrar"; }
+
+/* ================================================================ hora y programas */
 function horaEmisora(){
   const p = new Intl.DateTimeFormat("es-ES",{timeZone:CONFIG.zonaHoraria,hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).formatToParts(new Date());
-  const h = +p.find(x=>x.type==="hour").value, m = +p.find(x=>x.type==="minute").value;
-  return {h, m, txt: `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`};
+  const h = +p.find(x => x.type === "hour").value, m = +p.find(x => x.type === "minute").value;
+  return {h, m, txt:`${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`};
 }
 const progActual = () => { const {h} = horaEmisora(); return PROGRAMAS.find(p => h >= p.ini && h < p.fin) || PROGRAMAS[0]; };
-const progSiguiente = p => PROGRAMAS[(PROGRAMAS.indexOf(p)+1) % PROGRAMAS.length];
-const hh = n => `${String(n%24).padStart(2,"0")}:00`;
-
-/* ---------- Avatares ---------- */
-const COLORES = ["#ffd60a","#ff3d81","#ff5a36","#2ec4b6","#9b5de5","#ff8a3d","#4cc9f0","#e63946"];
-function avatar(id, size){
-  const L = LOCUTORES[id]; if(!L) return "";
-  const p = PROGRAMAS.find(x=>x.locutor===id); const c = p ? p.color : COLORES[0];
-  const ini = L.nombre.replace(/^Dr\.\s*/,"").slice(0,1);
-  return `<div class="ava" style="background:linear-gradient(135deg,${c},#ffffff55);${size?`width:${size}px;height:${size}px`:""}">${esc(ini)}</div>`;
-}
-function portada(art, color){
-  if (art) return `<img src="${esc(art)}" alt="" loading="lazy" onerror="this.remove()">`;
-  return `<svg width="22" height="22" viewBox="0 0 24 24" fill="${color||"#8a83b0"}"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg>`;
+const progSiguiente = p => PROGRAMAS[(PROGRAMAS.indexOf(p) + 1) % PROGRAMAS.length];
+const hh = n => `${String(n % 24).padStart(2,"0")}:00`;
+function avatarLocutor(id){
+  const L = LOCUTORES[id]; if (!L) return "";
+  const p = PROGRAMAS.find(x => x.locutor === id);
+  return `<div class="av" style="background:linear-gradient(135deg,${p ? p.color : "#8A00FF"},#00D4FF)">${esc(L.nombre.replace(/^Dr\.\s*/,"").slice(0,1))}</div>`;
 }
 
-/* ---------- Directo ---------- */
-let ahora = {t:"", a:"", art:""};
-const DEMO_CANCIONES = TOP_EJEMPLO.map(x=>({t:x.t,a:x.a}));
-function pintarDirecto(){
-  const p = progActual(), s = progSiguiente(p);
-  $("#onair").style.setProperty("--prog", p.color);
-  $("#progNombre").innerHTML = esc(p.nombre) + (p.adultos?'<span class="adult">+18</span>':"");
-  $("#progGenero").textContent = `${p.genero} · ${hh(p.ini)}–${hh(p.fin)}`;
-  $("#progDesc").textContent = p.desc;
-  const L = p.locutor && LOCUTORES[p.locutor];
-  $("#progLoc").innerHTML = L
-    ? `${avatar(p.locutor)}<div><b>${esc(L.nombre)}</b><span class="ia-tag">Locutor IA</span><div style="color:var(--tx3);font-size:14px">${esc(L.rol)}</div></div>`
-    : `<div style="color:var(--tx3);font-size:14px">Música continua, sin locutor.</div>`;
-  $("#sigProg").textContent = `${s.nombre} · ${hh(s.ini)}`;
-}
-function pintarCancion(t, a, art, hist){
-  ahora = {t, a, art};
-  const p = progActual();
-  $("#nowSong").innerHTML = `<div class="cov">${portada(art,p.color)}</div><div><div class="t">${esc(t)}</div><div class="a">${esc(a)}</div></div>`;
-  $("#pt").textContent = t; $("#pa").textContent = a;
-  $("#pcov").innerHTML = portada(art, p.color);
-  $("#historial").innerHTML = (hist||[]).slice(0,4).map(x=>`<div class="song"><div class="cov">${portada(x.art)}</div><div><div class="t">${esc(x.t)}</div><div class="a">${esc(x.a)}</div></div></div>`).join("") || `<div class="a" style="color:var(--tx3);font-size:14px">Sin datos todavía.</div>`;
-  if ("mediaSession" in navigator) {
-    try {
-      navigator.mediaSession.metadata = new MediaMetadata({
-        title: t, artist: a, album: `${CONFIG.nombre} · ${p.nombre}`,
-        artwork: art ? [{src:art,sizes:"512x512"}] : [{src:"icons/icon-512.png",sizes:"512x512",type:"image/png"}]
-      });
-    } catch(e){}
-  }
-}
-async function actualizarAhora(){
-  pintarDirecto();
-  if (DEMO || !API){
-    const i = Math.floor(Date.now()/180000) % DEMO_CANCIONES.length;
-    const c = DEMO_CANCIONES[i];
-    const hist = [1,2,3,4].map(k => DEMO_CANCIONES[(i - k + DEMO_CANCIONES.length*4) % DEMO_CANCIONES.length]);
-    pintarCancion(c.t, c.a, "", hist);
-    $("#stOyentes").textContent = "—";
-    return;
-  }
-  try{
-    const r = await fetch(API, {cache:"no-store"}); const d = await r.json();
-    const s = d.now_playing && d.now_playing.song || {};
-    const hist = (d.song_history||[]).map(h=>({t:h.song.title, a:h.song.artist, art:h.song.art}));
-    pintarCancion(s.title || CONFIG.nombre, s.artist || "", s.art || "", hist);
-    $("#stOyentes").textContent = d.listeners ? (d.listeners.current ?? d.listeners.total ?? "—") : "—";
-  }catch(e){ /* sin conexión con la API: se mantiene lo último */ }
-}
-
-/* ---------- Reproductor ---------- */
+/* ================================================================ reproductor (directo y a la carta) */
 const audio = $("#audio"), player = $("#player");
 const ICON_PLAY = '<path d="M8 5v14l11-7z"/>', ICON_PAUSE = '<path d="M6 5h4v14H6zM14 5h4v14h-4z"/>';
+let modo = "directo", cancionActual = null, ahoraDirecto = {t:"", a:"", art:""};
 function estado(sonando){
   player.classList.toggle("paused", !sonando);
   $("#picon").innerHTML = sonando ? ICON_PAUSE : ICON_PLAY;
-  $("#bigicon").innerHTML = sonando ? ICON_PAUSE : ICON_PLAY;
-  $("#bigtxt").textContent = sonando ? "Pausar" : "Escuchar en directo";
-  $("#pplay").setAttribute("aria-label", sonando ? "Pausar" : "Reproducir");
+  const enDirecto = modo === "directo";
+  $("#bigicon").innerHTML = sonando && enDirecto ? ICON_PAUSE : ICON_PLAY;
+  $("#bigtxt").textContent = sonando && enDirecto ? "Pausar" : "Escuchar en directo";
+  $$(".play[data-play], .row [data-play]").forEach(b => { const on = sonando && modo === "carta" && cancionActual && +b.dataset.play === cancionActual.id; b.innerHTML = `<svg viewBox="0 0 24 24" fill="currentColor">${on ? ICON_PAUSE : ICON_PLAY}</svg>`; });
 }
-function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("on"); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove("on"),3500); }
-async function alternar(){
-  if (!STREAM){ toast("Modo demostración: la emisión se activará cuando el servidor esté en marcha."); return; }
-  if (!audio.paused){ audio.pause(); audio.removeAttribute("src"); audio.load(); estado(false); return; }
-  // En directo: se vuelve a cargar la señal para no reproducir audio antiguo del búfer
-  audio.src = STREAM + (STREAM.includes("?")?"&":"?") + "t=" + Date.now();
-  try { await audio.play(); estado(true); }
-  catch(e){ estado(false); toast("No se pudo conectar con la emisión. Inténtalo de nuevo en unos segundos."); }
+function pintarBarra(){
+  $("#plive").classList.toggle("carta", modo === "carta");
+  $("#pmodo").textContent = modo === "carta" ? "A LA CARTA" : "DIRECTO";
+  $("#pprog").classList.toggle("oculto", modo !== "carta");
+  if (modo === "carta" && cancionActual){
+    $("#pt").textContent = cancionActual.titulo; $("#pa").textContent = cancionActual.artista;
+    $("#pcov").setAttribute("style", portadaFondo(cancionActual.titulo, cancionActual.artista)); $("#pcov").textContent = iniciales(cancionActual.titulo);
+  } else {
+    $("#pt").textContent = ahoraDirecto.t || "Crazy rAdIo"; $("#pa").textContent = ahoraDirecto.a || progActual().nombre;
+    $("#pcov").removeAttribute("style"); $("#pcov").innerHTML = ahoraDirecto.art ? `<img src="${esc(ahoraDirecto.art)}" alt="" onerror="this.remove()">` : `<img src="favicon.svg" alt="">`;
+  }
+  metadatos();
 }
-$("#pplay").addEventListener("click", alternar);
-$("#bigplay").addEventListener("click", alternar);
-audio.addEventListener("error", () => { if (audio.getAttribute("src")) { estado(false); toast("Se ha cortado la señal. Pulsa para reconectar."); } });
+function metadatos(){
+  if (!("mediaSession" in navigator)) return;
+  try {
+    const t = modo === "carta" && cancionActual ? cancionActual.titulo : (ahoraDirecto.t || "Crazy rAdIo");
+    const a = modo === "carta" && cancionActual ? cancionActual.artista : (ahoraDirecto.a || "");
+    navigator.mediaSession.metadata = new MediaMetadata({title:t, artist:a, album:`Crazy rAdIo · ${modo === "carta" ? "a la carta" : progActual().nombre}`,
+      artwork:[{src:"icons/icon-512.png", sizes:"512x512", type:"image/png"}]});
+  } catch(e){}
+}
+async function escucharDirecto(){
+  if (!STREAM){ toast("La emisión se activará cuando el servidor de la radio esté en marcha."); return; }
+  if (modo === "directo" && !audio.paused){ audio.pause(); audio.removeAttribute("src"); audio.load(); estado(false); return; }
+  modo = "directo"; cancionActual = null; pintarBarra();
+  audio.src = STREAM + (STREAM.includes("?") ? "&" : "?") + "t=" + Date.now();
+  try { await audio.play(); estado(true); } catch(e){ estado(false); toast("No se pudo conectar con la emisión. Inténtalo en unos segundos."); }
+}
+async function escucharCancion(c){
+  if (!c || !c.audio){ toast(API ? "Esta canción aún no está disponible a la carta." : "La escucha a la carta se activará cuando la plataforma esté en marcha."); return; }
+  if (modo === "carta" && cancionActual && cancionActual.id === c.id){
+    if (audio.paused){ try { await audio.play(); estado(true); } catch(e){} } else { audio.pause(); estado(false); }
+    return;
+  }
+  modo = "carta"; cancionActual = c; pintarBarra();
+  audio.src = c.audio;
+  try { await audio.play(); estado(true); api(`/api/canciones/${c.id}/reproduccion`, {method:"POST"}).catch(()=>{}); }
+  catch(e){ estado(false); toast("No se pudo reproducir la canción."); }
+}
+$("#pplay").addEventListener("click", () => {
+  if (modo === "carta" && cancionActual) escucharCancion(cancionActual); else escucharDirecto();
+});
+$("#bigplay").addEventListener("click", escucharDirecto);
+audio.addEventListener("ended", () => { estado(false); if (modo === "carta") { $("#pprog").value = 0; } });
+audio.addEventListener("timeupdate", () => { if (modo === "carta" && audio.duration) $("#pprog").value = Math.round(1000 * audio.currentTime / audio.duration); });
+$("#pprog").addEventListener("input", e => { if (audio.duration) audio.currentTime = audio.duration * e.target.value / 1000; });
+audio.addEventListener("error", () => { if (audio.getAttribute("src")) { estado(false); toast(modo === "directo" ? "Se ha cortado la señal. Pulsa para reconectar." : "No se pudo cargar la canción."); } });
 $("#vol").addEventListener("input", e => audio.volume = +e.target.value);
 audio.volume = 0.9;
 if ("mediaSession" in navigator){
-  try{
-    navigator.mediaSession.setActionHandler("play", () => audio.paused && alternar());
-    navigator.mediaSession.setActionHandler("pause", () => !audio.paused && alternar());
-    navigator.mediaSession.setActionHandler("stop", () => !audio.paused && alternar());
-  }catch(e){}
-}
-
-/* ---------- Parrilla ---------- */
-function pintarParrilla(){
-  const p = progActual();
-  $("#horaEmisora").textContent = horaEmisora().txt;
-  $("#parrilla").innerHTML = PROGRAMAS.map(x => {
-    const L = x.locutor && LOCUTORES[x.locutor];
-    return `<div class="prog ${x===p?"now":""}" style="--c:${x.color}">
-      <div class="h">${hh(x.ini)}<div class="d">hasta ${hh(x.fin)}</div></div>
-      <div><div class="n">${esc(x.nombre)}${x.adultos?'<span class="adult">+18</span>':""}${x===p?'<span class="ia-tag" style="background:rgba(255,45,85,.15);color:#ff6b75">AHORA</span>':""}</div><div class="d">${esc(x.genero)} · ${esc(x.desc)}</div></div>
-      <div class="l">${L ? `${esc(L.nombre)}<div class="d">locutor IA</div>` : `<span class="d">sin locutor</span>`}</div>
-    </div>`;}).join("");
-}
-
-/* ---------- Locutores ---------- */
-function pintarLocutores(){
-  $("#locs").innerHTML = Object.entries(LOCUTORES).map(([id,L]) => {
-    const p = PROGRAMAS.find(x=>x.locutor===id);
-    return `<div class="card loc">${avatar(id)}<h3>${esc(L.nombre)}<span class="ia-tag">IA</span></h3><div class="rol">${esc(L.rol)}</div><p>${esc(L.estilo)}</p>${p?`<div class="hor">${esc(p.nombre)} · ${hh(p.ini)}–${hh(p.fin)}</div>`:""}</div>`;
-  }).join("");
-}
-
-/* ---------- Sesión ---------- */
-const sesion = { _t:null,
-  get(){ if (this._t) return this._t; try { return this._t = localStorage.getItem("token"); } catch(e){ return null; } },
-  set(t){ this._t = t; try { t ? localStorage.setItem("token", t) : localStorage.removeItem("token"); } catch(e){} } };
-let YO = null;
-
-/* ---------- API ---------- */
-const API_BASE = (CONFIG.api||"").replace(/\/$/,"");
-async function api(ruta, opc={}){
-  const t = sesion.get();
-  opc.headers = Object.assign({}, opc.headers||{}, t ? {"Authorization": "Bearer " + t} : {});
-  const r = await fetch(API_BASE + ruta, opc);
-  if (r.status === 401 && t && ruta.startsWith("/api/cuenta")) { sesion.set(null); YO = null; }
-  const d = await r.json().catch(()=>({}));
-  if (!r.ok) throw new Error(d.error || `Error ${r.status}`);
-  return d;
-}
-/* ---------- Top 40 ---------- */
-let filtro = "Todos", TOP = null;
-function movimiento(m){
-  return m==="nuevo" ? '<span class="new">NUEVO</span>' : m>0 ? `<span class="up">▲ ${m}</span>` : m<0 ? `<span class="down">▼ ${-m}</span>` : '<span class="eqm">=</span>';
-}
-function filaVoto(x){
-  return `<button type="button" class="btn" data-votar="${x.id}" style="padding:6px 12px;font-size:13px">Votar</button>`;
-}
-async function cargarTop(){
-  if (!API_BASE) { TOP = TOP_EJEMPLO.map((x,i)=>({pos:i+1,titulo:x.t,artista:x.a,genero:x.g,votos:x.v,mov:x.mov})); pintarTop(); return; }
   try {
-    const d = await api("/api/top40");
-    TOP = d.lista;
-    $("#avisoTop").innerHTML = TOP.length ? `Semana ${esc(d.semana)}. Se actualiza en directo con tus votos.` : "Todavía no hay canciones admitidas. ¡Envía la tuya y sé de los primeros!";
-    const nov = await api("/api/novedades");
-    $("#bloqueNov").style.display = nov.length ? "block" : "none";
-    $("#novedades").innerHTML = nov.map(x => `<div class="row r2" style="grid-template-columns:minmax(0,1fr) auto"><div><div style="font-weight:600">${esc(x.titulo)}${x.adultos?'<span class="adult">+18</span>':""}</div><div style="color:var(--tx3);font-size:14px">${esc(x.artista)}${x.origen?" · "+esc(x.origen):""}<span class="gtag">· ${esc(x.genero)}</span></div></div>${filaVoto(x)}</div>`).join("");
-  } catch(e) { TOP = []; $("#avisoTop").textContent = "No se pudo cargar la lista ahora mismo."; }
+    navigator.mediaSession.setActionHandler("play", () => audio.paused && $("#pplay").click());
+    navigator.mediaSession.setActionHandler("pause", () => !audio.paused && $("#pplay").click());
+  } catch(e){}
+}
+const CACHE_C = new Map();
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-play]"); if (!b) return;
+  e.preventDefault(); escucharCancion(CACHE_C.get(+b.dataset.play));
+});
+
+/* ================================================================ en directo */
+const DEMO_CANCIONES = TOP_EJEMPLO.map((x, i) => ({id: -(i + 1), titulo:x.t, artista:x.a, genero:x.g, megusta: Math.round(x.v / 9), reproducciones: x.v, audio:null}));
+function pintarDirecto(){
+  const p = progActual(), s = progSiguiente(p);
+  $("#onair").style.setProperty("--prog", p.color);
+  $("#progNombre").innerHTML = esc(p.nombre) + (p.adultos ? '<span class="adult">+18</span>' : "");
+  $("#progGenero").textContent = `${p.genero} · ${hh(p.ini)}–${hh(p.fin)}`;
+  $("#progDesc").textContent = p.desc;
+  const L = p.locutor && LOCUTORES[p.locutor];
+  $("#progLoc").innerHTML = L ? `${avatarLocutor(p.locutor)}<div><b>${esc(L.nombre)}</b><span class="ia-tag">Locutor IA</span><div class="a">${esc(L.rol)}</div></div>` : `<div class="a">Música continua, sin locutor.</div>`;
+  $("#sigProg").textContent = `${s.nombre} · ${hh(s.ini)}`;
+}
+function cancionMini(t, a, art){ return `<div class="song"><div class="cov" style="${art ? "" : portadaFondo(t, a)}">${art ? `<img src="${esc(art)}" alt="" onerror="this.remove()">` : iniciales(t)}</div><div><div class="t">${esc(t)}</div><div class="a">${esc(a)}</div></div></div>`; }
+async function actualizarAhora(){
+  pintarDirecto();
+  let actual, hist = [];
+  if (!NOWPLAYING){
+    const i = Math.floor(Date.now() / 180000) % DEMO_CANCIONES.length, c = DEMO_CANCIONES[i];
+    actual = {t:c.titulo, a:c.artista, art:""};
+    hist = [1,2,3,4].map(k => DEMO_CANCIONES[(i - k + DEMO_CANCIONES.length * 4) % DEMO_CANCIONES.length]).map(x => ({t:x.titulo, a:x.artista}));
+  } else {
+    try {
+      const d = await (await fetch(NOWPLAYING, {cache:"no-store"})).json();
+      const s = (d.now_playing && d.now_playing.song) || {};
+      actual = {t:s.title || "Crazy rAdIo", a:s.artist || "", art:s.art || ""};
+      hist = (d.song_history || []).map(h => ({t:h.song.title, a:h.song.artist, art:h.song.art}));
+      $("#stOyentes").textContent = d.listeners ? num(d.listeners.current ?? d.listeners.total) : "—";
+    } catch(e){ return; }
+  }
+  ahoraDirecto = actual;
+  $("#nowSong").innerHTML = cancionMini(actual.t, actual.a, actual.art).replace(/^<div class="song">|<\/div>$/g, "");
+  $("#historial").innerHTML = hist.slice(0,4).map(x => cancionMini(x.t, x.a, x.art)).join("") || `<div class="a">Sin datos todavía.</div>`;
+  if (modo === "directo") pintarBarra();
+}
+
+/* ================================================================ tarjetas de canción */
+function tarjeta(c){
+  CACHE_C.set(c.id, c);
+  const ficha = c.id > 0 ? `#cancion-${c.id}` : "#explorar";
+  const autor = c.nick ? `<a href="#artista-${esc(c.nick)}">${esc(c.artista)}</a>` : esc(c.artista);
+  return `<div class="tc">
+    <a class="portada" href="${ficha}" style="${portadaFondo(c.titulo, c.artista)}" aria-label="${esc(c.titulo)}">${iniciales(c.titulo)}
+      <button class="play" type="button" data-play="${c.id}" aria-label="Escuchar ${esc(c.titulo)}"><svg viewBox="0 0 24 24" fill="currentColor">${ICON_PLAY}</svg></button></a>
+    <div class="info"><div class="t"><a href="${ficha}">${esc(c.titulo)}</a>${c.adultos ? '<span class="adult">+18</span>' : ""}</div>
+      <div class="a">${autor}<span class="gtag">· ${esc(c.genero || "")}</span></div>
+      <div class="met"><span title="Me gusta">♥ ${num(c.megusta)}</span><span title="Reproducciones">▶ ${num(c.reproducciones)}</span></div></div></div>`;
+}
+async function cargarRecientes(){
+  let lista = DEMO_CANCIONES.slice(0, 8);
+  if (API){ try { lista = await api("/api/canciones?orden=recientes&limite=8"); } catch(e){} }
+  $("#recientes").innerHTML = lista.length ? lista.map(tarjeta).join("") : `<p class="vacio">Pronto, las primeras canciones de la comunidad. <a href="#enviar">¿Subes la tuya?</a></p>`;
+}
+
+/* ================================================================ explorar */
+let filtroGenero = "", tBusca;
+$("#generos").innerHTML = [["", "Todo"], ...Object.entries(GENEROS)].map(([k, v]) => `<button type="button" data-gen="${k}" class="${k === "" ? "on" : ""}">${v}</button>`).join("");
+$("#generos").addEventListener("click", e => { const b = e.target.closest("[data-gen]"); if (!b) return; filtroGenero = b.dataset.gen; $$("#generos button").forEach(x => x.classList.toggle("on", x === b)); cargarCatalogo(); });
+$("#buscar").addEventListener("input", () => { clearTimeout(tBusca); tBusca = setTimeout(cargarCatalogo, 300); });
+$("#orden").addEventListener("change", cargarCatalogo);
+async function cargarCatalogo(){
+  let lista;
+  if (!API){
+    const q = $("#buscar").value.toLowerCase();
+    lista = DEMO_CANCIONES.filter(c => !q || (c.titulo + c.artista).toLowerCase().includes(q));
+  } else {
+    const p = new URLSearchParams({orden: $("#orden").value, q: $("#buscar").value.trim(), limite: 60});
+    if (filtroGenero) p.set("genero", filtroGenero);
+    try { lista = await api("/api/canciones?" + p); } catch(e){ lista = []; }
+  }
+  $("#catalogo").innerHTML = lista.length ? lista.map(tarjeta).join("") : `<p class="vacio">No hay canciones con ese filtro.</p>`;
+}
+
+/* ================================================================ ficha de canción */
+async function cargarCancion(id){
+  const box = $("#fichaCancion");
+  box.innerHTML = `<p class="vacio">Cargando…</p>`;
+  let c;
+  try { c = await api(`/api/canciones/${id}`); } catch(e){ box.innerHTML = `<div class="aviso">${esc(e.message)}</div>`; return; }
+  CACHE_C.set(c.id, c);
+  const url = location.href.split("#")[0] + `#cancion-${c.id}`;
+  box.innerHTML = `<div class="ficha">
+    <div class="portada" style="${portadaFondo(c.titulo, c.artista)}">${iniciales(c.titulo)}</div>
+    <div>
+      <span class="pill">${esc(c.genero)}${c.programa_nombre ? " · " + esc(c.programa_nombre) : ""}</span>
+      <h1>${esc(c.titulo)}${c.adultos ? '<span class="adult">+18</span>' : ""}</h1>
+      <div class="a" style="font-size:17px">${c.nick ? `<a href="#artista-${esc(c.nick)}">${esc(c.artista)}</a>` : esc(c.artista)}${c.origen ? " · " + esc(c.origen) : ""}</div>
+      <div class="acciones">
+        <button class="btn pri" type="button" data-play="${c.id}">▶ Escuchar</button>
+        <button class="btn mg ${c.yo_megusta ? "on" : ""}" type="button" id="btnMg">♥ <span id="nMg">${num(c.megusta)}</span></button>
+        ${c.es_mia ? "" : `<button class="btn" type="button" id="btnVoto" ${c.yo_votado ? "disabled" : ""}>${c.yo_votado ? "Votada esta semana" : "Votar para el Top 40"}</button>`}
+        <button class="btn sec" type="button" id="btnCompartir">Compartir</button>
+      </div>
+      <div class="stats" style="max-width:520px"><div class="stat"><b>${num(c.reproducciones)}</b><span>reproducciones</span></div><div class="stat"><b>${num(c.megusta)}</b><span>me gusta</span></div><div class="stat"><b>${num(c.visitas)}</b><span>visitas</span></div></div>
+      ${c.sobre ? `<h3 style="margin-top:24px">Sobre la canción</h3><p style="color:var(--tx2);white-space:pre-wrap">${esc(c.sobre)}</p>` : ""}
+      ${c.autor ? `<div class="card" style="margin-top:22px;display:flex;gap:14px;align-items:center">${avatarHTML(c.autor.avatar, c.autor.artista)}<div><b>${esc(c.autor.artista)}</b><div class="a">${esc(c.autor.ciudad || "")}</div></div><a class="btn peq" style="margin-left:auto" href="#artista-${esc(c.autor.nick)}">Ver perfil</a></div>` : ""}
+      <p class="nota" style="margin-top:18px">Creada con inteligencia artificial. Fecha de alta: ${esc(c.fecha)}.</p>
+    </div></div>`;
+  estado(!audio.paused);
+  $("#btnMg").addEventListener("click", async () => {
+    if (!sesion.get()) return necesitaCuenta("Entra para dar me gusta.");
+    try { const d = await api(`/api/canciones/${c.id}/megusta`, {method:"POST"}); $("#btnMg").classList.toggle("on", d.megusta); $("#nMg").textContent = num(d.total); }
+    catch(e){ toast(e.message); }
+  });
+  const bv = $("#btnVoto");
+  if (bv) bv.addEventListener("click", async () => {
+    if (!sesion.get()) return necesitaCuenta("Entra para votar: así cada voto es de una persona real.");
+    try { await api("/api/votar", {json:{id:c.id}}); bv.textContent = "Votada esta semana"; bv.disabled = true; toast("¡Voto registrado para el Top 40 de esta semana!"); }
+    catch(e){ toast(e.message); }
+  });
+  $("#btnCompartir").addEventListener("click", async () => {
+    try { if (navigator.share) await navigator.share({title:c.titulo, text:`${c.titulo} · ${c.artista} en Crazy rAdIo`, url}); else { await navigator.clipboard.writeText(url); toast("Enlace copiado."); } }
+    catch(e){ }
+  });
+}
+
+/* ================================================================ perfil de artista */
+const NOMBRES_RED = {web:"Web", instagram:"Instagram", tiktok:"TikTok", youtube:"YouTube", spotify:"Spotify", suno:"Suno", x:"X"};
+async function cargarArtista(nick){
+  const box = $("#fichaArtista");
+  box.innerHTML = `<p class="vacio">Cargando…</p>`;
+  let a;
+  try { a = await api(`/api/artistas/${encodeURIComponent(nick)}`); } catch(e){ box.innerHTML = `<div class="aviso">${esc(e.message)}</div>`; return; }
+  box.innerHTML = `<div class="perfilcab">${avatarHTML(a.avatar, a.artista)}<div>
+      <h1 style="margin:0">${esc(a.artista)}</h1><div class="a">@${esc(a.nick)}${a.ciudad ? " · " + esc(a.ciudad) : ""} · en Crazy rAdIo desde ${esc(a.desde)}</div>
+      ${a.bio ? `<p style="color:var(--tx2);max-width:640px;white-space:pre-wrap">${esc(a.bio)}</p>` : ""}
+      <div class="redes">${Object.entries(a.enlaces || {}).map(([k, u]) => `<a class="btn peq" href="${esc(u)}" target="_blank" rel="noopener nofollow">${esc(NOMBRES_RED[k] || k)}</a>`).join("")}</div></div></div>
+    <div class="stats" style="max-width:560px"><div class="stat"><b>${num(a.totales.canciones)}</b><span>canciones en antena</span></div><div class="stat"><b>${num(a.totales.reproducciones)}</b><span>reproducciones</span></div><div class="stat"><b>${num(a.totales.megusta)}</b><span>me gusta</span></div></div>
+    <h2 style="margin-top:30px">Canciones</h2>
+    <div class="rejilla">${a.canciones.map(c => tarjeta({...c, nick:a.nick})).join("") || `<p class="vacio">Todavía no tiene canciones en antena.</p>`}</div>`;
+}
+
+/* ================================================================ Top 40 */
+let filtroTop = "Todos", TOP = null;
+const mov = m => m === "nuevo" ? '<span class="new">NUEVO</span>' : m > 0 ? `<span class="up">▲ ${m}</span>` : m < 0 ? `<span class="down">▼ ${-m}</span>` : '<span class="eqm">=</span>';
+async function cargarTop(){
+  if (!API){ TOP = TOP_EJEMPLO.map((x, i) => ({id:-(i+1), pos:i+1, titulo:x.t, artista:x.a, genero:x.g, votos:x.v, mov:x.mov})); pintarTop(); return; }
+  try { const d = await api("/api/top40"); TOP = d.lista; $("#avisoTop").innerHTML = TOP.length ? `Semana ${esc(d.semana)}. Se actualiza en directo con los votos.` : "Todavía no hay canciones en la lista. ¡Sube la tuya y sé de los primeros!"; }
+  catch(e){ TOP = []; $("#avisoTop").textContent = "No se pudo cargar la lista ahora mismo."; }
   pintarTop();
 }
 function pintarTop(){
   if (!TOP) return;
-  const generos = ["Todos", ...new Set(TOP.map(x=>x.genero))];
-  $("#tabs").innerHTML = generos.length>2 ? generos.map(g=>`<button type="button" class="${g===filtro?"on":""}" data-g="${esc(g)}">${esc(g)}</button>`).join("") : "";
-  const lista = TOP.filter(x => filtro==="Todos" || x.genero===filtro);
-  $("#chart").innerHTML = lista.map((x,i) => `<div class="row" style="grid-template-columns:52px 1fr auto auto ${API_BASE?"auto":""}"><div class="pos">${filtro==="Todos"?x.pos:i+1}</div><div><div style="font-weight:600">${esc(x.titulo)}${x.adultos?'<span class="adult">+18</span>':""}</div><div style="color:var(--tx3);font-size:14px">${esc(x.artista)}<span class="gtag">· ${esc(x.genero)}</span></div></div><div class="votos">${(x.votos||0).toLocaleString("es-ES")}<br>votos</div><div class="mov">${movimiento(x.mov)}</div>${API_BASE?filaVoto(x):""}</div>`).join("");
+  const gens = ["Todos", ...new Set(TOP.map(x => x.genero))];
+  $("#tabsTop").innerHTML = gens.length > 2 ? gens.map(g => `<button type="button" class="${g === filtroTop ? "on" : ""}" data-g="${esc(g)}">${esc(g)}</button>`).join("") : "";
+  const lista = TOP.filter(x => filtroTop === "Todos" || x.genero === filtroTop);
+  $("#chart").innerHTML = lista.map((x, i) => { CACHE_C.set(x.id, x); const ficha = x.id > 0 ? `#cancion-${x.id}` : "#top40"; return `<div class="row">
+    <div class="pos">${filtroTop === "Todos" ? x.pos : i + 1}</div>
+    <div><div class="t"><a href="${ficha}">${esc(x.titulo)}</a>${x.adultos ? '<span class="adult">+18</span>' : ""}</div><div class="a">${esc(x.artista)}<span class="gtag">· ${esc(x.genero)}</span></div></div>
+    <div class="votos">${num(x.votos)}<br>votos</div><div class="mov">${mov(x.mov)}</div>
+    <button class="btn peq" type="button" data-play="${x.id}" aria-label="Escuchar">▶</button></div>`; }).join("");
 }
-$("#tabs").addEventListener("click", e => { const b = e.target.closest("button"); if(b){ filtro = b.dataset.g; pintarTop(); }});
-document.addEventListener("click", async e => {
-  const b = e.target.closest("[data-votar]"); if (!b) return;
-  if (!sesion.get()) { toast("Para votar entra con tu correo: así cada voto es de una persona real."); location.hash = "#cuenta"; return; }
-  b.disabled = true;
-  try { await api("/api/votar", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({id:+b.dataset.votar})});
-        b.textContent = "¡Votado!"; toast("Gracias. Tu voto cuenta para el Top 40 de esta semana."); setTimeout(cargarTop, 800); }
-  catch(err){ b.textContent = "Votar"; b.disabled = false; toast(err.message); }
-});
+$("#tabsTop").addEventListener("click", e => { const b = e.target.closest("button"); if (b){ filtroTop = b.dataset.g; pintarTop(); } });
 
-/* ---------- Envío de canciones ---------- */
-$("#fPlan").addEventListener("change", e => $("#warnPlan").style.display = e.target.value==="gratis" ? "block" : "none");
-$("#form").addEventListener("submit", e => {
+/* ================================================================ parrilla y locutores */
+function pintarParrilla(){
+  const p = progActual();
+  $("#horaEmisora").textContent = horaEmisora().txt;
+  $("#parrilla").innerHTML = PROGRAMAS.map(x => { const L = x.locutor && LOCUTORES[x.locutor]; return `<div class="prog ${x === p ? "now" : ""}" style="--c:${x.color}">
+    <div class="h">${hh(x.ini)}<div class="d">hasta ${hh(x.fin)}</div></div>
+    <div><div class="n">${esc(x.nombre)}${x.adultos ? '<span class="adult">+18</span>' : ""}${x === p ? '<span class="ia-tag" style="background:rgba(255,45,85,.15);color:#ff6b8a">AHORA</span>' : ""}</div><div class="d">${esc(x.genero)} · ${esc(x.desc)}</div></div>
+    <div class="l">${L ? `${esc(L.nombre)}<div class="d">locutor IA</div>` : `<span class="d">sin locutor</span>`}</div></div>`; }).join("");
+}
+function pintarLocutores(){
+  $("#locs").innerHTML = Object.entries(LOCUTORES).map(([id, L]) => { const p = PROGRAMAS.find(x => x.locutor === id);
+    return `<div class="card loc">${avatarLocutor(id)}<h3>${esc(L.nombre)}<span class="ia-tag">IA</span></h3><div class="rol">${esc(L.rol)}</div><p>${esc(L.estilo)}</p>${p ? `<div class="hor">${esc(p.nombre)} · ${hh(p.ini)}–${hh(p.fin)}</div>` : ""}</div>`; }).join("");
+}
+
+/* ================================================================ subir canción (con reglas de derechos) */
+const PLANES = {
+  "Suno": [["Suno Pro","Pro (de pago)"],["Suno Premier","Premier (de pago)"],["gratis","Gratuito / Básico"]],
+  "Udio": [["Udio de pago","De pago"],["gratis","Gratuito"]],
+  "ElevenLabs Music": [["Enterprise con licencia de radio","Enterprise con licencia que permite radio"],["Creator/Pro","Starter, Creator, Pro u otro plan normal"],["gratis","Gratuito"]],
+  "Otra": [["De pago con uso comercial","De pago, con uso comercial"],["gratis","Gratuito"]],
+  "Ninguna": [["No aplica","No aplica (composición propia)"]],
+};
+const INFO_HERR = {
+  "Suno": "Suno: con Pro o Premier la canción es tuya y puedes usarla comercialmente si la descargas por su botón oficial. Con el plan gratuito pertenece a Suno.",
+  "Udio": "Udio: desde su acuerdo con Universal (noviembre de 2025) no permite descargas ni uso comercial. Solo aceptamos canciones descargadas antes del 5/11/2025.",
+  "ElevenLabs Music": "ElevenLabs Music: sus planes normales excluyen el uso en radio. Solo con licencia Enterprise que lo autorice por escrito.",
+  "Otra": "Otra herramienta: revisaremos sus condiciones. Puede que te pidamos un justificante.",
+  "Ninguna": "Composición propia: tú eres el autor. Recuerda que no puede incluir fragmentos de otras canciones.",
+};
+function reglaDerechos(){
+  const herr = $("#fHerr").value, plan = $("#fPlan").value, fecha = $("#fDescarga").value, tit = ($("input[name=tit]:checked") || {}).value;
+  if (tit === "plataforma") return "Si la canción es de la plataforma (por ejemplo, del plan gratuito de Suno), no podemos emitirla.";
+  if (tit === "nose") return "Comprueba en las condiciones de tu plan si la canción es tuya antes de enviarla.";
+  if (plan === "gratis") return "Las canciones de planes gratuitos pertenecen a la plataforma o no permiten uso comercial: no podemos emitirlas.";
+  if (herr === "Udio" && fecha && fecha > "2025-11-05") return "De Udio solo aceptamos canciones descargadas antes del 5 de noviembre de 2025.";
+  if (herr === "ElevenLabs Music" && plan && plan !== "Enterprise con licencia de radio") return "Los planes normales de ElevenLabs Music no permiten la radio. Necesitas una licencia Enterprise.";
+  return "";
+}
+function actualizarDerechos(){
+  const herr = $("#fHerr").value;
+  $("#infoDerechos").classList.toggle("oculto", !herr);
+  $("#infoDerechos").textContent = INFO_HERR[herr] || "";
+  const m = reglaDerechos();
+  $("#avisoDerechos").classList.toggle("oculto", !m);
+  $("#avisoDerechos").textContent = m;
+}
+$("#fHerr").addEventListener("change", () => {
+  const ops = PLANES[$("#fHerr").value] || [];
+  $("#fPlan").innerHTML = (ops.length ? '<option value="">Elige…</option>' : '<option value="">Elige primero la herramienta</option>') + ops.map(([v, t]) => `<option value="${esc(v)}">${esc(t)}</option>`).join("");
+  if ($("#fHerr").value === "Ninguna"){ $("#fPlan").value = "No aplica"; const r = $("input[name=tit][value=propia]"); r.checked = true; }
+  actualizarDerechos();
+});
+["#fPlan", "#fDescarga"].forEach(s => $(s).addEventListener("change", actualizarDerechos));
+$("#opcTitularidad").addEventListener("change", actualizarDerechos);
+function prepararEnvio(){
+  $("#puertaEnvio").classList.toggle("oculto", !!YO);
+  $("#fEnvio").classList.toggle("oculto", !YO);
+  if (!API) $("#puertaEnvio").innerHTML = "La subida de canciones se activará cuando la plataforma esté en marcha.";
+  if (YO){ $("#comoQuien").textContent = `Subes como ${YO.artista} (${YO.email}).`; if (!$("#fArtista").value) $("#fArtista").value = YO.artista; }
+}
+$("#fEnvio").addEventListener("submit", e => {
   e.preventDefault();
-  const f = e.target, res = $("#result");
-  if (!f.checkValidity()){ f.reportValidity(); toast("Revisa los campos obligatorios."); return; }
-  if ($("#fPlan").value === "gratis"){ $("#warnPlan").style.display="block"; toast("No podemos aceptar canciones de planes gratuitos."); return; }
+  const f = e.target, res = $("#resEnvio");
+  const faltan = ["#fTitulo","#fArtista","#fGenero","#fIdioma","#fArchivo","#fLetra","#fHerr","#fPlan","#fDescarga"].filter(s => !$(s).value);
+  if (faltan.length){ toast("Completa todos los campos obligatorios."); $(faltan[0]).focus(); return; }
+  const tit = $("input[name=tit]:checked");
+  if (!tit){ toast("Indica de quién es la canción."); return; }
+  const regla = reglaDerechos(); if (regla){ toast(regla); return; }
+  if (!["#c1","#c2","#c3","#c4","#c5","#c6"].every(s => $(s).checked)){ toast("Marca todas las autorizaciones."); return; }
   const archivo = $("#fArchivo").files[0];
-  if (archivo && archivo.size > 25*1024*1024){ toast("El archivo supera 25 MB."); return; }
-  if (!API_BASE){ res.style.display="block"; res.innerHTML = `<div class="aviso">Modo demostración: el envío se activará cuando la plataforma esté en marcha.</div>`; return; }
+  if (archivo.size > 25 * 1024 * 1024){ toast("El archivo supera 25 MB."); return; }
   const fd = new FormData();
-  if (!sesion.get()){ location.hash = "#cuenta"; toast("Entra con tu correo para enviar canciones."); return; }
-  const v = { artista:"#fArtista", titulo:"#fTitulo", genero:"#fGenero", idioma:"#fIdioma", herramienta:"#fHerr",
-              plan:"#fPlan", fecha_descarga:"#fDescarga", letra_autor:"#fLetra", origen:"#fOrigen", notas:"#fNotas", web:"#fWeb" };
-  for (const [k,sel] of Object.entries(v)) fd.append(k, $(sel).value.trim());
-  ["declaracion","autorizacion","edad","condiciones"].forEach(k => fd.append(k, "1"));
+  const v = {titulo:"#fTitulo", artista:"#fArtista", genero:"#fGenero", idioma:"#fIdioma", herramienta:"#fHerr", plan:"#fPlan", fecha_descarga:"#fDescarga", letra_autor:"#fLetra", origen:"#fOrigen", notas:"#fNotas", web:"#fWeb"};
+  for (const [k, s] of Object.entries(v)) fd.append(k, $(s).value.trim());
+  fd.append("titularidad", tit.value);
+  ["declaracion","descarga_oficial","autorizacion","carta","edad","condiciones"].forEach(k => fd.append(k, "1"));
   fd.append("archivo", archivo);
   const btn = $("#btnEnviar"); btn.disabled = true;
   const xhr = new XMLHttpRequest();
-  xhr.open("POST", API_BASE + "/api/envios");
+  xhr.open("POST", API + "/api/envios");
   xhr.setRequestHeader("Authorization", "Bearer " + sesion.get());
-  xhr.upload.onprogress = ev => { if (ev.lengthComputable) $("#progreso").textContent = `Subiendo… ${Math.round(ev.loaded/ev.total*100)} %`; };
+  xhr.upload.onprogress = ev => { if (ev.lengthComputable) $("#progreso").textContent = `Subiendo… ${Math.round(ev.loaded / ev.total * 100)} %`; };
   xhr.onload = () => {
     btn.disabled = false; $("#progreso").textContent = "";
     let d = {}; try { d = JSON.parse(xhr.responseText); } catch(_){}
-    if (xhr.status !== 200 || !d.codigo){ toast(d.error || "No se pudo enviar. Inténtalo de nuevo."); return; }
-    const titulo = $("#fTitulo").value.trim();
-    res.style.display = "block";
-    res.innerHTML = `<div class="aviso" style="background:rgba(46,196,182,.12);border-color:rgba(46,196,182,.4)">
-      <b>¡Recibida!</b> La IA está analizando «${esc(titulo)}». En unos minutos verás el informe en <a href="#cuenta">Mi cuenta</a>. Te avisaremos por correo cuando la revisemos.</div>`;
-    f.reset(); if (YO) $("#fArtista").value = YO.artista;
+    if (xhr.status !== 200 || !d.codigo){ res.innerHTML = `<div class="aviso ko">${esc(d.error || "No se pudo enviar. Inténtalo de nuevo.")}</div>`; return; }
+    res.innerHTML = `<div class="aviso ok"><b>¡Recibida!</b> La IA está analizando «${esc($("#fTitulo").value)}». En unos minutos verás el informe en <a href="#panel">tu panel</a>, y te avisaremos por correo cuando la revisemos.</div>`;
+    f.reset(); $("#fArtista").value = YO ? YO.artista : ""; actualizarDerechos(); cargarYo();
   };
   xhr.onerror = () => { btn.disabled = false; $("#progreso").textContent = ""; toast("Sin conexión con la radio. Inténtalo de nuevo."); };
   xhr.send(fd);
 });
 
-/* ---------- Mi cuenta ---------- */
-const ESTADO_COLOR = {recibida:"var(--tx2)", analizando:"var(--a3)", pendiente:"var(--a2)", admitida:"var(--ok)", rechazada:"#ff6b75", error:"#ff6b75"};
+/* ================================================================ entrar, registro, verificación, recuperación */
 let emailPendiente = "";
-async function cargarYo(){
-  if (!API_BASE || !sesion.get()) { YO = null; return null; }
-  try { YO = await api("/api/cuenta"); } catch(e) { YO = null; }
-  return YO;
-}
-function pintarNav(){ $("#navCuenta").textContent = YO ? YO.artista : "Mi cuenta"; }
-async function pintarCuenta(){
-  if (!API_BASE){ $("#cuentaFuera").innerHTML = `<h2>Mi cuenta</h2><div class="aviso">Modo demostración: el registro se activará cuando la plataforma esté en marcha.</div>`; return; }
-  await cargarYo(); pintarNav();
-  $("#cuentaFuera").style.display = YO ? "none" : "block";
-  $("#cuentaDentro").style.display = YO ? "block" : "none";
-  if (!YO) return;
-  $("#txtCuenta").textContent = `Has entrado como ${YO.email}. Tu nombre artístico:`;
-  $("#cArtista").value = YO.artista;
-  $("#misEnvios").innerHTML = YO.envios.length ? YO.envios.map(e => `<div class="row r2" style="grid-template-columns:minmax(0,1fr) auto"><div><div style="font-weight:600">${esc(e.titulo)}</div><div style="font-size:14px;color:${ESTADO_COLOR[e.estado]||"var(--tx3)"}">${esc(e.estado_texto)}${e.programa?` · ${esc(e.programa)}`:""}</div><div style="color:var(--tx3);font-size:13px">${esc((e.creado||"").slice(0,10))}</div></div><button class="btn" type="button" data-cod="${esc(e.codigo)}" style="padding:6px 12px;font-size:13px">Ver informe</button></div>`).join("")
-    : `<p class="nota">Aún no has enviado canciones. <a href="#enviar">Envía la primera</a>.</p>`;
-}
-async function consultar(codigo){
-  const box = $("#estadoEnvio");
-  box.innerHTML = `<p class="nota">Consultando…</p>`;
-  try {
-    const d = await api("/api/envios/" + encodeURIComponent(codigo));
-    const inf = d.informe;
-    box.innerHTML = `<div class="card">
-      <div style="font-family:'Space Grotesk',Inter,sans-serif;font-size:22px;font-weight:700">${esc(d.titulo)}</div>
-      <div style="color:var(--tx3)">${esc(d.artista)}</div>
-      <p style="margin:14px 0 0;font-weight:600;color:${ESTADO_COLOR[d.estado]||"var(--tx)"}">${esc(d.estado_texto)}</p>
-      ${d.programa?`<p style="margin:6px 0 0">Suena en: <b>${esc(d.programa)}</b></p>`:""}
-      ${d.motivo?`<p style="margin:6px 0 0;color:var(--tx2)">Motivo: ${esc(d.motivo)}</p>`:""}
-      ${inf?`<div class="stats" style="margin-top:16px"><div class="stat"><b>${inf.puntuacion_tecnica??"—"}</b><span>calidad técnica / 100</span></div><div class="stat"><b>${inf.volumen_lufs??"—"}</b><span>volumen (LUFS)</span></div><div class="stat"><b>${inf.tempo_bpm??"—"}</b><span>tempo aprox. (BPM)</span></div></div>
-        ${inf.programa_sugerido?`<p style="margin:14px 0 0;color:var(--tx2)">Programa que propone la IA: <b>${esc(inf.programa_sugerido)}</b></p>`:""}
-        ${inf.alertas&&inf.alertas.length?`<ul style="color:var(--tx2);font-size:14px">${inf.alertas.map(a=>`<li>${esc(a)}</li>`).join("")}</ul>`:""}`:""}
-      ${["recibida","analizando"].includes(d.estado)?`<p class="nota">Se actualiza solo cada 15 segundos.</p>`:""}
-    </div>`;
-    box.scrollIntoView({behavior:"smooth", block:"nearest"});
-    if (["recibida","analizando"].includes(d.estado)) { clearTimeout(consultar._t); consultar._t = setTimeout(()=>{ if(location.hash==="#cuenta") consultar(codigo); }, 15000); }
-  } catch(err){ box.innerHTML = `<div class="aviso">${esc(err.message)}</div>`; }
-}
-document.addEventListener("click", e => { const b = e.target.closest("[data-cod]"); if (b) consultar(b.dataset.cod); });
+function verForm(id){ ["#fEntrar","#fRegistro","#fVerificar","#fRecuperar"].forEach(s => $(s).classList.toggle("oculto", s !== id)); $("#tabsEntrar").classList.toggle("oculto", id === "#fVerificar" || id === "#fRecuperar"); }
+$("#tabsEntrar").addEventListener("click", e => { const b = e.target.closest("[data-t]"); if (!b) return; $$("#tabsEntrar button").forEach(x => x.classList.toggle("on", x === b)); verForm(b.dataset.t === "entrar" ? "#fEntrar" : "#fRegistro"); });
+function pedirCodigo(email, d){ emailPendiente = email; verForm("#fVerificar"); $("#txtVerificar").innerHTML = `Te hemos enviado un código de 6 cifras a <b>${esc(email)}</b>. Caduca en ${d.minutos || 15} minutos. Mira también en spam.` + (d.codigo_pruebas ? ` <span class="nota">(pruebas: ${esc(d.codigo_pruebas)})</span>` : ""); $("#vCodigo").value = ""; $("#vCodigo").focus(); }
+async function dentro(token, msg){ sesion.set(token); await cargarYo(); pintarUsuario(); toast(msg); location.hash = "#panel"; }
 $("#fEntrar").addEventListener("submit", async e => {
   e.preventDefault();
-  const email = $("#eEmail").value.trim(), artista = $("#eArtista").value.trim();
-  if (!$("#eEmail").checkValidity() || !email){ toast("Escribe un correo válido."); return; }
-  const btn = $("#btnCodigo"); btn.disabled = true;
-  try {
-    const d = await api("/api/cuenta/codigo", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({email, artista})});
-    if (d.necesita_artista){ $("#bloqueArtista").style.display = "block"; $("#eArtista").focus(); toast("Es tu primera vez: elige tu nombre artístico."); return; }
-    emailPendiente = email;
-    $("#fEntrar").style.display = "none"; $("#fCodigo").style.display = "grid";
-    $("#txtCodigo").innerHTML = `Te hemos enviado un código a <b>${esc(email)}</b>. Caduca en ${d.minutos} minutos. Mira también en la carpeta de spam.` + (d.codigo_pruebas?` <span class="nota">(pruebas: ${esc(d.codigo_pruebas)})</span>`:"");
-    $("#eCodigo").value = ""; $("#eCodigo").focus();
-  } catch(err){ toast(err.message); } finally { btn.disabled = false; }
+  try { const d = await api("/api/cuenta/entrar", {json:{usuario:$("#eUsuario").value.trim(), password:$("#eClave").value}}); await dentro(d.token, "¡Hola de nuevo!"); }
+  catch(err){ if (err.datos && err.datos.necesita_verificar) pedirCodigo(err.datos.email, err.datos); else toast(err.message); }
 });
-$("#fCodigo").addEventListener("submit", async e => {
+$("#fRegistro").addEventListener("submit", async e => {
   e.preventDefault();
-  try {
-    const d = await api("/api/cuenta/verificar", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({email: emailPendiente, codigo: $("#eCodigo").value})});
-    sesion.set(d.token);
-    $("#fCodigo").style.display = "none"; $("#fEntrar").style.display = "grid"; $("#bloqueArtista").style.display = "none";
-    toast("¡Dentro! Tu correo está verificado.");
-    await pintarCuenta(); prepararEnvio();
-  } catch(err){ toast(err.message); }
-});
-$("#btnOtroCorreo").addEventListener("click", () => { $("#fCodigo").style.display = "none"; $("#fEntrar").style.display = "grid"; });
-$("#fArtistaCuenta").addEventListener("submit", async e => {
-  e.preventDefault();
-  try { await api("/api/cuenta", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({artista: $("#cArtista").value.trim()})}); toast("Nombre guardado."); pintarCuenta(); }
+  if (!$("#rAcepto").checked) return toast("Acepta las condiciones para crear la cuenta.");
+  const email = $("#rEmail").value.trim();
+  try { const d = await api("/api/cuenta/registro", {json:{email, nick:$("#rNick").value.trim().toLowerCase(), artista:$("#rArtista").value.trim(), password:$("#rClave").value}}); pedirCodigo(email, d); }
   catch(err){ toast(err.message); }
 });
-$("#btnSalir").addEventListener("click", async () => { try { await api("/api/cuenta/salir", {method:"POST"}); } catch(e){} sesion.set(null); YO = null; pintarCuenta(); prepararEnvio(); });
-$("#btnBorrar").addEventListener("click", async e => {
-  const b = e.currentTarget;
-  if (!b.dataset.seguro){ b.dataset.seguro = 1; b.textContent = "Se borrarán tu cuenta y tus envíos no admitidos. Pulsa otra vez para confirmar"; return; }
-  try { await api("/api/cuenta/borrar", {method:"POST"}); sesion.set(null); YO = null; toast("Cuenta borrada."); b.dataset.seguro = ""; b.textContent = "Borrar mi cuenta"; pintarCuenta(); }
+$("#fVerificar").addEventListener("submit", async e => {
+  e.preventDefault();
+  try { const d = await api("/api/cuenta/verificar", {json:{email:emailPendiente, codigo:$("#vCodigo").value}}); await dentro(d.token, "¡Cuenta verificada! Bienvenido a Crazy rAdIo."); verForm("#fEntrar"); }
   catch(err){ toast(err.message); }
 });
-async function prepararEnvio(){
-  if (!API_BASE) return;
-  if (sesion.get() && !YO) await cargarYo();
-  pintarNav();
-  $("#puertaEnvio").style.display = YO ? "none" : "block";
-  $("#form").style.display = YO ? "grid" : "none";
-  if (YO){ $("#comoQuien").textContent = `Envías como ${YO.email}.`; if (!$("#fArtista").value) $("#fArtista").value = YO.artista; }
-}
+$("#btnReenviar").addEventListener("click", async () => { try { const d = await api("/api/cuenta/reenviar", {json:{email:emailPendiente}}); pedirCodigo(emailPendiente, d); toast("Código reenviado."); } catch(err){ toast(err.message); } });
+$("#lnkOlvido").addEventListener("click", e => { e.preventDefault(); verForm("#fRecuperar"); $("#bloqueNuevaClave").classList.add("oculto"); $("#btnRecuperar").textContent = "Enviarme un código"; });
+$("#btnVolver").addEventListener("click", () => verForm("#fEntrar"));
+$("#fRecuperar").addEventListener("submit", async e => {
+  e.preventDefault();
+  const email = $("#kEmail2").value.trim();
+  if ($("#bloqueNuevaClave").classList.contains("oculto")){
+    try { const d = await api("/api/cuenta/recuperar", {json:{email}}); $("#bloqueNuevaClave").classList.remove("oculto"); $("#btnRecuperar").textContent = "Guardar contraseña nueva";
+      $("#txtRecuperar").innerHTML = `Si hay una cuenta con ese correo, te hemos enviado un código.` + (d.codigo_pruebas ? ` <span class="nota">(pruebas: ${esc(d.codigo_pruebas)})</span>` : ""); }
+    catch(err){ toast(err.message); }
+  } else {
+    try { const d = await api("/api/cuenta/restablecer", {json:{email, codigo:$("#kCodigo").value, password:$("#kClave").value}}); await dentro(d.token, "Contraseña cambiada."); verForm("#fEntrar"); }
+    catch(err){ toast(err.message); }
+  }
+});
 
-/* ---------- Publicidad ---------- */
+/* ================================================================ panel del usuario */
+let metrica = "reproducciones";
+$("#ptabs").addEventListener("click", e => { const b = e.target.closest("[data-p]"); if (!b) return; $$("#ptabs button").forEach(x => x.classList.toggle("on", x === b)); ["resumen","canciones","perfil","cuenta"].forEach(k => $("#p-" + k).classList.toggle("oculto", k !== b.dataset.p)); });
+$("#tabsMetrica").addEventListener("click", e => { const b = e.target.closest("[data-m]"); if (!b) return; metrica = b.dataset.m; $$("#tabsMetrica button").forEach(x => x.classList.toggle("on", x === b)); grafico(); });
+function grafico(){
+  if (!YO) return;
+  const datos = YO.serie.map(d => d[metrica] || 0), max = Math.max(1, ...datos);
+  const W = 600, H = 170, bw = W / datos.length;
+  const barras = datos.map((v, i) => { const h = Math.max(v ? 3 : 1, (H - 24) * v / max); return `<rect x="${(i * bw + 2).toFixed(1)}" y="${(H - 18 - h).toFixed(1)}" width="${(bw - 4).toFixed(1)}" height="${h.toFixed(1)}" rx="3" fill="${v ? "url(#gG)" : "#27306A"}"><title>${YO.serie[i].dia}: ${num(v)}</title></rect>`; }).join("");
+  const f = d => d.slice(8, 10) + "/" + d.slice(5, 7);
+  $("#grafico").innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Evolución de ${metrica} en 30 días"><defs><linearGradient id="gG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#00D4FF"/><stop offset="1" stop-color="#8A00FF"/></linearGradient></defs>${barras}
+    <text x="0" y="${H - 2}" fill="#8C92BB" font-size="11">${f(YO.serie[0].dia)}</text><text x="${W}" y="${H - 2}" fill="#8C92BB" font-size="11" text-anchor="end">${f(YO.serie[YO.serie.length - 1].dia)}</text>
+    <text x="${W}" y="12" fill="#8C92BB" font-size="11" text-anchor="end">máx. ${num(max)}</text></svg>`;
+}
+function pintarPanel(){
+  if (!API){ $("#panelCab").innerHTML = `<div class="aviso">Tu panel estará disponible cuando la plataforma esté en marcha.</div>`; return; }
+  if (!YO){ necesitaCuenta("Entra para ver tu panel."); return; }
+  $("#panelCab").innerHTML = `${avatarHTML(YO.avatar, YO.artista)}<div><h1 style="margin:0">${esc(YO.artista)}</h1><div class="a">@${esc(YO.nick)} · ${esc(YO.email)}</div>
+    <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><a class="btn peq" href="#artista-${esc(YO.nick)}">Ver mi perfil público</a><a class="btn peq pri" href="#enviar">Subir canción</a></div></div>`;
+  const T = YO.totales;
+  $("#kpis").innerHTML = [["reproducciones","reproducciones a la carta"],["minutos_radio","minutos escuchados en la radio"],["megusta","me gusta"],["visitas","visitas a tus fichas"],["votos","votos para el Top 40"]]
+    .map(([k, t]) => `<div class="stat"><b>${num(T[k])}</b><span>${t}</span></div>`).join("") + `<div class="stat"><b>${YO.canciones.filter(c => c.estado === "admitida").length} / ${YO.canciones.length}</b><span>canciones en antena / enviadas</span></div>`;
+  grafico();
+  const COL = {recibida:"var(--tx2)", analizando:"var(--cian)", pendiente:"var(--violeta2)", admitida:"var(--ok)", rechazada:"var(--ko)", error:"var(--ko)"};
+  $("#tablaCanciones").innerHTML = YO.canciones.length ? `<tr><th>Canción</th><th>Estado</th><th class="n">▶ Reprod.</th><th class="n">Min. radio</th><th class="n">♥</th><th class="n">Visitas</th><th class="n">Votos</th><th></th></tr>` +
+    YO.canciones.map(c => `<tr><td><b>${c.estado === "admitida" ? `<a href="#cancion-${c.id}">${esc(c.titulo)}</a>` : esc(c.titulo)}</b>${c.adultos ? '<span class="adult">+18</span>' : ""}<div class="a" style="font-size:12px">${esc((c.creado || "").slice(0,10))}${c.programa ? " · " + esc(c.programa) : ""}</div></td>
+      <td style="color:${COL[c.estado] || "var(--tx2)"};font-size:13px">${esc(c.estado_texto)}</td><td class="n">${num(c.reproducciones)}</td><td class="n">${num(c.minutos_radio)}</td><td class="n">${num(c.megusta)}</td><td class="n">${num(c.visitas)}</td><td class="n">${num(c.votos)}</td>
+      <td><button class="btn peq" type="button" data-informe="${esc(c.codigo)}">Informe</button></td></tr>`).join("")
+    : `<tr><td class="vacio">Aún no has subido canciones. <a href="#enviar">Sube la primera</a>.</td></tr>`;
+  // Perfil
+  $("#avPerfil").outerHTML = avatarHTML(YO.avatar, YO.artista, 'id="avPerfil"');
+  $("#pNick").value = YO.nick || ""; $("#pArtista").value = YO.artista || ""; $("#pCiudad").value = YO.ciudad || ""; $("#pBio").value = YO.bio || ""; $("#pPublico").checked = YO.publico;
+  $("#pEnlaces").innerHTML = Object.entries(NOMBRES_RED).map(([k, n]) => `<div><label for="pE_${k}">${n}</label><input id="pE_${k}" data-red="${k}" type="url" placeholder="https://" value="${esc((YO.enlaces || {})[k] || "")}"></div>`).join("");
+  $("#verPerfil").href = `#artista-${YO.nick}`;
+  // Cuenta
+  $("#txtEmailActual").textContent = `Correo actual: ${YO.email}`; $("#cAvisos").checked = YO.avisos_email;
+}
+document.addEventListener("click", async e => {
+  const b = e.target.closest("[data-informe]"); if (!b) return;
+  const box = $("#informeEnvio"); box.innerHTML = `<p class="nota">Cargando…</p>`;
+  try {
+    const d = await api("/api/envios/" + encodeURIComponent(b.dataset.informe)), inf = d.informe;
+    box.innerHTML = `<div class="card"><h3 style="margin:0">${esc(d.titulo)}</h3><p style="margin:6px 0 0;font-weight:600">${esc(d.estado_texto)}</p>
+      ${d.programa ? `<p style="margin:6px 0 0">Suena en: <b>${esc(d.programa)}</b></p>` : ""}${d.motivo ? `<p style="margin:6px 0 0;color:var(--tx2)">Motivo: ${esc(d.motivo)}</p>` : ""}
+      ${inf ? `<div class="stats"><div class="stat"><b>${inf.puntuacion_tecnica ?? "—"}</b><span>calidad técnica / 100</span></div><div class="stat"><b>${inf.volumen_lufs ?? "—"}</b><span>volumen (LUFS)</span></div><div class="stat"><b>${inf.tempo_bpm ?? "—"}</b><span>tempo aprox. (BPM)</span></div></div>
+      ${inf.programa_sugerido ? `<p style="margin:14px 0 0;color:var(--tx2)">Programa que propone la IA: <b>${esc(inf.programa_sugerido)}</b></p>` : ""}
+      ${inf.alertas && inf.alertas.length ? `<ul style="color:var(--tx2);font-size:14px">${inf.alertas.map(a => `<li>${esc(a)}</li>`).join("")}</ul>` : ""}` : `<p class="nota">El análisis aparecerá en unos minutos.</p>`}</div>`;
+    box.scrollIntoView({behavior:"smooth", block:"nearest"});
+  } catch(err){ box.innerHTML = `<div class="aviso ko">${esc(err.message)}</div>`; }
+});
+$("#pAvatar").addEventListener("change", async e => {
+  const f = e.target.files[0]; if (!f) return;
+  const fd = new FormData(); fd.append("avatar", f);
+  try { await api("/api/cuenta/avatar", {method:"POST", body:fd}); toast("Foto actualizada."); await cargarYo(); pintarUsuario(); pintarPanel(); } catch(err){ toast(err.message); }
+});
+function datosPerfil(extra = {}){
+  const enlaces = {}; $$("#pEnlaces [data-red]").forEach(i => { if (i.value.trim()) enlaces[i.dataset.red] = i.value.trim(); });
+  return {nick:$("#pNick").value.trim().toLowerCase(), artista:$("#pArtista").value.trim(), ciudad:$("#pCiudad").value.trim(), bio:$("#pBio").value.trim(), enlaces, publico:$("#pPublico").checked, avisos_email:$("#cAvisos").checked, ...extra};
+}
+$("#fPerfil").addEventListener("submit", async e => { e.preventDefault(); try { await api("/api/cuenta/perfil", {json:datosPerfil()}); toast("Perfil guardado."); await cargarYo(); pintarUsuario(); pintarPanel(); } catch(err){ toast(err.message); } });
+$("#cAvisos").addEventListener("change", async () => { try { await api("/api/cuenta/perfil", {json:datosPerfil()}); toast("Preferencia guardada."); } catch(err){ toast(err.message); } });
+$("#fClave").addEventListener("submit", async e => { e.preventDefault(); try { await api("/api/cuenta/clave", {json:{actual:$("#cActual").value, nueva:$("#cNueva").value}}); toast("Contraseña cambiada. Se han cerrado tus otras sesiones."); e.target.reset(); } catch(err){ toast(err.message); } });
+$("#fEmail").addEventListener("submit", async e => {
+  e.preventDefault();
+  const nuevo = $("#cNuevo").value.trim();
+  if ($("#bloqueCodEmail").classList.contains("oculto")){
+    try { const d = await api("/api/cuenta/email", {json:{nuevo, password:$("#cClaveEmail").value}}); $("#bloqueCodEmail").classList.remove("oculto"); $("#btnEmail").textContent = "Confirmar código"; toast(`Te hemos enviado un código a ${nuevo}.` + (d.codigo_pruebas ? ` (pruebas: ${d.codigo_pruebas})` : "")); }
+    catch(err){ toast(err.message); }
+  } else {
+    try { await api("/api/cuenta/email/confirmar", {json:{nuevo, codigo:$("#cCodigo").value}}); toast("Correo cambiado."); $("#bloqueCodEmail").classList.add("oculto"); $("#btnEmail").textContent = "Cambiar correo"; e.target.reset(); await cargarYo(); pintarPanel(); }
+    catch(err){ toast(err.message); }
+  }
+});
+$("#btnSalir").addEventListener("click", async () => { try { await api("/api/cuenta/salir", {method:"POST"}); } catch(e){} sesion.set(null); YO = null; pintarUsuario(); toast("Sesión cerrada."); location.hash = "#directo"; });
+$("#fBorrar").addEventListener("submit", async e => {
+  e.preventDefault();
+  const b = e.target.querySelector("button");
+  if (!b.dataset.seguro){ b.dataset.seguro = "1"; b.textContent = "Pulsa otra vez para confirmar: no se puede deshacer"; return; }
+  try { await api("/api/cuenta/borrar", {json:{password:$("#bClave").value}}); sesion.set(null); YO = null; pintarUsuario(); toast("Cuenta borrada."); location.hash = "#directo"; }
+  catch(err){ toast(err.message); b.dataset.seguro = ""; b.textContent = "Borrar mi cuenta para siempre"; }
+});
+
+/* ================================================================ publicidad: anuncios y contratación */
 async function cargarAnuncios(){
-  for (const hueco of document.querySelectorAll(".vista.on .pub, main > .pub")) {
+  for (const hueco of $$(".vista.on .pub, main > .pub")){
     const formato = hueco.dataset.formato;
     let a = null;
-    if (API_BASE) { try { a = (await api(`/api/anuncios?formato=${formato}`)).anuncio; } catch(e){} }
+    if (API){ try { a = (await api(`/api/anuncios?formato=${formato}`)).anuncio; } catch(e){} }
     hueco.innerHTML = a
-      ? `<span class="et">Publicidad</span><a href="${esc(a.clic)}" target="_blank" rel="noopener sponsored"><img src="${esc(a.img)}" alt="${esc(a.alt)}" width="${formato==="banner"?728:300}" height="${formato==="banner"?90:250}"></a>`
-      : `<span class="et">Publicidad</span><a class="casa" href="#anunciate"><span>¿Quieres que tu marca suene aquí?</span><b>Anúnciate en ${esc(CONFIG.nombre)} →</b></a>`;
+      ? `<span class="et">Publicidad</span><a href="${esc(a.clic)}" target="_blank" rel="noopener sponsored"><img src="${esc(a.img)}" alt="${esc(a.alt)}" width="${formato === "banner" ? 728 : 300}" height="${formato === "banner" ? 90 : 250}"></a>`
+      : `<span class="et">Publicidad</span><a class="casa" href="#anunciate"><span>¿Quieres que tu marca suene aquí?</span><b>Anúnciate en Crazy rAdIo desde 49 € →</b></a>`;
   }
 }
+const TARIFAS_DEMO = [
+  {id:"banner_mes", nombre:"Banner 728×90 · 1 mes", tipo:"banner", base:49, total:59.29, desc:"Arriba de cada página y en el Top 40, en rotación con un máximo de 3 anunciantes. Impresiones sin límite durante 30 días."},
+  {id:"banner_10k", nombre:"Banner 728×90 · 10.000 impresiones", tipo:"banner", base:60, total:72.6, desc:"Pagas solo lo que se ve: 10.000 impresiones garantizadas, con un plazo máximo de 90 días."},
+  {id:"cuadrado_mes", nombre:"Cuadrado 300×250 junto al directo · 1 mes", tipo:"banner", base:69, total:83.49, desc:"La zona más vista: al lado del reproductor en directo. 30 días."},
+  {id:"cuna_mes", nombre:"Cuña de radio 20″ · 1 mes", tipo:"cuna", base:59, total:71.39, desc:"Tu anuncio en antena 3 veces por hora durante 30 días. Grabación con locutor IA incluida."},
+  {id:"patrocinio_mes", nombre:"Patrocinio de un programa · 1 mes", tipo:"patrocinio", base:129, total:156.09, desc:"Menciones del locutor y tu logo en la ficha del programa durante 30 días."}];
+let TARIFAS = TARIFAS_DEMO, PAGO_ONLINE = false, paquete = null;
+async function cargarTarifas(){
+  if (API){ try { const d = await api("/api/publicidad/tarifas"); TARIFAS = d.tarifas; PAGO_ONLINE = d.pago_online;
+    $("#oLocutor").innerHTML = Object.entries(d.locutores).map(([k, v]) => `<option value="${esc(k)}">${esc(v)}</option>`).join("");
+    $("#oPrograma").innerHTML = Object.entries(d.programas).map(([k, v]) => `<option value="${esc(k)}">${esc(v)}</option>`).join(""); } catch(e){} }
+  else {
+    $("#oLocutor").innerHTML = Object.entries(LOCUTORES).map(([k, v]) => `<option value="${k}">${esc(v.nombre)}</option>`).join("");
+    $("#oPrograma").innerHTML = PROGRAMAS.filter(p => p.locutor).map(p => `<option value="${p.id}">${esc(p.nombre)}</option>`).join("");
+  }
+  $("#tarifas").innerHTML = TARIFAS.map(t => `<div class="card tarifa ${paquete && paquete.id === t.id ? "sel" : ""}"><h3 style="margin:0">${esc(t.nombre)}</h3>
+    <div class="precio">${eur(t.base)} <small>+ IVA</small></div><div class="nota" style="margin-top:-6px">Total con IVA: ${eur(t.total)}</div><p>${esc(t.desc)}</p>
+    <button class="btn pri" type="button" data-paquete="${esc(t.id)}">Contratar</button></div>`).join("");
+}
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-paquete]"); if (!b) return;
+  paquete = TARIFAS.find(t => t.id === b.dataset.paquete);
+  $$(".tarifa").forEach(x => x.classList.toggle("sel", x.contains(b)));
+  $("#fPedido").classList.remove("oculto");
+  $("#tituloPedido").textContent = paquete.nombre;
+  $("#bqBanner").classList.toggle("oculto", paquete.tipo !== "banner");
+  $("#bqCuna").classList.toggle("oculto", paquete.tipo !== "cuna");
+  $("#bqPatrocinio").classList.toggle("oculto", paquete.tipo !== "patrocinio");
+  $("#medidas").textContent = paquete.id.startsWith("cuadrado") ? "(300×250 px, PNG/JPG/GIF, máx. 1 MB)" : "(728×90 px, PNG/JPG/GIF, máx. 1 MB)";
+  $("#resumenPedido").textContent = `${eur(paquete.base)} + IVA = ${eur(paquete.total)}`;
+  $("#btnPagar").textContent = PAGO_ONLINE ? `Pagar ${eur(paquete.total)} con tarjeta` : "Enviar pedido";
+  $("#fPedido").scrollIntoView({behavior:"smooth", block:"start"});
+});
+$("#fPedido").addEventListener("submit", async e => {
+  e.preventDefault();
+  if (!paquete) return;
+  if (!API) return toast("La contratación se activará cuando la plataforma esté en marcha. Escríbenos mientras tanto.");
+  if (!$("#oAcepto").checked) return toast("Acepta las condiciones de contratación.");
+  const fd = new FormData();
+  const campos = {paquete:paquete.id, empresa:"#oEmpresa", nif:"#oNif", direccion:"#oDireccion", contacto:"#oContacto", telefono:"#oTelefono", email:"#oEmail", texto:"#oTexto", locutor:"#oLocutor", programa:"#oPrograma", web:"#oWeb"};
+  for (const [k, s] of Object.entries(campos)) fd.append(k, s.startsWith("#") ? $(s).value.trim() : s);
+  fd.append("url", (paquete.tipo === "patrocinio" ? $("#oUrl2") : $("#oUrl")).value.trim());
+  fd.append("condiciones", "1");
+  if ($("#oImagen").files[0]) fd.append("imagen", $("#oImagen").files[0]);
+  if ($("#oAudio").files[0]) fd.append("audio", $("#oAudio").files[0]);
+  const btn = $("#btnPagar"); btn.disabled = true;
+  try {
+    const d = await api("/api/publicidad/pedido", {method:"POST", body:fd});
+    if (d.url_pago){ location.href = d.url_pago; return; }
+    $("#resPedido").innerHTML = `<div class="aviso ok"><b>Pedido n.º ${d.pedido} registrado.</b> Te escribimos en menos de 24 horas laborables con los datos para pagar por transferencia (${eur(d.total)}). Activamos el anuncio en cuanto llegue el pago.</div>`;
+    e.target.reset();
+  } catch(err){ $("#resPedido").innerHTML = `<div class="aviso ko">${esc(err.message)}</div>`; }
+  finally { btn.disabled = false; }
+});
 $("#fContacto").addEventListener("submit", async e => {
   e.preventDefault();
-  const f = e.target;
-  if (!f.checkValidity()){ f.reportValidity(); return; }
-  const datos = {nombre:$("#kNombre").value, empresa:$("#kEmpresa").value, email:$("#kEmail").value, tipo:$("#kTipo").value, mensaje:$("#kMensaje").value, web:$("#kWeb").value};
-  const res = $("#resContacto"); res.style.display = "block";
-  if (!API_BASE){ res.innerHTML = `<div class="aviso">Escríbenos a <b>${esc(CONFIG.emailContacto)}</b>.</div>`; return; }
-  try { await api("/api/contacto", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(datos)});
-        res.innerHTML = `<div class="aviso" style="background:rgba(46,196,182,.12);border-color:rgba(46,196,182,.4)">¡Gracias! Te responderemos en breve.</div>`; f.reset(); }
-  catch(err){ res.innerHTML = `<div class="aviso">${esc(err.message)}</div>`; }
+  const res = $("#resContacto");
+  if (!$("#kEmail").value || !$("#kMensaje").value) return toast("Indica tu correo y el mensaje.");
+  if (!API){ res.innerHTML = `<div class="aviso">Escríbenos a <b>${esc(CONFIG.emailContacto)}</b>.</div>`; return; }
+  try { await api("/api/contacto", {json:{nombre:$("#kNombre").value, empresa:$("#kEmpresa").value, email:$("#kEmail").value, tipo:$("#kTipo").value, mensaje:$("#kMensaje").value, web:$("#kWeb").value}});
+        res.innerHTML = `<div class="aviso ok">¡Gracias! Te responderemos en breve.</div>`; e.target.reset(); }
+  catch(err){ res.innerHTML = `<div class="aviso ko">${esc(err.message)}</div>`; }
 });
 
-/* ---------- Navegación ---------- */
-const VISTAS = ["directo","parrilla","locutores","top40","enviar","cuenta","anunciate","info"];
-function ruta(){
-  const v = VISTAS.includes(location.hash.slice(1)) ? location.hash.slice(1) : "directo";
-  VISTAS.forEach(x => $("#v-"+x).classList.toggle("on", x===v));
-  document.querySelectorAll("#menu a").forEach(a => a.classList.toggle("on", a.getAttribute("href")==="#"+v));
-  if (v==="parrilla") pintarParrilla();
-  if (v==="top40") cargarTop();
-  if (v==="cuenta") pintarCuenta();
-  if (v==="enviar") prepararEnvio();
-  cargarAnuncios();
+/* ================================================================ navegación */
+const VISTAS = ["directo","explorar","cancion","artista","top40","parrilla","locutores","enviar","entrar","panel","anunciate","pago-ok","info"];
+async function ruta(){
+  const h = decodeURIComponent(location.hash.slice(1));
+  let v = VISTAS.includes(h) ? h : "directo", param = null;
+  if (h.startsWith("cancion-")) { v = "cancion"; param = parseInt(h.slice(8), 10); }
+  if (h.startsWith("artista-")) { v = "artista"; param = h.slice(8); }
+  VISTAS.forEach(x => { const el = $("#v-" + x); if (el) el.classList.toggle("on", x === v); });
+  $$("#menu a").forEach(a => a.classList.toggle("on", a.getAttribute("href") === "#" + v));
   window.scrollTo({top:0});
+  if (v === "directo") cargarRecientes();
+  if (v === "explorar") cargarCatalogo();
+  if (v === "cancion") cargarCancion(param);
+  if (v === "artista") cargarArtista(param);
+  if (v === "top40") cargarTop();
+  if (v === "parrilla") pintarParrilla();
+  if (v === "enviar") { if (sesion.get() && !YO) await cargarYo(); prepararEnvio(); }
+  if (v === "entrar" && YO) { location.hash = "#panel"; return; }
+  if (v === "panel") { if (sesion.get()) await cargarYo(); pintarUsuario(); pintarPanel(); }
+  if (v === "anunciate") cargarTarifas();
+  cargarAnuncios();
 }
 window.addEventListener("hashchange", ruta);
 
-/* ---------- Instalación como app ---------- */
+/* ================================================================ instalación como app */
 let instalar = null;
-window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); instalar = e; $("#btnInstalar").style.display="inline-block"; });
-$("#btnInstalar").addEventListener("click", async () => { if(!instalar) return; instalar.prompt(); try{ await instalar.userChoice; }catch(e){} instalar=null; $("#btnInstalar").style.display="none"; });
-if (/iphone|ipad|ipod/i.test(navigator.userAgent)) { const h=$("#iosHint"); h.style.display="block"; h.textContent="En iPhone: botón Compartir de Safari → «Añadir a pantalla de inicio»."; }
-if ("serviceWorker" in navigator && location.protocol === "https:") {
-  try { navigator.serviceWorker.register("sw.js").catch(()=>{}); } catch(e){}
-}
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); instalar = e; $("#btnInstalar").style.display = "inline-block"; });
+$("#btnInstalar").addEventListener("click", async () => { if (!instalar) return; instalar.prompt(); try { await instalar.userChoice; } catch(e){} instalar = null; $("#btnInstalar").style.display = "none"; });
+if (/iphone|ipad|ipod/i.test(navigator.userAgent)) $("#iosHint").textContent = "En iPhone: botón Compartir de Safari → «Añadir a pantalla de inicio».";
+if ("serviceWorker" in navigator && location.protocol === "https:") { try { navigator.serviceWorker.register("sw.js").catch(() => {}); } catch(e){} }
 
-/* ---------- Arranque ---------- */
+/* ================================================================ arranque */
 $("#stProgs").textContent = PROGRAMAS.length;
-pintarLocutores(); pintarParrilla(); actualizarAhora(); ruta();
-cargarYo().then(pintarNav);
-setInterval(actualizarAhora, DEMO ? 30000 : 15000);
-setInterval(() => { if ($("#v-parrilla").classList.contains("on")) pintarParrilla(); }, 30000);
+pintarLocutores(); pintarParrilla(); actualizarAhora(); pintarBarra();
+cargarYo().then(() => { pintarUsuario(); ruta(); });
+setInterval(actualizarAhora, NOWPLAYING ? 15000 : 30000);
 })();
+
 </script>
 </body>
 </html>

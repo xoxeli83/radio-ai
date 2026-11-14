@@ -1,14 +1,14 @@
 {
   "_ayuda": "Configuración de la emisora y de los locutores IA. Las voces son de Piper (gratuitas). Muestras para elegir: https://rhasspy.github.io/piper-samples/",
   "emisora": {
-    "nombre": "AI Radio Global",
-    "nombre_hablado": "AI Radio Global",
-    "web": "airadio punto duckdns punto org",
+    "nombre": "Crazy rAdIo",
+    "nombre_hablado": "Crazy rAdIo",
+    "web": "czyradio punto com",
     "zona_horaria": "Europe/Madrid"
   },
   "azuracast": {
     "url": "http://127.0.0.1:8080",
-    "emisora": "airadio",
+    "emisora": "czyradio",
     "api_key_variable": "AZURACAST_API_KEY",
     "_ayuda": "Dirección interna de AzuraCast en el propio servidor (Caddy publica la externa con HTTPS)."
   },

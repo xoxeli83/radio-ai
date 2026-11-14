@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Panel · AI Radio Global</title>
+<title>Panel · Crazy rAdIo</title>
 <style>
 :root{--bg:#0d0b1a;--card:#1b1735;--bg2:#15122a;--line:#2c2752;--tx:#f4f1ff;--tx2:#b7b0d9;--tx3:#8a83b0;--a3:#ffd60a;--ok:#2ec4b6;--ko:#ff6b75}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 Inter,system-ui,sans-serif}
@@ -50,14 +50,20 @@ th{color:var(--tx3);font-weight:500}td img{max-width:180px;max-height:60px;borde
 </style>
 </head>
 <body>
-<header><div class="wrap hb"><h1 style="margin:0 12px 0 0">AI Radio · Panel</h1>
-  <nav class="secs" id="secs"><a href="#canciones" class="on">Canciones</a><a href="#publicidad">Banners</a><a href="#cunas">Cuñas de radio</a><a href="#mensajes">Mensajes</a></nav>
+<header><div class="wrap hb"><h1 style="margin:0 12px 0 0">Crazy rAdIo · Panel</h1>
+  <nav class="secs" id="secs"><a href="#canciones" class="on">Canciones</a><a href="#pedidos">Pedidos</a><a href="#publicidad">Banners</a><a href="#cunas">Cuñas de radio</a><a href="#mensajes">Mensajes</a></nav>
 </div></header>
 <main class="wrap">
  <section class="sec on" id="s-canciones">
   <div class="tabs" id="tabs" style="margin-top:14px"></div>
   <p class="nota" id="resumen"></p>
   <div id="lista"></div>
+ </section>
+
+ <section class="sec" id="s-pedidos">
+  <div class="kpis" id="kpisPedidos"></div>
+  <p class="nota">Los anunciantes contratan en la web (Anúnciate). Con Stripe activo, el pedido pasa solo a «Pagado»; si pagan por transferencia, márcalo tú. Revisa el material y pulsa <b>Activar</b>: el banner o la cuña se publican solos durante el periodo contratado y se retiran al terminar.</p>
+  <div id="tablaPedidos"></div>
  </section>
 
  <section class="sec" id="s-publicidad">
@@ -127,6 +133,7 @@ function tarjeta(e){
       <span class="chip">${esc(e.herramienta)} · plan ${esc(e.plan)} · descarga ${esc(e.fecha_descarga)}</span>
       <span class="chip">${mmss(m.duracion_s)} · ${m.kbps||"?"} kbps · ${m.lufs??"?"} LUFS · ${m.tempo_bpm||"?"} BPM</span>
       <span class="chip">Letra: ${esc(e.letra_autor)}</span>
+      <span class="chip">Titularidad: ${esc({mia:"del creador (plan que la cede)",propia:"composición propia",licencia:"licencia de la plataforma"}[e.titularidad]||e.titularidad||"—")}</span>
     </div>
     ${(a.motivos||[]).length||(a.alertas||[]).length?`<ul>${(a.alertas||[]).map(x=>`<li class="alerta">${esc(x)}</li>`).join("")}${(a.motivos||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:""}
     ${a.ia&&a.ia.comentario?`<p style="margin:6px 0;color:var(--tx2);font-size:14px"><b>Comentario IA:</b> ${esc(a.ia.comentario)}</p>`:""}
@@ -138,6 +145,7 @@ function tarjeta(e){
       ${e.estado!=="admitida"?`<select id="p${e.id}">${opciones}</select><button class="btn ok" data-a="admitir" data-id="${e.id}">Admitir y enviar a la radio</button>`:`<span class="chip prog">En emisión: ${esc(programas[e.programa]||e.programa)}</span>`}
       ${e.estado!=="rechazada"&&e.estado!=="admitida"?`<input id="m${e.id}" placeholder="Motivo del rechazo (lo verá el creador)" size="34"><button class="btn ko" data-a="rechazar" data-id="${e.id}">Rechazar</button>`:""}
       <button class="btn" data-a="reanalizar" data-id="${e.id}">Reanalizar</button>
+      ${e.estado==="admitida"?`<input id="m${e.id}" placeholder="Motivo de la retirada" size="24"><button class="btn ko" data-a="retirar" data-id="${e.id}">Retirar de la radio</button>`:""}
     </div>
    </div></div>`;
 }
@@ -146,7 +154,7 @@ document.addEventListener("click",async ev=>{
   const b=ev.target.closest("[data-a]"); if(!b) return;
   const id=b.dataset.id, accion=b.dataset.a, cuerpo={accion};
   if(accion==="admitir") cuerpo.programa=$("#p"+id).value;
-  if(accion==="rechazar") cuerpo.motivo=$("#m"+id).value;
+  if(accion==="rechazar"||accion==="retirar") cuerpo.motivo=$("#m"+id).value;
   b.disabled=true; b.textContent="…";
   const r=await fetch(`api/admin/envios/${id}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(cuerpo)});
   const d=await r.json().catch(()=>({}));
@@ -160,7 +168,7 @@ function seccion(){
   const s=(location.hash||"#canciones").slice(1);
   document.querySelectorAll(".sec").forEach(x=>x.classList.toggle("on",x.id==="s-"+s));
   document.querySelectorAll("#secs a").forEach(a=>a.classList.toggle("on",a.getAttribute("href")==="#"+s));
-  if(s==="publicidad") cargarAnuncios(); if(s==="cunas") cargarCunas(); if(s==="mensajes") cargarMensajes();
+  if(s==="pedidos") cargarPedidos(); if(s==="publicidad") cargarAnuncios(); if(s==="cunas") cargarCunas(); if(s==="mensajes") cargarMensajes();
 }
 window.addEventListener("hashchange",seccion);
 
@@ -222,6 +230,29 @@ document.addEventListener("click",async ev=>{
   if(le){ await fetch("api/admin/contactos",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:+le.dataset.leido})}); cargarMensajes(); }
 });
 seccion();
+
+/* ---------- Pedidos ---------- */
+const EST_PED={pendiente_pago:["Pendiente de pago","var(--a3)"],pagado:["Pagado · por activar","var(--ok)"],activo:["Activo","var(--ok)"],finalizado:["Finalizado","var(--tx3)"],rechazado:["Rechazado","var(--ko)"]};
+async function cargarPedidos(){
+  const d=await (await fetch("api/admin/pedidos",{cache:"no-store"})).json();
+  const porActivar=d.pedidos.filter(p=>p.estado==="pagado").length, activos=d.pedidos.filter(p=>p.estado==="activo").length;
+  $("#kpisPedidos").innerHTML=`<div class="kpi"><b>${d.ingresos30.base.toLocaleString("es-ES",{style:"currency",currency:"EUR"})}</b><span>ingresos 30 días (sin IVA)</span></div><div class="kpi"><b>${porActivar}</b><span>pagados por activar</span></div><div class="kpi"><b>${activos}</b><span>campañas activas</span></div><div class="kpi"><b>${d.pago_online?"Stripe activo":"Sin pago online"}</b><span>${d.pago_online?"cobro automático con tarjeta":"configura STRIPE_SECRET_KEY"}</span></div>`;
+  $("#tablaPedidos").innerHTML=d.pedidos.length?`<table><tr><th>#</th><th>Fecha</th><th>Paquete</th><th>Cliente</th><th>Total</th><th>Material</th><th>Estado</th><th></th></tr>${d.pedidos.map(p=>{const [t,c]=EST_PED[p.estado]||[p.estado,"var(--tx2)"]; return `<tr>
+    <td>${p.id}</td><td>${esc((p.creado||"").slice(0,10))}</td><td>${esc(p.nombre_paquete)}${p.programa?`<div class="a" style="font-size:12px">${esc(p.programa)}</div>`:""}</td>
+    <td><b>${esc(p.empresa)}</b><div class="a" style="font-size:12px">${esc(p.nif)} · ${esc(p.email)}${p.telefono?" · "+esc(p.telefono):""}</div></td>
+    <td>${(p.total_cent/100).toLocaleString("es-ES",{style:"currency",currency:"EUR"})}<div class="a" style="font-size:12px">${(p.base_cent/100).toFixed(2).replace(".",",")} + IVA</div></td>
+    <td>${p.imagen?`<img src="api/admin/pedidos/${p.id}/imagen" alt="">`:""}${p.audio&&!p.audio.startsWith("publicidad/")?`<audio controls preload="none" src="api/admin/pedidos/${p.id}/audio" style="width:180px"></audio>`:""}${p.texto?`<div style="font-size:12px;max-width:260px">«${esc(p.texto)}»${p.locutor?` · voz: ${esc(p.locutor)}`:""}</div>`:""}${p.url?`<div class="a" style="font-size:12px">${esc(p.url)}</div>`:""}</td>
+    <td style="color:${c};font-weight:600">${t}${p.fin?`<div class="a" style="font-size:12px;font-weight:400">hasta ${esc(p.fin)}</div>`:""}</td>
+    <td style="white-space:nowrap">${p.estado==="pendiente_pago"?`<button class="btn" data-ped="marcar_pagado" data-id="${p.id}">Marcar pagado</button>`:""}${p.estado==="pagado"?`<button class="btn ok" data-ped="activar" data-id="${p.id}">Activar</button>`:""}${["pendiente_pago","pagado"].includes(p.estado)?` <button class="btn ko" data-ped="rechazar" data-id="${p.id}">Rechazar</button>`:""}</td></tr>`}).join("")}</table>`:`<div class="vacio">Todavía no hay pedidos.</div>`;
+}
+document.addEventListener("click",async ev=>{
+  const b=ev.target.closest("[data-ped]"); if(!b) return;
+  if(b.dataset.ped==="rechazar"&&!b.dataset.seguro){ b.dataset.seguro=1; b.textContent="¿Seguro? (devuelve el pago en Stripe)"; return; }
+  b.disabled=true; b.textContent="…";
+  const r=await fetch(`api/admin/pedidos/${b.dataset.id}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({accion:b.dataset.ped})});
+  const d=await r.json().catch(()=>({})); if(!r.ok) alertaPanel(d.error||"Error"); cargarPedidos();
+});
+function alertaPanel(m){ const p=document.createElement("div"); p.className="msg"; p.style.borderColor="var(--ko)"; p.textContent=m; $("#tablaPedidos").before(p); setTimeout(()=>p.remove(),8000); }
 
 </script>
 </body>
