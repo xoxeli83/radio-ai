@@ -133,11 +133,11 @@ LOCUTORES_DIR=$D/locutores
 WHISPER_MODELO=small
 MAX_MB=25
 # Correo (códigos de verificación y avisos). Ver GUIA.md, paso 5 bis.
-SMTP_HOST=
+SMTP_HOST=smtp.ionos.es
 SMTP_PUERTO=587
-SMTP_USUARIO=
+SMTP_USUARIO=hola@czyradio.com
 SMTP_CLAVE=
-CORREO_REMITENTE=
+CORREO_REMITENTE=Crazy rAdIo <hola@czyradio.com>
 # Aquí te llegan los mensajes de anunciantes y los pedidos
 CORREO_ADMIN=
 # Pagos de publicidad con Stripe (GUIA.md, paso 8)

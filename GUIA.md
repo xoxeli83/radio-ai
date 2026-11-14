@@ -10,7 +10,7 @@ Lo que va a tu nombre (dominios, cuentas, tarjetas, contratos) tienes que hacerl
 | 3 | DNS del dominio | gratis | 10 min |
 | 4 | Instalar todo en el servidor | un comando | 30 min |
 | 5 | Ajustes de AzuraCast | gratis | 10 min |
-| 6 | Correo (Brevo) | gratis hasta 300 correos/día | 10 min |
+| 6 | Correo hola@czyradio.com (IONOS) | incluido con el dominio | hecho |
 | 7 | Web en czyradio.com | gratis (GitHub Pages) | 5 min |
 | 8 | Publicidad por presupuesto | — | cuando haya anunciantes |
 | 9 | Derechos de las canciones | gratis | antes de abrir |
@@ -91,19 +91,18 @@ Queda instalado en `/opt/czyradio`:
 
 Los usuarios se registran con **correo + contraseña** y verifican el correo con un **código de 6 cifras**. Los mismos códigos sirven para recuperar la contraseña y cambiar de correo.
 
-1. Cuenta gratuita en <https://www.brevo.com>.
-2. **Remitentes y dominios:** añade el dominio `czyradio.com` y crea en el DNS los registros que te pida (SPF, DKIM, DMARC). Así los correos no van a spam.
-3. **SMTP y API → SMTP:** copia el usuario y genera una clave.
-4. `sudo nano /opt/czyradio/plataforma.env`:
+Se usa el buzón **hola@czyradio.com** (Correo Básico de IONOS, incluido con el dominio; ya creado, con reenvío a info@besting.es). Los registros SPF, DKIM y DMARC de IONOS ya están en el DNS, así que los correos no van a spam.
+
+1. `sudo nano /opt/czyradio/plataforma.env`:
    ```
-   SMTP_HOST=smtp-relay.brevo.com
+   SMTP_HOST=smtp.ionos.es
    SMTP_PUERTO=587
-   SMTP_USUARIO=usuario-de-brevo
-   SMTP_CLAVE=clave-smtp
+   SMTP_USUARIO=hola@czyradio.com
+   SMTP_CLAVE=la-contraseña-del-buzón
    CORREO_REMITENTE=Crazy rAdIo <hola@czyradio.com>
-   CORREO_ADMIN=tu-correo
+   CORREO_ADMIN=hola@czyradio.com
    ```
-5. `sudo systemctl restart czyradio-plataforma`
+2. `sudo systemctl restart czyradio-plataforma`
 
 Sin SMTP los códigos solo salen en `journalctl -u czyradio-plataforma` y nadie puede registrarse.
 
