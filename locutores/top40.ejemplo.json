@@ -1,0 +1,8 @@
+[
+  {"titulo": "Electric Dreams", "artista": "Neon Pulse", "origen": "Vigo", "movimiento": 0,
+   "archivo": "/var/lib/docker/volumes/azuracast_station_data/_data/airadio/media/musica/pop/electric-dreams.mp3"},
+  {"titulo": "Sin mirar atrás", "artista": "Virtual Rebels", "origen": "México", "movimiento": 2,
+   "archivo": "/var/lib/docker/volumes/azuracast_station_data/_data/airadio/media/musica/rock/sin-mirar-atras.mp3"},
+  {"titulo": "Pousa en Ibiza", "artista": "Atlantic AI", "movimiento": "nuevo",
+   "archivo": "/var/lib/docker/volumes/azuracast_station_data/_data/airadio/media/musica/chill/pousa-en-ibiza.mp3"}
+]

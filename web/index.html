@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Radio Global</title>
+<meta name="description" content="Radio online 24/7 con canciones creadas con inteligencia artificial, locutores virtuales y listas de éxitos.">
+<meta name="theme-color" content="#0d0b1a">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- ======================================================================
+     CONFIGURACIÓN DE LA RADIO — lo único que hay que tocar para ponerla en marcha
+     ====================================================================== -->
+<script id="config">
+const CONFIG = {
+  nombre: "AI Radio Global",
+  lema: "La radio donde los próximos éxitos los crea la inteligencia artificial",
+
+  // Servidor AzuraCast (déjalo vacío para el modo demostración)
+  // Ejemplo: "https://airadio.duckdns.org"
+  servidor: "",
+  emisora: "airadio",            // nombre corto de la emisora en AzuraCast
+  // URL directa del audio. Si se deja vacía se usa servidor + /listen/emisora/radio.mp3
+  streamUrl: "",
+
+  zonaHoraria: "Europe/Madrid",
+
+  // Envío de canciones: URL de un formulario (p. ej. Formspree gratuito).
+  // Si está vacío, el formulario genera el texto para enviarlo por correo.
+  formularioUrl: "",
+  emailContacto: "radio@ejemplo.com",
+};
+
+// Parrilla diaria (hora de la emisora). fin = 24 significa medianoche.
+const PROGRAMAS = [
+  { ini: 0,  fin: 7,  id: "noche",   nombre: "Noche IA",              genero: "Música continua",       locutor: null,      color: "#6c63ff", desc: "Selección musical automática de todos los géneros, sin interrupciones." },
+  { ini: 7,  fin: 10, id: "morning", nombre: "AI Morning Show",       genero: "Variado",               locutor: "nova",    color: "#ffd60a", desc: "Para empezar el día: novedades, lo más votado y buen humor." },
+  { ini: 10, fin: 12, id: "pop",     nombre: "AI Pop Hits",           genero: "Pop · Dance",           locutor: "lia",     color: "#ff3d81", desc: "Pop comercial, dance y canciones pegadizas." },
+  { ini: 12, fin: 14, id: "rock",    nombre: "AI Rock Station",       genero: "Rock · Indie · Metal",  locutor: "bruno",   color: "#ff5a36", desc: "Rock clásico, alternativo, metal y nuevas bandas virtuales." },
+  { ini: 14, fin: 16, id: "chill",   nombre: "AI Chill & Electronic", genero: "Chillout · Electrónica",locutor: "marea",   color: "#2ec4b6", desc: "Chillout, house, electrónica y ambient para bajar revoluciones." },
+  { ini: 16, fin: 18, id: "urban",   nombre: "AI Urban",              genero: "Rap · Trap · Reguetón", locutor: "kilo",    color: "#9b5de5", desc: "Rap, trap, reguetón y música urbana." },
+  { ini: 18, fin: 20, id: "top40",   nombre: "Top 40 AI",             genero: "Lo más votado",         locutor: "atlas",   color: "#ff8a3d", desc: "La lista de éxitos de la comunidad, posición a posición." },
+  { ini: 20, fin: 22, id: "estrenos",nombre: "Estrenos y descubrimientos", genero: "Novedades",        locutor: "eco",     color: "#4cc9f0", desc: "Las canciones recién admitidas y los nuevos creadores." },
+  { ini: 22, fin: 24, id: "sinfiltros", nombre: "AI Sin Filtros",     genero: "Humor · Sátira · +18",  locutor: "sarcasmo",color: "#e63946", desc: "Canciones humorísticas, satíricas e irreverentes. Contenido explícito, solo para adultos.", adultos: true },
+];
+
+const LOCUTORES = {
+  nova:     { nombre: "Nova",        rol: "Presentadora del AI Morning Show", estilo: "Cercana, optimista y madrugadora. Habla rápido, saluda a los oyentes por su ciudad y nunca se queda sin un dato curioso." },
+  lia:      { nombre: "Lía",         rol: "Presentadora de AI Pop Hits",      estilo: "Dinámica y risueña. Vive para los estribillos y anuncia cada estreno como si fuera un acontecimiento." },
+  bruno:    { nombre: "Bruno Volt",  rol: "Presentador de AI Rock Station",   estilo: "Voz grave, energía de directo y cero prisas. Respeta a los clásicos y defiende a las bandas nuevas." },
+  marea:    { nombre: "Marea",       rol: "Presentadora de AI Chill & Electronic", estilo: "Tranquila y pausada. Ambiente de terraza al atardecer, frases cortas y mucho espacio para la música." },
+  kilo:     { nombre: "Kilo",        rol: "Presentador de AI Urban",          estilo: "Desenfadado, callejero y directo. Da protagonismo a los creadores y a los mensajes de los oyentes." },
+  atlas:    { nombre: "Atlas",       rol: "Presentador del Top 40 AI",        estilo: "El narrador de la lista: suspense en cada posición, datos de subidas y bajadas, y emoción en el número uno." },
+  eco:      { nombre: "Eco",         rol: "Presentador de Estrenos",          estilo: "Curioso y descubridor. Presenta a los creadores que debutan y cuenta de dónde vienen." },
+  sarcasmo: { nombre: "Dr. Sarcasmo",rol: "Presentador de AI Sin Filtros (+18)", estilo: "Irónico e irreverente, pero sin ataques a personas reales ni a colectivos. Humor para adultos." },
+};
+
+// Top 40 de EJEMPLO (ficticio) hasta que haya votaciones reales.
+const TOP_EJEMPLO = [
+  { t: "Electric Dreams",    a: "Neon Pulse",       g: "Pop",          v: 1842, mov: 0 },
+  { t: "Sin mirar atrás",    a: "Virtual Rebels",   g: "Rock",         v: 1605, mov: 2 },
+  { t: "La última noche",    a: "Luna Sintética",   g: "Dance",        v: 1430, mov: -1 },
+  { t: "Código de barrio",   a: "MC Neural",        g: "Urban",        v: 1198, mov: 3 },
+  { t: "Pousa en Ibiza",     a: "Atlantic AI",      g: "Chill",        v: 1044, mov: "nuevo" },
+  { t: "Mareas de cobre",    a: "Faro Norte",       g: "Rock",         v: 987,  mov: -2 },
+  { t: "Bailando en binario",a: "Kora 808",         g: "Dance",        v: 941,  mov: 1 },
+  { t: "Mi suegra es un bot", a: "Los Desconfigurados", g: "Humor",    v: 902,  mov: "nuevo" },
+  { t: "Lluvia en la nube",  a: "Sora Waves",       g: "Chill",        v: 866,  mov: -3 },
+  { t: "Flow sin batería",   a: "Ritmo Remoto",     g: "Urban",        v: 815,  mov: 0 },
+];
+</script>
+
+<style>
+:root{
+  --bg:#0d0b1a; --bg2:#15122a; --card:#1b1735; --line:#2c2752;
+  --tx:#f4f1ff; --tx2:#b7b0d9; --tx3:#8a83b0;
+  --a1:#ff3d81; --a2:#ff8a3d; --a3:#ffd60a; --ok:#2ec4b6;
+  --grad:linear-gradient(90deg,var(--a1),var(--a2) 55%,var(--a3));
+  --r:16px; --player-h:84px;
+  --safe-b:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--tx);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;font-size:16px;line-height:1.5}
+body{padding-bottom:calc(var(--player-h) + var(--safe-b) + 12px);min-height:100vh;
+  background:radial-gradient(1200px 600px at 85% -10%,rgba(255,61,129,.18),transparent 60%),
+             radial-gradient(900px 500px at -10% 10%,rgba(108,99,255,.18),transparent 60%),var(--bg);}
+h1,h2,h3{font-family:"Space Grotesk",Inter,sans-serif;line-height:1.15;margin:0 0 .5em}
+a{color:var(--a3)}
+button{font:inherit;cursor:pointer}
+.wrap{max-width:1080px;margin:0 auto;padding:0 18px}
+
+/* Cabecera */
+header{position:sticky;top:0;z-index:20;background:rgba(13,11,26,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.hbar{display:flex;align-items:center;gap:14px;height:62px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--tx);font-family:"Space Grotesk",Inter,system-ui,sans-serif;font-weight:700;font-size:19px;white-space:nowrap}
+.logo svg{flex:none}
+nav{display:flex;gap:4px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav a{color:var(--tx2);text-decoration:none;padding:8px 12px;border-radius:999px;font-size:14px;font-weight:500;white-space:nowrap}
+nav a:hover{color:var(--tx);background:var(--card)}
+nav a.on{color:#0d0b1a;background:var(--a3)}
+#btnInstalar{display:none;border:1px solid var(--line);background:var(--card);color:var(--tx);border-radius:999px;padding:7px 12px;font-size:13px;white-space:nowrap}
+@media (max-width:760px){
+  .hbar{height:auto;flex-wrap:wrap;padding:10px 0 6px;gap:8px}
+  nav{order:3;width:100%;margin-left:0;padding-bottom:4px}
+  #btnInstalar{margin-left:auto}
+}
+
+/* Aviso demo */
+.demo{margin:16px 0 0;padding:10px 14px;border:1px dashed var(--a2);border-radius:12px;color:var(--tx2);font-size:14px;background:rgba(255,138,61,.07)}
+.demo b{color:var(--a2)}
+
+/* Secciones */
+section.vista{display:none;padding:26px 0 10px;animation:in .25s ease}
+section.vista.on{display:block}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.sub{color:var(--tx2);margin:-4px 0 22px;max-width:680px}
+
+/* Directo */
+.hero{display:grid;grid-template-columns:1.3fr 1fr;gap:18px}
+@media (max-width:860px){.hero{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+.onair{position:relative;overflow:hidden;padding:26px}
+.onair::before{content:"";position:absolute;inset:0;background:var(--prog,#ff3d81);opacity:.13;pointer-events:none}
+.pill{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:5px 10px;border-radius:999px;background:rgba(255,255,255,.08);color:var(--tx)}
+.dot{width:8px;height:8px;border-radius:50%;background:#ff2d55;box-shadow:0 0 0 0 rgba(255,45,85,.7);animation:pulse 1.6s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,45,85,.6)}70%{box-shadow:0 0 0 9px rgba(255,45,85,0)}100%{box-shadow:0 0 0 0 rgba(255,45,85,0)}}
+.onair h1{font-size:clamp(28px,4.6vw,44px);margin:16px 0 6px}
+.onair .gen{color:var(--tx2);font-weight:500}
+.locline{display:flex;align-items:center;gap:12px;margin-top:20px}
+.ava{width:46px;height:46px;border-radius:50%;flex:none;display:grid;place-items:center;font-family:"Space Grotesk",Inter,system-ui,sans-serif;font-weight:700;color:#0d0b1a}
+.ia-tag{display:inline-block;font-size:11px;font-weight:600;padding:2px 7px;border-radius:6px;background:rgba(46,196,182,.15);color:var(--ok);margin-left:6px;vertical-align:middle}
+.adult{display:inline-block;font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px;background:rgba(230,57,70,.18);color:#ff6b75;margin-left:6px}
+.bigplay{margin-top:24px;display:inline-flex;align-items:center;gap:12px;border:0;border-radius:999px;padding:14px 26px 14px 18px;background:var(--grad);color:#1a0d12;font-weight:700;font-size:17px;box-shadow:0 10px 30px rgba(255,61,129,.25)}
+.bigplay svg{width:26px;height:26px}
+.eq{display:inline-flex;gap:3px;align-items:flex-end;height:16px}
+.eq i{width:3px;background:currentColor;border-radius:2px;animation:eq 1s infinite ease-in-out}
+.eq i:nth-child(2){animation-delay:.2s}.eq i:nth-child(3){animation-delay:.4s}.eq i:nth-child(4){animation-delay:.1s}
+@keyframes eq{0%,100%{height:4px}50%{height:16px}}
+.paused .eq i{animation:none;height:4px}
+.side h3{font-size:15px;color:var(--tx2);font-weight:600;font-family:Inter;text-transform:uppercase;letter-spacing:.06em}
+.song{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.song:last-child{border-bottom:0}
+.cov{width:44px;height:44px;border-radius:10px;flex:none;background:var(--bg2);display:grid;place-items:center;overflow:hidden}
+.cov img{width:100%;height:100%;object-fit:cover}
+.song .t{font-weight:600;line-height:1.25}
+.song .a{color:var(--tx3);font-size:14px}
+.next{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:16px;padding-top:14px;border-top:1px solid var(--line);color:var(--tx2);font-size:14px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.stat b{display:block;font-family:"Space Grotesk",Inter,system-ui,sans-serif;font-size:24px}
+.stat span{color:var(--tx3);font-size:13px}
+.cta{margin-top:18px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;background:linear-gradient(120deg,rgba(255,61,129,.16),rgba(255,214,10,.10));border:1px solid var(--line);border-radius:var(--r);padding:20px}
+.cta h3{margin:0 0 4px}
+.cta p{margin:0;color:var(--tx2)}
+.btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--bg2);color:var(--tx);padding:11px 18px;border-radius:999px;font-weight:600;text-decoration:none}
+.btn.pri{background:var(--a3);color:#0d0b1a;border-color:transparent}
+
+/* Parrilla */
+.grid-prog{display:grid;gap:10px}
+.prog{display:grid;grid-template-columns:110px 1fr auto;gap:16px;align-items:center;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--c);border-radius:14px;padding:14px 16px}
+.prog.now{background:linear-gradient(90deg,rgba(255,255,255,.06),var(--card));border-color:var(--c)}
+.prog .h{font-family:"Space Grotesk",Inter,system-ui,sans-serif;font-weight:700;font-size:18px}
+.prog .n{font-weight:600}
+.prog .d{color:var(--tx3);font-size:14px}
+.prog .l{color:var(--tx2);font-size:14px;text-align:right}
+@media (max-width:620px){.prog{grid-template-columns:78px 1fr}.prog .l{grid-column:2;text-align:left}}
+.nota{color:var(--tx3);font-size:13px;margin-top:14px}
+
+/* Locutores */
+.locs{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.loc .ava{width:64px;height:64px;font-size:24px;margin-bottom:12px}
+.loc h3{margin:0}
+.loc .rol{color:var(--tx2);font-size:14px;margin:2px 0 10px}
+.loc p{margin:0;color:var(--tx2);font-size:14px}
+.loc .hor{margin-top:12px;font-size:13px;color:var(--tx3)}
+
+/* Top 40 */
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.tabs button{border:1px solid var(--line);background:var(--card);color:var(--tx2);border-radius:999px;padding:7px 14px;font-size:14px}
+.tabs button.on{background:var(--tx);color:var(--bg);border-color:var(--tx)}
+.chart{display:grid;gap:8px}
+.row{display:grid;grid-template-columns:52px 1fr auto auto;gap:14px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 16px}
+.pos{font-family:"Space Grotesk",Inter,system-ui,sans-serif;font-size:26px;font-weight:700;text-align:center}
+.row:nth-child(1) .pos{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.mov{font-size:13px;font-weight:600;min-width:52px;text-align:right}
+.up{color:var(--ok)}.down{color:#ff6b75}.eqm{color:var(--tx3)}.new{color:var(--a3)}
+.votos{color:var(--tx3);font-size:13px;text-align:right}
+.gtag{font-size:12px;color:var(--tx3);margin-left:6px}
+.aviso{margin-bottom:14px;padding:10px 14px;border-radius:12px;background:rgba(108,99,255,.12);border:1px solid rgba(108,99,255,.35);color:var(--tx2);font-size:14px}
+
+/* Formulario */
+form{display:grid;gap:14px;max-width:760px}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:620px){.f2{grid-template-columns:1fr}}
+label{display:block;font-size:14px;font-weight:600;margin-bottom:6px}
+label small{font-weight:400;color:var(--tx3)}
+input,select,textarea{width:100%;background:var(--bg2);border:1px solid var(--line);color:var(--tx);border-radius:12px;padding:11px 13px;font:inherit}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--a3);outline-offset:1px}
+textarea{min-height:90px;resize:vertical}
+.chk{display:flex;gap:10px;align-items:flex-start;font-weight:400;font-size:14px;color:var(--tx2)}
+.chk input{width:18px;height:18px;margin-top:2px;flex:none;accent-color:var(--a3)}
+.warn{display:none;padding:10px 14px;border-radius:12px;background:rgba(230,57,70,.12);border:1px solid rgba(230,57,70,.4);color:#ffb3b9;font-size:14px}
+.result{display:none;margin-top:6px}
+.result pre{white-space:pre-wrap;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:14px;font-size:13px;color:var(--tx2);max-height:320px;overflow:auto}
+.pasos{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:0 0 24px;max-width:860px}
+.paso{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;font-size:13px;color:var(--tx2)}
+.paso b{display:block;color:var(--tx);font-family:"Space Grotesk",Inter,system-ui,sans-serif;font-size:15px}
+@media (max-width:760px){.pasos{grid-template-columns:1fr 1fr}}
+
+/* Info */
+.info{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.info p{color:var(--tx2);font-size:15px;margin:0}
+
+/* Reproductor fijo */
+.player{position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(21,18,42,.94);backdrop-filter:blur(14px);border-top:1px solid var(--line);padding-bottom:var(--safe-b)}
+.pbar{display:flex;align-items:center;gap:14px;height:var(--player-h)}
+.pplay{width:52px;height:52px;border-radius:50%;border:0;background:var(--grad);display:grid;place-items:center;flex:none;color:#1a0d12}
+.pplay svg{width:24px;height:24px}
+.pinfo{min-width:0;flex:1;display:flex;align-items:center;gap:12px}
+.pinfo .cov{width:52px;height:52px}
+.ptxt{min-width:0}
+.ptxt .t{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ptxt .a{color:var(--tx3);font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pvol{display:flex;align-items:center;gap:8px;color:var(--tx3)}
+.pvol input{width:110px;padding:0;accent-color:var(--a3)}
+@media (max-width:620px){.pvol{display:none}}
+.live{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;letter-spacing:.06em;color:#ff6b75}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--player-h) + var(--safe-b) + 16px);background:var(--tx);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:14px;font-weight:500;opacity:0;pointer-events:none;transition:.25s;z-index:40;max-width:90vw;text-align:center}
+.toast.on{opacity:1}
+footer{color:var(--tx3);font-size:13px;padding:30px 0 10px;text-align:center}
+.ios{display:none;margin-top:10px;font-size:13px;color:var(--tx3)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap hbar">
+    <a class="logo" href="#directo" aria-label="Inicio">
+      <svg width="34" height="34" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="#1b1735"/><path d="M14 30a18 18 0 0 1 36 0" stroke="#ffd60a" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M20 30a12 12 0 0 1 24 0" stroke="#ff8a3d" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M26 30a6 6 0 0 1 12 0" stroke="#ff3d81" stroke-width="3.5" fill="none" stroke-linecap="round"/><circle cx="32" cy="32" r="3.5" fill="#fff"/><text x="32" y="53" text-anchor="middle" font-family="Space Grotesk,Arial" font-weight="700" font-size="13" fill="#fff">AI</text></svg>
+      <span id="marca">AI Radio Global</span>
+    </a>
+    <nav id="menu">
+      <a href="#directo">En directo</a>
+      <a href="#parrilla">Programación</a>
+      <a href="#locutores">Locutores</a>
+      <a href="#top40">Top 40</a>
+      <a href="#enviar">Envía tu canción</a>
+      <a href="#info">Información</a>
+    </nav>
+    <button id="btnInstalar" type="button">Instalar app</button>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="demo" id="demo"><b>Modo demostración.</b> La emisión real se activará cuando el servidor de la radio esté en marcha. Programación, locutores y lista son de ejemplo.</div>
+
+  <!-- EN DIRECTO -->
+  <section class="vista" id="v-directo">
+    <div class="hero">
+      <div class="card onair" id="onair">
+        <span class="pill"><span class="dot"></span> En antena</span>
+        <h1 id="progNombre">—</h1>
+        <div class="gen" id="progGenero"></div>
+        <p class="sub" id="progDesc" style="margin:10px 0 0"></p>
+        <div class="locline" id="progLoc"></div>
+        <button class="bigplay" id="bigplay" type="button" aria-label="Escuchar en directo">
+          <svg viewBox="0 0 24 24" fill="currentColor" id="bigicon"><path d="M8 5v14l11-7z"/></svg>
+          <span id="bigtxt">Escuchar en directo</span>
+        </button>
+      </div>
+      <div class="card side">
+        <h3>Sonando ahora</h3>
+        <div class="song" id="nowSong"></div>
+        <h3 style="margin-top:18px">Ha sonado</h3>
+        <div id="historial"></div>
+        <div class="next"><span>A continuación</span><b id="sigProg"></b></div>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat"><b id="stOyentes">—</b><span>oyentes ahora</span></div>
+      <div class="stat"><b>24/7</b><span>emisión continua</span></div>
+      <div class="stat"><b id="stProgs">9</b><span>programas al día</span></div>
+    </div>
+    <div class="cta">
+      <div><h3>¿Creas música con IA?</h3><p>Envía tu canción. Si pasa la selección, sonará en la radio y entrará en el Top 40.</p></div>
+      <a class="btn pri" href="#enviar">Envía tu canción</a>
+    </div>
+  </section>
+
+  <!-- PROGRAMACIÓN -->
+  <section class="vista" id="v-parrilla">
+    <h2>Programación</h2>
+    <p class="sub">Todos los días, hora de España peninsular (<span id="tzTxt"></span>). Hora en la emisora ahora: <b id="horaEmisora"></b>.</p>
+    <div class="grid-prog" id="parrilla"></div>
+    <p class="nota">Los programas los conducen locutores virtuales generados con inteligencia artificial. El programa para adultos se emite a partir de las 22:00.</p>
+  </section>
+
+  <!-- LOCUTORES -->
+  <section class="vista" id="v-locutores">
+    <h2>Locutores</h2>
+    <p class="sub">Todas las voces de la emisora son personajes virtuales creados con inteligencia artificial. No imitan a ninguna persona real.</p>
+    <div class="locs" id="locs"></div>
+  </section>
+
+  <!-- TOP 40 -->
+  <section class="vista" id="v-top40">
+    <h2>Top 40 AI</h2>
+    <p class="sub">La lista combina votos válidos (40 %), escuchas reales (35 %) y valoración editorial (25 %). Las posiciones no se pueden comprar.</p>
+    <div class="aviso" id="avisoTop">Lista de <b>ejemplo</b> con canciones y artistas ficticios. Las votaciones reales empezarán cuando se abra la comunidad de creadores.</div>
+    <div class="tabs" id="tabs"></div>
+    <div class="chart" id="chart"></div>
+  </section>
+
+  <!-- ENVIAR -->
+  <section class="vista" id="v-enviar">
+    <h2>Envía tu canción</h2>
+    <p class="sub">Aceptamos canciones creadas total o parcialmente con Suno, Udio u otras herramientas de IA, siempre que tengas derecho a difundirlas.</p>
+    <div class="pasos">
+      <div class="paso"><b>1 · Enviada</b>Recibimos tu canción y tu declaración.</div>
+      <div class="paso"><b>2 · En revisión</b>Calidad, derechos y contenido.</div>
+      <div class="paso"><b>3 · Admitida</b>Entra en el catálogo.</div>
+      <div class="paso"><b>4 · En emisión</b>Suena en uno o varios programas.</div>
+      <div class="paso"><b>5 · Clasificada</b>Participa en el Top 40.</div>
+    </div>
+    <form id="form" novalidate>
+      <div class="f2">
+        <div><label for="fArtista">Nombre artístico</label><input id="fArtista" required maxlength="80"></div>
+        <div><label for="fEmail">Correo electrónico</label><input id="fEmail" type="email" required maxlength="120"></div>
+      </div>
+      <div class="f2">
+        <div><label for="fTitulo">Título de la canción</label><input id="fTitulo" required maxlength="120"></div>
+        <div><label for="fGenero">Género</label>
+          <select id="fGenero" required>
+            <option value="">Elige…</option><option>Pop / Dance</option><option>Rock / Indie / Metal</option><option>Chillout / Electrónica</option><option>Rap / Trap / Urbano</option><option>Humor / Sátira</option><option>Otro</option>
+          </select></div>
+      </div>
+      <div class="f2">
+        <div><label for="fIdioma">Idioma de la letra</label>
+          <select id="fIdioma" required><option value="">Elige…</option><option>Español</option><option>Inglés</option><option>Gallego</option><option>Catalán</option><option>Euskera</option><option>Portugués</option><option>Francés</option><option>Instrumental</option><option>Otro</option></select></div>
+        <div><label for="fHerr">Herramienta utilizada</label>
+          <select id="fHerr" required><option value="">Elige…</option><option>Suno</option><option>Udio</option><option>ElevenLabs Music</option><option>Otra</option></select></div>
+      </div>
+      <div class="f2">
+        <div><label for="fPlan">Plan con el que la generaste</label>
+          <select id="fPlan" required><option value="">Elige…</option><option value="pago">De pago (Pro, Premier u otro)</option><option value="gratis">Gratuito</option><option value="nose">No lo sé</option></select></div>
+        <div><label for="fDescarga">Fecha de descarga <small>(desde la propia herramienta)</small></label><input id="fDescarga" type="date" required></div>
+      </div>
+      <div class="warn" id="warnPlan">Las canciones generadas con planes gratuitos no tienen autorización de uso comercial en Suno y en otras herramientas, así que no podemos emitirlas. Si la regeneraste o descargaste con un plan de pago, elige esa opción.</div>
+      <div><label for="fEnlace">Enlace para escuchar o descargar la canción <small>(Suno, Google Drive, Dropbox…)</small></label><input id="fEnlace" type="url" required placeholder="https://"></div>
+      <div><label for="fLetra">¿Quién escribió la letra?</label>
+        <select id="fLetra" required><option value="">Elige…</option><option>La escribí yo</option><option>Generada por la IA</option><option>Mixta (yo + IA)</option><option>Es de otra persona, con su permiso</option><option>Instrumental, sin letra</option></select></div>
+      <div><label for="fNotas">Cuéntanos algo de la canción <small>(opcional, puede usarlo el locutor)</small></label><textarea id="fNotas" maxlength="600"></textarea></div>
+      <label class="chk"><input type="checkbox" id="c1" required> Declaro que tengo los derechos necesarios para difundir esta canción, que la descargué por el canal oficial de la herramienta y que no contiene material de terceros sin autorización.</label>
+      <label class="chk"><input type="checkbox" id="c2" required> Autorizo su emisión gratuita en la radio online, en sus programas y en las listas, y que se mencione mi nombre artístico.</label>
+      <label class="chk"><input type="checkbox" id="c3" required> Soy mayor de 18 años o cuento con autorización de mi padre, madre o tutor.</label>
+      <label class="chk"><input type="checkbox" id="c4" required> Acepto las condiciones de participación y la política de privacidad.</label>
+      <div><button class="btn pri" type="submit">Enviar canción</button></div>
+      <div class="result" id="result"></div>
+    </form>
+  </section>
+
+  <!-- INFORMACIÓN -->
+  <section class="vista" id="v-info">
+    <h2>Información</h2>
+    <div class="info">
+      <div class="card"><h3>Qué es</h3><p><span class="nm"></span> es una radio online que emite las 24 horas canciones creadas con ayuda de inteligencia artificial por creadores de todo el mundo, con programas por géneros y una lista de éxitos votada por los oyentes.</p></div>
+      <div class="card"><h3>Transparencia sobre la IA</h3><p>Las canciones están generadas total o parcialmente con IA. Los locutores son personajes virtuales con voces sintéticas: no son personas reales y no imitan a nadie. No emitimos entrevistas ni declaraciones inventadas.</p></div>
+      <div class="card"><h3>Contenido para adultos</h3><p>El programa AI Sin Filtros puede incluir lenguaje explícito. Se emite a partir de las 22:00 y se identifica con la etiqueta +18.</p></div>
+      <div class="card"><h3>Escúchala en el móvil y en el coche</h3><p>Pulsa «Instalar app» (Android y ordenador) o, en iPhone, Compartir → «Añadir a pantalla de inicio». En el coche suena por Bluetooth con el título de cada canción, y pronto estará en las apps de radio compatibles con Android Auto y CarPlay.</p><div class="ios" id="iosHint"></div></div>
+      <div class="card"><h3>Derechos y reclamaciones</h3><p>Si crees que una canción vulnera tus derechos, escríbenos a <b class="em"></b> indicando el título y el motivo. La retiraremos de la emisión mientras lo revisamos.</p></div>
+      <div class="card"><h3>Contacto</h3><p>Creadores, anunciantes y colaboradores: <b class="em"></b></p></div>
+    </div>
+  </section>
+
+  <footer><span class="nm"></span> · Radio online de música creada con IA · Locutores virtuales</footer>
+</main>
+
+<div class="player paused" id="player">
+  <div class="wrap pbar">
+    <button class="pplay" id="pplay" type="button" aria-label="Reproducir">
+      <svg viewBox="0 0 24 24" fill="currentColor" id="picon"><path d="M8 5v14l11-7z"/></svg>
+    </button>
+    <div class="pinfo">
+      <div class="cov" id="pcov"></div>
+      <div class="ptxt"><div class="t" id="pt">—</div><div class="a" id="pa">—</div></div>
+    </div>
+    <div class="live"><span class="eq"><i></i><i></i><i></i><i></i></span> DIRECTO</div>
+    <div class="pvol"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 10v4h4l5 5V5L7 10H3zm13.5 2A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4z"/></svg><input type="range" id="vol" min="0" max="1" step="0.05" value="0.9" aria-label="Volumen"></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<audio id="audio" preload="none"></audio>
+
+<script>
+(() => {
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const DEMO = !CONFIG.servidor && !CONFIG.streamUrl;
+const STREAM = CONFIG.streamUrl || (CONFIG.servidor ? `${CONFIG.servidor.replace(/\/$/,"")}/listen/${CONFIG.emisora}/radio.mp3` : "");
+const API = CONFIG.servidor ? `${CONFIG.servidor.replace(/\/$/,"")}/api/nowplaying/${CONFIG.emisora}` : "";
+
+document.title = CONFIG.nombre;
+$("#marca").textContent = CONFIG.nombre;
+document.querySelectorAll(".nm").forEach(e => e.textContent = CONFIG.nombre);
+document.querySelectorAll(".em").forEach(e => e.textContent = CONFIG.emailContacto);
+$("#tzTxt").textContent = CONFIG.zonaHoraria;
+if (!DEMO) $("#demo").style.display = "none";
+
+/* ---------- Hora de la emisora ---------- */
+function horaEmisora(){
+  const p = new Intl.DateTimeFormat("es-ES",{timeZone:CONFIG.zonaHoraria,hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).formatToParts(new Date());
+  const h = +p.find(x=>x.type==="hour").value, m = +p.find(x=>x.type==="minute").value;
+  return {h, m, txt: `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`};
+}
+const progActual = () => { const {h} = horaEmisora(); return PROGRAMAS.find(p => h >= p.ini && h < p.fin) || PROGRAMAS[0]; };
+const progSiguiente = p => PROGRAMAS[(PROGRAMAS.indexOf(p)+1) % PROGRAMAS.length];
+const hh = n => `${String(n%24).padStart(2,"0")}:00`;
+
+/* ---------- Avatares ---------- */
+const COLORES = ["#ffd60a","#ff3d81","#ff5a36","#2ec4b6","#9b5de5","#ff8a3d","#4cc9f0","#e63946"];
+function avatar(id, size){
+  const L = LOCUTORES[id]; if(!L) return "";
+  const p = PROGRAMAS.find(x=>x.locutor===id); const c = p ? p.color : COLORES[0];
+  const ini = L.nombre.replace(/^Dr\.\s*/,"").slice(0,1);
+  return `<div class="ava" style="background:linear-gradient(135deg,${c},#ffffff55);${size?`width:${size}px;height:${size}px`:""}">${esc(ini)}</div>`;
+}
+function portada(art, color){
+  if (art) return `<img src="${esc(art)}" alt="" loading="lazy" onerror="this.remove()">`;
+  return `<svg width="22" height="22" viewBox="0 0 24 24" fill="${color||"#8a83b0"}"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg>`;
+}
+
+/* ---------- Directo ---------- */
+let ahora = {t:"", a:"", art:""};
+const DEMO_CANCIONES = TOP_EJEMPLO.map(x=>({t:x.t,a:x.a}));
+function pintarDirecto(){
+  const p = progActual(), s = progSiguiente(p);
+  $("#onair").style.setProperty("--prog", p.color);
+  $("#progNombre").innerHTML = esc(p.nombre) + (p.adultos?'<span class="adult">+18</span>':"");
+  $("#progGenero").textContent = `${p.genero} · ${hh(p.ini)}–${hh(p.fin)}`;
+  $("#progDesc").textContent = p.desc;
+  const L = p.locutor && LOCUTORES[p.locutor];
+  $("#progLoc").innerHTML = L
+    ? `${avatar(p.locutor)}<div><b>${esc(L.nombre)}</b><span class="ia-tag">Locutor IA</span><div style="color:var(--tx3);font-size:14px">${esc(L.rol)}</div></div>`
+    : `<div style="color:var(--tx3);font-size:14px">Música continua, sin locutor.</div>`;
+  $("#sigProg").textContent = `${s.nombre} · ${hh(s.ini)}`;
+}
+function pintarCancion(t, a, art, hist){
+  ahora = {t, a, art};
+  const p = progActual();
+  $("#nowSong").innerHTML = `<div class="cov">${portada(art,p.color)}</div><div><div class="t">${esc(t)}</div><div class="a">${esc(a)}</div></div>`;
+  $("#pt").textContent = t; $("#pa").textContent = a;
+  $("#pcov").innerHTML = portada(art, p.color);
+  $("#historial").innerHTML = (hist||[]).slice(0,4).map(x=>`<div class="song"><div class="cov">${portada(x.art)}</div><div><div class="t">${esc(x.t)}</div><div class="a">${esc(x.a)}</div></div></div>`).join("") || `<div class="a" style="color:var(--tx3);font-size:14px">Sin datos todavía.</div>`;
+  if ("mediaSession" in navigator) {
+    try {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: t, artist: a, album: `${CONFIG.nombre} · ${p.nombre}`,
+        artwork: art ? [{src:art,sizes:"512x512"}] : [{src:"icons/icon-512.png",sizes:"512x512",type:"image/png"}]
+      });
+    } catch(e){}
+  }
+}
+async function actualizarAhora(){
+  pintarDirecto();
+  if (DEMO || !API){
+    const i = Math.floor(Date.now()/180000) % DEMO_CANCIONES.length;
+    const c = DEMO_CANCIONES[i];
+    const hist = [1,2,3,4].map(k => DEMO_CANCIONES[(i - k + DEMO_CANCIONES.length*4) % DEMO_CANCIONES.length]);
+    pintarCancion(c.t, c.a, "", hist);
+    $("#stOyentes").textContent = "—";
+    return;
+  }
+  try{
+    const r = await fetch(API, {cache:"no-store"}); const d = await r.json();
+    const s = d.now_playing && d.now_playing.song || {};
+    const hist = (d.song_history||[]).map(h=>({t:h.song.title, a:h.song.artist, art:h.song.art}));
+    pintarCancion(s.title || CONFIG.nombre, s.artist || "", s.art || "", hist);
+    $("#stOyentes").textContent = d.listeners ? (d.listeners.current ?? d.listeners.total ?? "—") : "—";
+  }catch(e){ /* sin conexión con la API: se mantiene lo último */ }
+}
+
+/* ---------- Reproductor ---------- */
+const audio = $("#audio"), player = $("#player");
+const ICON_PLAY = '<path d="M8 5v14l11-7z"/>', ICON_PAUSE = '<path d="M6 5h4v14H6zM14 5h4v14h-4z"/>';
+function estado(sonando){
+  player.classList.toggle("paused", !sonando);
+  $("#picon").innerHTML = sonando ? ICON_PAUSE : ICON_PLAY;
+  $("#bigicon").innerHTML = sonando ? ICON_PAUSE : ICON_PLAY;
+  $("#bigtxt").textContent = sonando ? "Pausar" : "Escuchar en directo";
+  $("#pplay").setAttribute("aria-label", sonando ? "Pausar" : "Reproducir");
+}
+function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("on"); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove("on"),3500); }
+async function alternar(){
+  if (!STREAM){ toast("Modo demostración: la emisión se activará cuando el servidor esté en marcha."); return; }
+  if (!audio.paused){ audio.pause(); audio.removeAttribute("src"); audio.load(); estado(false); return; }
+  // En directo: se vuelve a cargar la señal para no reproducir audio antiguo del búfer
+  audio.src = STREAM + (STREAM.includes("?")?"&":"?") + "t=" + Date.now();
+  try { await audio.play(); estado(true); }
+  catch(e){ estado(false); toast("No se pudo conectar con la emisión. Inténtalo de nuevo en unos segundos."); }
+}
+$("#pplay").addEventListener("click", alternar);
+$("#bigplay").addEventListener("click", alternar);
+audio.addEventListener("error", () => { if (audio.getAttribute("src")) { estado(false); toast("Se ha cortado la señal. Pulsa para reconectar."); } });
+$("#vol").addEventListener("input", e => audio.volume = +e.target.value);
+audio.volume = 0.9;
+if ("mediaSession" in navigator){
+  try{
+    navigator.mediaSession.setActionHandler("play", () => audio.paused && alternar());
+    navigator.mediaSession.setActionHandler("pause", () => !audio.paused && alternar());
+    navigator.mediaSession.setActionHandler("stop", () => !audio.paused && alternar());
+  }catch(e){}
+}
+
+/* ---------- Parrilla ---------- */
+function pintarParrilla(){
+  const p = progActual();
+  $("#horaEmisora").textContent = horaEmisora().txt;
+  $("#parrilla").innerHTML = PROGRAMAS.map(x => {
+    const L = x.locutor && LOCUTORES[x.locutor];
+    return `<div class="prog ${x===p?"now":""}" style="--c:${x.color}">
+      <div class="h">${hh(x.ini)}<div class="d">hasta ${hh(x.fin)}</div></div>
+      <div><div class="n">${esc(x.nombre)}${x.adultos?'<span class="adult">+18</span>':""}${x===p?'<span class="ia-tag" style="background:rgba(255,45,85,.15);color:#ff6b75">AHORA</span>':""}</div><div class="d">${esc(x.genero)} · ${esc(x.desc)}</div></div>
+      <div class="l">${L ? `${esc(L.nombre)}<div class="d">locutor IA</div>` : `<span class="d">sin locutor</span>`}</div>
+    </div>`;}).join("");
+}
+
+/* ---------- Locutores ---------- */
+function pintarLocutores(){
+  $("#locs").innerHTML = Object.entries(LOCUTORES).map(([id,L]) => {
+    const p = PROGRAMAS.find(x=>x.locutor===id);
+    return `<div class="card loc">${avatar(id)}<h3>${esc(L.nombre)}<span class="ia-tag">IA</span></h3><div class="rol">${esc(L.rol)}</div><p>${esc(L.estilo)}</p>${p?`<div class="hor">${esc(p.nombre)} · ${hh(p.ini)}–${hh(p.fin)}</div>`:""}</div>`;
+  }).join("");
+}
+
+/* ---------- Top 40 ---------- */
+let filtro = "Todos";
+function pintarTop(){
+  const generos = ["Todos", ...new Set(TOP_EJEMPLO.map(x=>x.g))];
+  $("#tabs").innerHTML = generos.map(g=>`<button type="button" class="${g===filtro?"on":""}" data-g="${esc(g)}">${esc(g)}</button>`).join("");
+  const lista = TOP_EJEMPLO.filter(x => filtro==="Todos" || x.g===filtro);
+  $("#chart").innerHTML = lista.map((x,i) => {
+    let m = x.mov==="nuevo" ? '<span class="new">NUEVO</span>' : x.mov>0 ? `<span class="up">▲ ${x.mov}</span>` : x.mov<0 ? `<span class="down">▼ ${-x.mov}</span>` : '<span class="eqm">=</span>';
+    return `<div class="row"><div class="pos">${i+1}</div><div><div class="t" style="font-weight:600">${esc(x.t)}</div><div class="a" style="color:var(--tx3);font-size:14px">${esc(x.a)}<span class="gtag">· ${esc(x.g)}</span></div></div><div class="votos">${x.v.toLocaleString("es-ES")}<br>votos</div><div class="mov">${m}</div></div>`;
+  }).join("");
+}
+$("#tabs").addEventListener("click", e => { const b = e.target.closest("button"); if(b){ filtro = b.dataset.g; pintarTop(); }});
+
+/* ---------- Formulario ---------- */
+$("#fPlan").addEventListener("change", e => $("#warnPlan").style.display = e.target.value==="gratis" ? "block" : "none");
+$("#form").addEventListener("submit", async e => {
+  e.preventDefault();
+  const f = e.target, res = $("#result");
+  if (!f.checkValidity()){ f.reportValidity(); toast("Revisa los campos obligatorios."); return; }
+  if ($("#fPlan").value === "gratis"){ $("#warnPlan").style.display="block"; toast("No podemos aceptar canciones de planes gratuitos."); return; }
+  const datos = {
+    artista: $("#fArtista").value.trim(), email: $("#fEmail").value.trim(), titulo: $("#fTitulo").value.trim(),
+    genero: $("#fGenero").value, idioma: $("#fIdioma").value, herramienta: $("#fHerr").value,
+    plan: $("#fPlan").selectedOptions[0].text, fecha_descarga: $("#fDescarga").value, enlace: $("#fEnlace").value.trim(),
+    letra: $("#fLetra").value, notas: $("#fNotas").value.trim(),
+    declaracion_derechos: true, autoriza_emision: true, mayor_edad_o_autorizado: true, acepta_condiciones: true,
+    fecha_envio: new Date().toISOString()
+  };
+  if (CONFIG.formularioUrl){
+    try{
+      const r = await fetch(CONFIG.formularioUrl, {method:"POST", headers:{"Content-Type":"application/json","Accept":"application/json"}, body: JSON.stringify(datos)});
+      if (!r.ok) throw new Error(r.status);
+      res.style.display="block";
+      res.innerHTML = `<div class="aviso" style="background:rgba(46,196,182,.12);border-color:rgba(46,196,182,.4)">¡Recibida! Revisaremos «${esc(datos.titulo)}» y te escribiremos a ${esc(datos.email)} con el resultado.</div>`;
+      f.reset(); return;
+    }catch(err){ toast("No se pudo enviar. Te mostramos el texto para mandarlo por correo."); }
+  }
+  const texto = Object.entries(datos).map(([k,v]) => `${k}: ${v}`).join("\n");
+  res.style.display="block";
+  res.innerHTML = `<p style="color:var(--tx2);font-size:14px;margin:0 0 8px">Copia este texto y envíalo a <b>${esc(CONFIG.emailContacto)}</b>:</p><pre id="txtEnvio">${esc(texto)}</pre><button type="button" class="btn" id="copiar">Copiar texto</button>`;
+  $("#copiar").addEventListener("click", async () => { try{ await navigator.clipboard.writeText(texto); toast("Texto copiado."); }catch(e){ toast("Selecciona el texto y cópialo manualmente."); } });
+});
+
+/* ---------- Navegación ---------- */
+const VISTAS = ["directo","parrilla","locutores","top40","enviar","info"];
+function ruta(){
+  const v = VISTAS.includes(location.hash.slice(1)) ? location.hash.slice(1) : "directo";
+  VISTAS.forEach(x => $("#v-"+x).classList.toggle("on", x===v));
+  document.querySelectorAll("#menu a").forEach(a => a.classList.toggle("on", a.getAttribute("href")==="#"+v));
+  if (v==="parrilla") pintarParrilla();
+  window.scrollTo({top:0});
+}
+window.addEventListener("hashchange", ruta);
+
+/* ---------- Instalación como app ---------- */
+let instalar = null;
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); instalar = e; $("#btnInstalar").style.display="inline-block"; });
+$("#btnInstalar").addEventListener("click", async () => { if(!instalar) return; instalar.prompt(); try{ await instalar.userChoice; }catch(e){} instalar=null; $("#btnInstalar").style.display="none"; });
+if (/iphone|ipad|ipod/i.test(navigator.userAgent)) { const h=$("#iosHint"); h.style.display="block"; h.textContent="En iPhone: botón Compartir de Safari → «Añadir a pantalla de inicio»."; }
+if ("serviceWorker" in navigator && location.protocol === "https:") {
+  try { navigator.serviceWorker.register("sw.js").catch(()=>{}); } catch(e){}
+}
+
+/* ---------- Arranque ---------- */
+$("#stProgs").textContent = PROGRAMAS.length;
+pintarLocutores(); pintarTop(); pintarParrilla(); actualizarAhora(); ruta();
+setInterval(actualizarAhora, DEMO ? 30000 : 15000);
+setInterval(() => { if ($("#v-parrilla").classList.contains("on")) pintarParrilla(); }, 30000);
+})();
+</script>
+</body>
+</html>

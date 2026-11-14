@@ -1,0 +1,5 @@
+locutores/voces/
+locutores/salida/
+locutores/top40.json
+__pycache__/
+*.env
