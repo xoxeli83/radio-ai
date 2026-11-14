@@ -7,9 +7,10 @@
     "zona_horaria": "Europe/Madrid"
   },
   "azuracast": {
-    "url": "https://TU-SUBDOMINIO.duckdns.org",
+    "url": "http://127.0.0.1:8080",
     "emisora": "airadio",
-    "api_key_variable": "AZURACAST_API_KEY"
+    "api_key_variable": "AZURACAST_API_KEY",
+    "_ayuda": "Dirección interna de AzuraCast en el propio servidor (Caddy publica la externa con HTTPS)."
   },
   "ia_guiones": {
     "_ayuda": "Opcional. Si existe la variable ANTHROPIC_API_KEY, Claude redacta textos más variados. Sin ella se usan las plantillas incluidas (gratis).",

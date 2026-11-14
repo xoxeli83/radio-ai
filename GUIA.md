@@ -10,8 +10,8 @@ Tiempo total: unas 2 horas, la mayoría esperando instalaciones.
 | 3 | Abrir los puertos en Oracle | Tú, 2 clics | 5 min |
 | 4 | Dominio gratis en DuckDNS + instalar todo | Un comando | 30 min |
 | 5 | Ajustes de AzuraCast en el navegador | Tú | 10 min |
-| 6 | Subir las primeras canciones | Tú, arrastrando archivos | 10 min |
-| 7 | Publicar la web y la app | GitHub Pages | 10 min |
+| 6 | Revisar las canciones que envía la gente | Panel de revisión | cuando quieras |
+| 7 | Conectar la web con el servidor | Claude | 2 min |
 | 8 | Que suene en el coche | Altas en directorios | 15 min |
 
 ---
@@ -47,57 +47,54 @@ Instancia → **Virtual cloud network** → **Security Lists** → *Default Secu
    ```
 4. Sube el proyecto y lanza la instalación:
    ```
-   git clone https://github.com/TU_USUARIO/ai-radio-global.git   # o copia la carpeta con scp
-   cd ai-radio-global
+   git clone https://github.com/xoxeli83/radio-ai.git
+   cd radio-ai
    sudo bash servidor/instalar_servidor.sh airadio TU_TOKEN_DUCKDNS
    ```
    El instalador de AzuraCast hace un par de preguntas: pulsa **Intro** en todas.
 
 ## 5. Ajustes de AzuraCast (navegador)
 
-1. Abre `http://IP_DEL_SERVIDOR` y crea el **usuario administrador**.
-2. **Crear emisora:** nombre `AI Radio Global`, **nombre corto `airadio`** (tiene que ser exactamente ese), zona horaria *Europe/Madrid*. Deja el resto como está.
-3. **Administración → Ajustes del sistema:** URL base `https://airadio.duckdns.org` y activa **HTTPS con Let's Encrypt** para `airadio.duckdns.org`.
+1. Abre `https://airadio.duckdns.org` y crea el **usuario administrador**.
+2. **Crear emisora:** nombre `AI Radio Global`, **nombre corto `airadio`** (exactamente ese), zona horaria *Europe/Madrid*.
+3. **Administración → Ajustes del sistema:** URL base `https://airadio.duckdns.org`. **No** actives Let's Encrypt en AzuraCast: el HTTPS ya lo pone Caddy.
 4. **Tu usuario (arriba a la derecha) → Claves API → Añadir.** Copia la clave.
 5. En el servidor:
    ```
    sudo nano /opt/airadio/claves.env      # pega la clave en AZURACAST_API_KEY= y guarda (Ctrl+O, Intro, Ctrl+X)
    sudo /opt/airadio/configurar.sh
    ```
-   Esto crea las carpetas y listas de cada programa, genera la voz de los 8 locutores y las sube.
+   Crea las carpetas y listas de cada programa, genera la voz de los 8 locutores y conecta la plataforma con la emisora.
 
-## 6. Subir canciones
+## 6. Canciones: las envía la gente y la IA propone
 
-Panel de AzuraCast → **Medios → Música**. Arrastra los MP3 a la carpeta de su programa:
+1. Los creadores suben su canción desde la web (**Envía tu canción**). Reciben un **código de seguimiento**.
+2. La plataforma la analiza sola:
+   - calidad técnica: formato, volumen (LUFS), picos, saturación, silencios y duración;
+   - ritmo y energía aproximados;
+   - **letra transcrita** con Whisper e idioma detectado;
+   - **lenguaje explícito**: si lo hay, propone *AI Sin Filtros* (22–24 h) y la marca **+18**;
+   - posibles insultos de odio, que siempre marca para revisión;
+   - con `ANTHROPIC_API_KEY`, además, Claude opina sobre el encaje y afina el programa.
+3. En el **panel de revisión** (`https://airadio.duckdns.org/plataforma/admin`, con el usuario y la clave que muestra el instalador) ves las canciones **ordenadas por la puntuación de la IA**, con su programa propuesto. Las escuchas y pulsas **Admitir**: la canción se normaliza, se le ponen título y artista y entra sola en la carpeta de su programa. O **Rechazar** con un motivo, que verá el creador.
+4. El creador ve el estado y el informe del análisis en **Mis envíos**.
 
-| Carpeta | Suena en |
-|---|---|
-| `musica/general` | Todo el día (noche, mañana y relleno) |
-| `musica/pop`, `musica/rock`, `musica/chill`, `musica/urban` | Su franja |
-| `musica/top40` | Top 40 AI (18–20 h) |
-| `musica/estrenos` | Estrenos (20–22 h) |
-| `musica/sinfiltros` | **Solo** el programa +18 (22–24 h). Todo lo explícito va aquí. |
+También puedes subir canciones tuyas directamente en AzuraCast → **Medios**, en `musica/<programa>`. Lo explícito va solo a `musica/sinfiltros`.
 
-Antes de subir, rellena bien **título y artista** en el MP3: es lo que se ve en la web y en la pantalla del coche.
-Solo canciones con derechos: descargadas de Suno con plan Pro o Premier y por el botón oficial de descarga.
+## 7. Votos y Top 40
 
-La radio empieza a emitir en cuanto hay canciones. Cada 3 canciones entra el locutor del programa.
+- Los oyentes votan en la web (Top 40 y **Vota las novedades**): un voto por canción y semana, con un máximo diario por persona. No se guarda la IP, solo una huella cifrada.
+- Lista = **40 % votos** de los últimos 7 días + **35 % escuchas** (oyentes reales mientras suena) + **25 % valoración editorial** (nota del análisis). Dos plazas para creadores nuevos.
+- Cada lunes se guardan las posiciones (para las subidas y bajadas) y se prepara el **especial del domingo** con el locutor Atlas.
 
-## 7. Publicar la web y la app del móvil
+## 7 bis. Conectar la web
 
-1. Crea un repositorio público en GitHub, por ejemplo `ai-radio-global`, y sube esta carpeta.
-2. Edita `web/index.html`, bloque `CONFIG`:
-   ```js
-   servidor: "https://airadio.duckdns.org",
-   emisora: "airadio",
-   emailContacto: "tu-correo",
-   ```
-3. GitHub → *Settings → Pages* → Source: *GitHub Actions*. El flujo incluido (`.github/workflows/pages.yml`) publica la carpeta `web` en `https://TU_USUARIO.github.io/ai-radio-global/`.
-4. En el móvil abre esa dirección:
-   - **Android:** botón «Instalar app».
-   - **iPhone:** Safari → Compartir → «Añadir a pantalla de inicio».
-
-**Formulario de canciones:** crea un formulario gratuito en <https://formspree.io> y pega su URL en `formularioUrl`. Las canciones te llegarán por correo.
+La web publicada está en `https://xoxeli83.github.io/radio-ai/`. Cuando el servidor esté en marcha, en `web/index.html`, bloque `CONFIG`:
+```js
+servidor: "https://airadio.duckdns.org",
+api: "https://airadio.duckdns.org/plataforma",
+```
+Al subir el cambio a GitHub, la web se actualiza sola en uno o dos minutos.
 
 ## 8. En el coche
 
