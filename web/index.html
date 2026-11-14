@@ -735,7 +735,7 @@ const progActual = () => { const {h} = horaEmisora(); return PROGRAMAS.find(p =>
 const progSiguiente = p => PROGRAMAS[(PROGRAMAS.indexOf(p) + 1) % PROGRAMAS.length];
 const hh = n => `${String(n % 24).padStart(2,"0")}:00`;
 // Fotos de los locutores (retratos generados con IA). Añade el id cuando su imagen esté en web/locutores/<id>.jpg
-const FOTOS_LOCUTORES = [];
+const FOTOS_LOCUTORES = ["nova","lia","bruno","marea","kilo","atlas","eco","sarcasmo"];
 function avatarLocutor(id, cls = ""){
   const L = LOCUTORES[id]; if (!L) return "";
   if (FOTOS_LOCUTORES.includes(id)) return `<img class="av avL ${cls}" src="locutores/${id}.jpg" alt="${esc(L.nombre)}, locutor IA" width="46" height="46" loading="lazy">`;
@@ -1258,7 +1258,7 @@ let instalar = null;
 window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); instalar = e; $("#btnInstalar").style.display = "inline-block"; });
 $("#btnInstalar").addEventListener("click", async () => { if (!instalar) return; instalar.prompt(); try { await instalar.userChoice; } catch(e){} instalar = null; $("#btnInstalar").style.display = "none"; });
 if (/iphone|ipad|ipod/i.test(navigator.userAgent)) $("#iosHint").textContent = "En iPhone: botón Compartir de Safari → «Añadir a pantalla de inicio».";
-if ("serviceWorker" in navigator && location.protocol === "https:") { try { navigator.serviceWorker.register("sw.js").catch(() => {}); } catch(e){} }
+if ("serviceWorker" in navigator && location.protocol === "https:") { try { navigator.serviceWorker.register("").catch(() => {}); } catch(e){} }
 
 /* ================================================================ arranque */
 $("#stProgs").textContent = PROGRAMAS.length;
