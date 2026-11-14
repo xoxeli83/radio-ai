@@ -44,8 +44,9 @@ foreach ($l in $locutores) {
   $wav = Join-Path $salida "$($l.id) - $($l.nombre).wav"
   Write-Host "Grabando a $($l.nombre)..."
   $opts = @("--model", $onnx, "--output_file", $wav, "--length_scale", ([string]$l.vel).Replace(",", "."))
-  $meta = Get-Content "$onnx.json" -Raw | ConvertFrom-Json
-  if ($meta.num_speakers -gt 1) { $opts += @("--speaker", [string]$l.hablante) }
+  $hablantes = 1
+  if ((Get-Content "$onnx.json" -Raw -Encoding UTF8) -match '"num_speakers"\s*:\s*(\d+)') { $hablantes = [int]$Matches[1] }
+  if ($hablantes -gt 1) { $opts += @("--speaker", [string]$l.hablante) }
   $l.texto | & $piper.FullName @opts 2>$null
 }
 
