@@ -12,7 +12,7 @@
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.png" type="image/png">
 <link rel="icon" href="favicon.ico" sizes="48x48">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -345,7 +345,7 @@ footer a{color:var(--tx3)}
 <body>
 <header>
   <div class="wrap hbar">
-    <a class="logo" href="#directo" aria-label="Crazy rAdIo, inicio"><img src="favicon.svg" width="36" height="36" alt=""><img class="wm" src="wordmark_blanco.svg" alt="crazy rAdIo" width="133" height="26"></a>
+    <a class="logo" href="#directo" aria-label="Crazy rAdIo, inicio"><img src="alien_icono.png" width="46" height="46" alt=""><img class="wm" src="wordmark_blanco.svg" alt="crazy rAdIo" width="133" height="26"></a>
     <nav id="menu">
       <a href="#directo">En directo</a>
       <a href="#explorar">Explorar</a>
@@ -764,7 +764,7 @@ function pintarBarra(){
     $("#pcov").setAttribute("style", portadaFondo(cancionActual.titulo, cancionActual.artista)); $("#pcov").textContent = iniciales(cancionActual.titulo);
   } else {
     $("#pt").textContent = ahoraDirecto.t || "Crazy rAdIo"; $("#pa").textContent = ahoraDirecto.a || progActual().nombre;
-    $("#pcov").removeAttribute("style"); $("#pcov").innerHTML = ahoraDirecto.art ? `<img src="${esc(ahoraDirecto.art)}" alt="" onerror="this.remove()">` : `<img src="favicon.svg" alt="">`;
+    $("#pcov").removeAttribute("style"); $("#pcov").innerHTML = ahoraDirecto.art ? `<img src="${esc(ahoraDirecto.art)}" alt="" onerror="this.remove()">` : `<img src="alien_icono.png" alt="">`;
   }
   metadatos();
 }
