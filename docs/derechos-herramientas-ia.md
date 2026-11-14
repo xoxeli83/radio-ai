@@ -26,5 +26,4 @@ Con eso, si una plataforma o una entidad de gestión reclama, se puede retirar l
 
 ## Lo que no cubre
 
-- **Licencia de SGAE / AGEDI / AIE** para radio por internet: hace falta igualmente.
 - Canciones que imiten a artistas reales (voz o nombre): se rechazan siempre en la revisión manual.

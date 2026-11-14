@@ -13,7 +13,7 @@ Lo que va a tu nombre (dominios, cuentas, tarjetas, contratos) tienes que hacerl
 | 6 | Correo (Brevo) | gratis hasta 300 correos/día | 10 min |
 | 7 | Web en czyradio.com | gratis (GitHub Pages) | 5 min |
 | 8 | Cobros de publicidad (Stripe) | comisión por pago | 20 min |
-| 9 | Derechos y licencias | ver punto 9 | antes de abrir |
+| 9 | Derechos de las canciones | gratis | antes de abrir |
 | 10 | En el coche | gratis | 15 min |
 
 ---
@@ -179,7 +179,6 @@ En el panel cada canción muestra su **titularidad**, y puedes **retirarla** de 
 ¿Avisar a las plataformas? Si la canción es del usuario según sus condiciones, no hace falta. Aun así, conviene presentarles el proyecto antes de abrir: en `docs/correos-plataformas.md` tienes los correos para **Suno** y **ElevenLabs**, en inglés y listos para enviar.
 
 Antes de abrir al público:
-- [ ] **SGAE / AGEDI / AIE:** licencia de radio por internet. Que la música sea de IA no exime de pedirla.
 - [ ] **Abogado:** revisión de `docs/legal/` (condiciones, privacidad y condiciones para anunciantes).
 - [ ] **Marca:** registrar «Crazy rAdIo» en la OEPM (y en la EUIPO si sales fuera).
 - [ ] Respuesta de Suno y ElevenLabs (si contestan).
