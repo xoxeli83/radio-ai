@@ -370,7 +370,7 @@ footer a{color:var(--tx3)}
 </header>
 
 <main class="wrap">
-  <div class="demo" id="demo"><b>Modo demostración.</b> La emisión y las cuentas se activarán cuando el servidor de la radio esté en marcha. Las canciones que ves son de ejemplo.</div>
+  <div class="demo" id="demo"><b>Modo demostración.</b> Ya puedes escuchar las primeras canciones. La emisión 24 horas con locutores y las cuentas se activarán cuando el servidor de la radio esté en marcha.</div>
   <div class="pub" data-formato="banner"></div>
 
   <!-- EN DIRECTO -->
@@ -706,6 +706,7 @@ footer a{color:var(--tx3)}
 <div class="toast" id="toast"></div>
 <audio id="audio" preload="none"></audio>
 
+<script src="canciones/catalogo.js"></script>
 <script>
 (() => {
 "use strict";
@@ -807,7 +808,17 @@ function metadatos(){
       artwork:[{src:"icons/icon-512.png", sizes:"512x512", type:"image/png"}]});
   } catch(e){}
 }
+let RADIO_WEB = false, RADIO_WEB_LLAMADA = false;
+function siguienteWeb(){
+  const lista = CATALOGO.filter(c => !c.adultos || progActual().id === "sinfiltros");
+  let c; do { c = lista[Math.floor(Math.random() * lista.length)]; } while (lista.length > 1 && cancionActual && c.id === cancionActual.id);
+  return c;
+}
 async function escucharDirecto(){
+  if (!STREAM && CATALOGO.length){
+    if (RADIO_WEB && !audio.paused){ audio.pause(); estado(false); return; }
+    RADIO_WEB = true; cancionActual = null; RADIO_WEB_LLAMADA = true; try { await escucharCancion(siguienteWeb()); } finally { RADIO_WEB_LLAMADA = false; } return;
+  }
   if (!STREAM){ toast("La emisión se activará cuando el servidor de la radio esté en marcha."); return; }
   if (modo === "directo" && !audio.paused){ audio.pause(); audio.removeAttribute("src"); audio.load(); estado(false); return; }
   modo = "directo"; cancionActual = null; pintarBarra();
@@ -822,6 +833,7 @@ async function escucharCancion(c){
   }
   modo = "carta"; cancionActual = c; pintarBarra();
   audio.src = c.audio;
+  if (!RADIO_WEB_LLAMADA) RADIO_WEB = false;
   try { await audio.play(); estado(true); api(`/api/canciones/${c.id}/reproduccion`, {method:"POST"}).catch(()=>{}); }
   catch(e){ estado(false); toast("No se pudo reproducir la canción."); }
 }
@@ -829,7 +841,7 @@ $("#pplay").addEventListener("click", () => {
   if (modo === "carta" && cancionActual) escucharCancion(cancionActual); else escucharDirecto();
 });
 $("#bigplay").addEventListener("click", escucharDirecto);
-audio.addEventListener("ended", () => { estado(false); if (modo === "carta") { $("#pprog").value = 0; } });
+audio.addEventListener("ended", () => { estado(false); if (modo === "carta") { $("#pprog").value = 0; if (RADIO_WEB) { cancionActual = null; RADIO_WEB_LLAMADA = true; escucharCancion(siguienteWeb()).finally(() => RADIO_WEB_LLAMADA = false); } } });
 audio.addEventListener("timeupdate", () => { if (modo === "carta" && audio.duration) $("#pprog").value = Math.round(1000 * audio.currentTime / audio.duration); });
 $("#pprog").addEventListener("input", e => { if (audio.duration) audio.currentTime = audio.duration * e.target.value / 1000; });
 audio.addEventListener("error", () => { if (audio.getAttribute("src")) { estado(false); toast(modo === "directo" ? "Se ha cortado la señal. Pulsa para reconectar." : "No se pudo cargar la canción."); } });
@@ -855,7 +867,8 @@ document.addEventListener("click", e => {
 });
 
 /* ================================================================ en directo */
-const DEMO_CANCIONES = TOP_EJEMPLO.map((x, i) => ({id: -(i + 1), titulo:x.t, artista:x.a, genero:x.g, megusta: Math.round(x.v / 9), reproducciones: x.v, audio:null}));
+const CATALOGO = (window.CATALOGO_LOCAL || []).slice();
+const DEMO_CANCIONES = CATALOGO.length ? CATALOGO : TOP_EJEMPLO.map((x, i) => ({id: -(i + 1), titulo:x.t, artista:x.a, genero:x.g, megusta: Math.round(x.v / 9), reproducciones: x.v, audio:null}));
 function pintarDirecto(){
   const p = progActual(), s = progSiguiente(p);
   $("#onair").style.setProperty("--prog", p.color);
@@ -917,7 +930,7 @@ async function cargarCatalogo(){
   let lista;
   if (!API){
     const q = $("#buscar").value.toLowerCase();
-    lista = DEMO_CANCIONES.filter(c => !q || (c.titulo + c.artista).toLowerCase().includes(q));
+    lista = DEMO_CANCIONES.filter(c => (!q || (c.titulo + c.artista).toLowerCase().includes(q)) && (!filtroGenero || c.programa === filtroGenero));
   } else {
     const p = new URLSearchParams({orden: $("#orden").value, q: $("#buscar").value.trim(), limite: 60});
     if (filtroGenero) p.set("genero", filtroGenero);
@@ -931,7 +944,8 @@ async function cargarCancion(id){
   const box = $("#fichaCancion");
   box.innerHTML = `<p class="vacio">Cargando…</p>`;
   let c;
-  try { c = await api(`/api/canciones/${id}`); } catch(e){ box.innerHTML = `<div class="aviso">${esc(e.message)}</div>`; return; }
+  if (!API){ c = CATALOGO.find(x => x.id === id); if (!c){ box.innerHTML = `<div class="aviso">Canción no encontrada.</div>`; return; } }
+  else { try { c = await api(`/api/canciones/${id}`); } catch(e){ box.innerHTML = `<div class="aviso">${esc(e.message)}</div>`; return; } }
   CACHE_C.set(c.id, c);
   const url = location.href.split("#")[0] + `#cancion-${c.id}`;
   box.innerHTML = `<div class="ficha">
@@ -993,7 +1007,7 @@ async function cargarArtista(nick){
 let filtroTop = "Todos", TOP = null;
 const mov = m => m === "nuevo" ? '<span class="new">NUEVO</span>' : m > 0 ? `<span class="up">▲ ${m}</span>` : m < 0 ? `<span class="down">▼ ${-m}</span>` : '<span class="eqm">=</span>';
 async function cargarTop(){
-  if (!API){ TOP = TOP_EJEMPLO.map((x, i) => ({id:-(i+1), pos:i+1, titulo:x.t, artista:x.a, genero:x.g, votos:x.v, mov:x.mov})); pintarTop(); return; }
+  if (!API){ TOP = CATALOGO.length ? CATALOGO.map((c, i) => ({...c, pos:i+1, votos:0, mov:"nuevo"})) : TOP_EJEMPLO.map((x, i) => ({id:-(i+1), pos:i+1, titulo:x.t, artista:x.a, genero:x.g, votos:x.v, mov:x.mov})); pintarTop(); return; }
   try { const d = await api("/api/top40"); TOP = d.lista; $("#avisoTop").innerHTML = TOP.length ? `Semana ${esc(d.semana)}. Se actualiza en directo con los votos.` : "Todavía no hay canciones en la lista. ¡Sube la tuya y sé de los primeros!"; }
   catch(e){ TOP = []; $("#avisoTop").textContent = "No se pudo cargar la lista ahora mismo."; }
   pintarTop();

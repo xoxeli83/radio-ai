@@ -11,6 +11,9 @@
     "Crazy rAdIo, inicio": "Crazy rAdIo, home", "Información": "About", "Información y derechos": "About & rights",
     "Contacto": "Contact", "Privacidad": "Privacy", "Publicidad": "Advertising", "Volver": "Back", "Volver a la radio": "Back to the radio",
     "Modo demostración.": "Demo mode.",
+    "Ya puedes escuchar las primeras canciones. La emisión 24 horas con locutores y las cuentas se activarán cuando el servidor de la radio esté en marcha.":
+      "You can already listen to the first songs. The 24/7 stream with hosts and accounts will be enabled once the radio server is up.",
+    "Canción no encontrada.": "Song not found.",
     "La emisión y las cuentas se activarán cuando el servidor de la radio esté en marcha. Las canciones que ves son de ejemplo.":
       "Streaming and accounts will be enabled once the radio server is up. The songs you see are examples.",
     "¿Quieres que tu marca suene aquí?": "Want your brand on air here?",
