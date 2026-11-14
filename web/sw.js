@@ -1,7 +1,7 @@
 // Service worker: guarda la web para que la app abra rápido y sin conexión.
 // La señal de radio y la API nunca se guardan (siempre en directo).
-const CACHE = "czyradio-v5";
-const BASE = ["./", "./index.html", "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png", "./favicon.png", "./alien_icono.png", "./mascota.webp", "./wordmark_blanco.svg"];
+const CACHE = "czyradio-v6";
+const BASE = ["./", "./index.html", "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png", "./favicon.png", "./i18n.js", "./alien_icono.png", "./mascota.webp", "./wordmark_blanco.svg"];
 
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(BASE)).then(() => self.skipWaiting()));

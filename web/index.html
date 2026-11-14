@@ -108,6 +108,7 @@ img{max-width:100%}
 header{position:sticky;top:0;z-index:20;background:rgba(11,16,38,.88);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
 .hbar{display:flex;align-items:center;gap:12px;height:64px}
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none;white-space:nowrap}
+.idiomas{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;flex:none}.idiomas button{border:0;background:transparent;color:var(--tx3);font-size:12px;font-weight:700;padding:6px 9px;letter-spacing:.04em}.idiomas button.on{background:var(--violeta);color:#fff}
 .logo img{display:block}.logo .wm{height:26px;width:auto}
 nav#menu{display:flex;gap:2px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
 nav#menu::-webkit-scrollbar{display:none}
@@ -358,6 +359,7 @@ footer a{color:var(--tx3)}
       <a href="#anunciate">Anúnciate</a>
     </nav>
     <div class="usu">
+      <div class="idiomas" role="group" aria-label="Idioma / Language"><button type="button" data-idioma="es" aria-label="Español">ES</button><button type="button" data-idioma="en" aria-label="English">EN</button></div>
       <button id="btnInstalar" type="button">Instalar app</button>
       <a class="btn pri peq" href="#entrar" id="btnEntrar">Entrar</a>
       <a class="chipU oculto" href="#panel" id="chipUsuario"></a>
@@ -1306,5 +1308,6 @@ setInterval(actualizarAhora, NOWPLAYING ? 15000 : 30000);
 })();
 
 </script>
+<script src="i18n.js"></script>
 </body>
 </html>
