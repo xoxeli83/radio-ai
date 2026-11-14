@@ -133,14 +133,15 @@ function tarjeta(e){
       <span class="chip">${esc(e.herramienta)} · plan ${esc(e.plan)} · descarga ${esc(e.fecha_descarga)}</span>
       <span class="chip">${mmss(m.duracion_s)} · ${m.kbps||"?"} kbps · ${m.lufs??"?"} LUFS · ${m.tempo_bpm||"?"} BPM</span>
       <span class="chip">Letra: ${esc(e.letra_autor)}</span>
-      <span class="chip">Titularidad: ${esc({mia:"del creador (plan que la cede)",propia:"composición propia",licencia:"licencia de la plataforma"}[e.titularidad]||e.titularidad||"—")}</span>
+      <span class="chip">Titularidad: ${esc({mia:"del creador (plan que la cede)",propia:"composición propia",licencia:"licencia de la plataforma",enlace:"solo enlace de Suno"}[e.titularidad]||e.titularidad||"—")}</span>
     </div>
     ${(a.motivos||[]).length||(a.alertas||[]).length?`<ul>${(a.alertas||[]).map(x=>`<li class="alerta">${esc(x)}</li>`).join("")}${(a.motivos||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:""}
     ${a.ia&&a.ia.comentario?`<p style="margin:6px 0;color:var(--tx2);font-size:14px"><b>Comentario IA:</b> ${esc(a.ia.comentario)}</p>`:""}
     ${e.notas?`<details><summary>Notas del creador</summary><pre>${esc(e.notas)}</pre></details>`:""}
     ${a.letra?`<details><summary>Letra transcrita</summary><pre>${esc(a.letra)}</pre></details>`:""}
     ${e.motivo?`<p style="color:var(--ko);font-size:14px">${esc(e.motivo)}</p>`:""}
-    <audio controls preload="none" src="api/admin/audio/${e.id}"></audio>
+    ${e.solo_enlace ? `<iframe src="https://suno.com/embed/${esc(e.suno_id)}" style="width:100%;height:152px;border:0;border-radius:10px;margin-top:6px" loading="lazy" allow="autoplay; encrypted-media"></iframe><div style="font-size:12px"><a href="https://suno.com/song/${esc(e.suno_id)}" target="_blank" rel="noopener">Abrir en Suno ↗</a> · solo a la carta, no suena en la radio</div>` : `<audio controls preload="none" src="api/admin/audio/${e.id}"></audio>`}
+    ${e.estilo ? `<div style="font-size:12px;margin-top:4px">Estilo: ${esc(e.estilo)}</div>` : ""}
     <div class="acc">
       ${e.estado!=="admitida"?`<select id="p${e.id}">${opciones}</select><button class="btn ok" data-a="admitir" data-id="${e.id}">Admitir y enviar a la radio</button>`:`<span class="chip prog">En emisión: ${esc(programas[e.programa]||e.programa)}</span>`}
       ${e.estado!=="rechazada"&&e.estado!=="admitida"?`<input id="m${e.id}" placeholder="Motivo del rechazo (lo verá el creador)" size="34"><button class="btn ko" data-a="rechazar" data-id="${e.id}">Rechazar</button>`:""}

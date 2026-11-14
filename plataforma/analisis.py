@@ -179,7 +179,8 @@ def opinion_ia(envio, medidas, letra):
         '"nota" (0 a 10, adecuación a la emisora; no puntúes el gusto personal). No inventes datos.\n\n'
         f"Género declarado: {envio.get('genero')}. Idioma declarado: {envio.get('idioma')}. Título: {envio.get('titulo')}.\n"
         f"Medidas: {json.dumps(medidas, ensure_ascii=False)}\n"
-        f"Letra transcrita: {(letra or {}).get('texto', '(sin transcripción)')[:4000]}"
+        f"Estilo indicado por el creador: {envio.get('estilo') or '(no indicado)'}\n"
+        f"Letra: {(letra or {}).get('texto', '(sin letra)')[:4000]}"
     )
     cuerpo = json.dumps({"model": os.environ.get("CLAUDE_MODELO", "claude-haiku-5-5"), "max_tokens": 400,
                          "messages": [{"role": "user", "content": instr}]}).encode()
@@ -273,9 +274,10 @@ def analizar(ruta, envio):
         letra = transcribir(ruta)
     except Exception as e:
         letra = {"texto": "", "idioma": None, "claridad": 0.5, "error": str(e)[:200]}
-    expl = explicito((letra or {}).get("texto", "") + " " + envio.get("titulo", "") + " " + envio.get("notas", ""))
+    letra_usuario = (envio.get("letra_texto") or "").strip()
+    expl = explicito((letra or {}).get("texto", "") + " " + letra_usuario + " " + envio.get("titulo", "") + " " + envio.get("notas", ""))
     medidas = {**a, **son, **s}
-    ia = opinion_ia(envio, medidas, letra)
+    ia = opinion_ia(envio, medidas, {"texto": letra_usuario} if letra_usuario else letra)
     total, tecnica, alertas = puntuar(a, s, son, letra, envio)
     if ia and isinstance(ia.get("nota"), (int, float)):
         total = round(0.7 * total + 3 * float(ia["nota"]))  # la nota editorial de la IA pesa un 30 %
@@ -295,3 +297,54 @@ def analizar(ruta, envio):
         "letra": (letra or {}).get("texto", "")[:6000], "idioma_detectado": (letra or {}).get("idioma"),
         "explicito": expl, "ia": ia,
     }
+
+
+# Palabras de estilo (las que pone el creador en Suno) → programa
+_ESTILOS = [
+    ("sinfiltros", r"humor|parodia|comedy|sátira|satira|explicit"),
+    ("urban", r"rap|trap|reggaet|regueton|hip.?hop|drill|dembow|urban|r&b|rnb"),
+    ("rock", r"rock|metal|punk|grunge|indie|guitar|hardcore"),
+    ("chill", r"chill|lo.?fi|ambient|house|techno|tekno|electr|edm|trance|downtempo|deep"),
+    ("pop", r"pop|dance|disco|latin|cumbia|salsa|pasodoble|tango|verbena|flamenc|rumba|folk|balada|ballad"),
+]
+
+
+def programa_por_estilo(estilo):
+    t = (estilo or "").lower()
+    for prog, pat in _ESTILOS:
+        if re.search(pat, t):
+            return prog
+    return None
+
+
+def analizar_texto(envio):
+    """Análisis de una canción que solo se escucha desde su plataforma (sin archivo): letra y estilo que pega el creador."""
+    letra = (envio.get("letra_texto") or "").strip()
+    expl = explicito(letra + " " + envio.get("titulo", "") + " " + envio.get("notas", ""))
+    ia = opinion_ia(envio, {"sin_audio": True}, {"texto": letra} if letra else None)
+    alertas, motivos = [], []
+    if not letra and envio.get("idioma") != "Instrumental":
+        alertas.append("El creador no ha pegado la letra: revisa el lenguaje escuchándola.")
+    prog_estilo = programa_por_estilo(envio.get("estilo"))
+    if expl.get("palabras"):
+        prog, adultos = "sinfiltros", True
+        motivos.append(f"Lenguaje explícito: {', '.join(expl['palabras'][:6])}.")
+    elif ia and ia.get("explicito"):
+        prog, adultos = "sinfiltros", True
+        motivos.append("La revisión con IA detecta contenido para adultos.")
+    elif ia and ia.get("programa"):
+        prog, adultos = ia["programa"], False
+        motivos.append("Programa propuesto por la revisión con IA.")
+    elif prog_estilo:
+        prog, adultos = prog_estilo, prog_estilo == "sinfiltros"
+        motivos.append(f"Según el estilo indicado ({envio.get('estilo')}).")
+    else:
+        prog, adultos = GENERO_A_PROGRAMA.get(envio.get("genero"), "general"), False
+        motivos.append(f"Según el género declarado ({envio.get('genero')}).")
+    if expl.get("odio") or (ia and ia.get("odio")):
+        alertas.insert(0, "POSIBLE CONTENIDO DE ODIO: revisar la letra antes de admitir.")
+    nota = float(ia["nota"]) * 10 if ia and isinstance(ia.get("nota"), (int, float)) else 60
+    alertas.append("Solo enlace: se escucha con el reproductor de la plataforma y no suena en la radio.")
+    return {"puntuacion": max(0, min(100, round(nota))), "tecnica": None, "programa": prog, "programa_nombre": PROGRAMAS[prog],
+            "adultos": adultos, "motivos": motivos, "alertas": alertas, "medidas": {}, "letra": letra[:6000],
+            "idioma_detectado": None, "explicito": expl, "ia": ia}

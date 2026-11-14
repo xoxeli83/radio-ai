@@ -467,7 +467,7 @@ def trabajador():
                 if not r:
                     continue
                 c.execute("UPDATE envios SET estado='analizando' WHERE id=?", (eid,))
-            res = analisis.analizar(str(ARCHIVOS / r["archivo"]), dict(r))
+            res = analisis.analizar_texto(dict(r)) if r["solo_enlace"] else analisis.analizar(str(ARCHIVOS / r["archivo"]), dict(r))
             with db() as c:
                 c.execute("UPDATE envios SET estado='pendiente', analisis=?, puntuacion=?, programa=?, adultos=? WHERE id=?",
                           (json.dumps(res, ensure_ascii=False), res["puntuacion"], res["programa"], int(res["adultos"]), eid))
@@ -533,8 +533,28 @@ def arrancar_hilos():
 # Canciones
 # ============================================================================
 CAMPOS = {"artista": 80, "titulo": 120, "genero": 40, "idioma": 30, "herramienta": 40, "plan": 40,
-          "fecha_descarga": 10, "letra_autor": 60, "origen": 60, "notas": 600, "titularidad": 40}
+          "fecha_descarga": 10, "letra_autor": 60, "origen": 60, "notas": 600, "titularidad": 40,
+          "enlace": 300, "letra_texto": 6000, "estilo": 200}
 OBLIGATORIOS = ["titulo", "genero", "idioma", "herramienta", "plan", "fecha_descarga", "letra_autor", "titularidad"]
+OBLIGATORIOS_ENLACE = ["titulo", "genero", "idioma", "letra_autor", "enlace"]
+RE_SUNO = re.compile(r"^https?://(?:www\.|app\.)?suno\.(?:com|ai)/(?:song|embed)/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})", re.I)
+RE_SUNO_CORTO = re.compile(r"^https?://(?:www\.)?suno\.(?:com|ai)/s/[A-Za-z0-9]+$")
+
+
+def id_suno(enlace):
+    """Saca el id de canción de un enlace de Suno. Los enlaces cortos (suno.com/s/…) se resuelven siguiendo su redirección."""
+    enlace = (enlace or "").strip()
+    if (m := RE_SUNO.match(enlace)):
+        return m.group(1).lower()
+    if RE_SUNO_CORTO.match(enlace):
+        try:
+            req = urllib.request.Request(enlace, method="HEAD", headers={"User-Agent": "CrazyRadio/1.0"})
+            with urllib.request.urlopen(req, timeout=10) as r:
+                if (m := RE_SUNO.match(r.geturl())):
+                    return m.group(1).lower()
+        except Exception:
+            pass
+    return None
 
 # Reglas de derechos por herramienta (revisadas en noviembre de 2026; revisar cuando cambien sus condiciones).
 #  · Suno: con Pro/Premier, Suno cede al usuario lo que posee de la canción, y el uso comercial exige una descarga
@@ -580,6 +600,29 @@ async def crear_envio(request: Request):
         return JSONResponse({"codigo": secrets.token_urlsafe(8)})
     datos = {k: str(form.get(k) or "").strip()[:lim] for k, lim in CAMPOS.items()}
     datos["artista"] = datos["artista"] or u["artista"]
+    solo_enlace = form.get("modo") == "enlace"
+    suno = id_suno(datos["enlace"]) if datos["enlace"] else None
+    if datos["enlace"] and not suno and not re.match(r"^https://", datos["enlace"]):
+        return error("El enlace debe empezar por https://")
+    if solo_enlace:
+        faltan = [k for k in OBLIGATORIOS_ENLACE if not datos[k]]
+        if faltan:
+            return error("Faltan campos: " + ", ".join(faltan))
+        if not suno:
+            return error("Pega el enlace de la canción en Suno (suno.com/song/… o el enlace de compartir suno.com/s/…).")
+        for k in ("declaracion", "edad", "condiciones"):
+            if form.get(k) not in ("1", "true", "on"):
+                return error("Debes aceptar todas las declaraciones.")
+        datos.update({"herramienta": "Suno", "plan": datos["plan"] or "Solo enlace", "titularidad": datos["titularidad"] or "enlace"})
+        with db() as c:
+            if c.execute("SELECT 1 FROM envios WHERE suno_id=? AND estado NOT IN ('rechazada','error')", (suno,)).fetchone():
+                return error("Esa canción ya está enviada.")
+            codigo = secrets.token_urlsafe(9)
+            eid = c.execute(f"INSERT INTO envios(codigo, creado, ip_huella, usuario_id, email, archivo, estado, suno_id, solo_enlace, {', '.join(CAMPOS)}) "
+                            f"VALUES (?,?,?,?,?,'', 'recibida', ?, 1, {', '.join('?' * len(CAMPOS))})",
+                            (codigo, ahora(), h("ip", ip_de(request))[:32], u["id"], u["email"], suno, *datos.values())).lastrowid
+        cola.put(eid)
+        return JSONResponse({"codigo": codigo, "id": eid, "estado": ESTADOS["recibida"], "en_cola": cola.qsize()})
     faltan = [k for k in OBLIGATORIOS if not datos[k]]
     if faltan:
         return error("Faltan campos: " + ", ".join(faltan))
@@ -610,9 +653,9 @@ async def crear_envio(request: Request):
         destino.unlink(missing_ok=True)
         return error(str(e))
     with db() as c:
-        eid = c.execute(f"INSERT INTO envios(codigo, creado, ip_huella, usuario_id, email, archivo, estado, {', '.join(CAMPOS)}) "
-                        f"VALUES (?,?,?,?,?,?, 'recibida', {', '.join('?' * len(CAMPOS))})",
-                        (codigo, ahora(), h("ip", ip_de(request))[:32], u["id"], u["email"], nombre, *datos.values())).lastrowid
+        eid = c.execute(f"INSERT INTO envios(codigo, creado, ip_huella, usuario_id, email, archivo, estado, suno_id, {', '.join(CAMPOS)}) "
+                        f"VALUES (?,?,?,?,?,?, 'recibida', ?, {', '.join('?' * len(CAMPOS))})",
+                        (codigo, ahora(), h("ip", ip_de(request))[:32], u["id"], u["email"], nombre, suno, *datos.values())).lastrowid
     cola.put(eid)
     return JSONResponse({"codigo": codigo, "id": eid, "estado": ESTADOS["recibida"], "en_cola": cola.qsize()})
 
@@ -640,7 +683,9 @@ def _cancion(r, st=None, autor=None):
     d = {"id": r["id"], "titulo": r["titulo"], "artista": r["artista"], "origen": r["origen"] or "", "programa": r["programa"],
          "programa_nombre": analisis.PROGRAMAS.get(r["programa"], ""), "genero": GENEROS.get(r["programa"], "Variado"),
          "adultos": bool(r["adultos"]), "fecha": (r["revisado"] or r["creado"] or "")[:10],
-         "audio": f"{URL_PUBLICA}/api/canciones/{r['id']}/audio" if (EMITIDAS / f"{r['id']}.mp3").exists() else None}
+         "audio": f"{URL_PUBLICA}/api/canciones/{r['id']}/audio" if (EMITIDAS / f"{r['id']}.mp3").exists() else None,
+         "suno_id": r["suno_id"], "enlace": r["enlace"] or (f"https://suno.com/song/{r['suno_id']}" if r["suno_id"] else None),
+         "en_radio": bool(r["ruta_emisora"])}
     if st is not None:
         d.update({k: st.get(k, 0) for k in ("reproducciones", "megusta", "visitas")})
     if autor is not None:
@@ -1075,6 +1120,13 @@ async def admin_accion(request: Request):
         prog = d.get("programa") or r["programa"] or "general"
         if prog not in analisis.PROGRAMAS:
             return error("Programa no válido.")
+        if r["solo_enlace"]:
+            with db() as c:
+                c.execute("UPDATE envios SET estado='admitida', programa=?, adultos=?, revisado=?, ruta_emisora=NULL, motivo=NULL WHERE id=?",
+                          (prog, int(prog == "sinfiltros"), ahora(), eid))
+            avisar(r, True, analisis.PROGRAMAS[prog] + " (a la carta, con el reproductor de Suno)")
+            _cache_top["t"] = 0
+            return JSONResponse({"ok": True})
         final = EMITIDAS / f"{eid}.mp3"
         try:
             mp3_normalizado(ARCHIVOS / r["archivo"], final, r["titulo"], r["artista"], f"Creado con {r['herramienta']}")

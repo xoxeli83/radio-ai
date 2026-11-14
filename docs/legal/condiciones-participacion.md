@@ -50,3 +50,12 @@ Según la Política de privacidad.
 
 ## 9. Legislación
 Legislación española. Juzgados y tribunales de [CIUDAD], salvo que la norma aplicable a consumidores disponga otra cosa.
+
+
+## Canciones compartidas solo con enlace
+
+El creador puede compartir una canción indicando únicamente su enlace en Suno. En ese caso:
+- la canción se reproduce con el reproductor oficial de Suno insertado en la web; la Emisora no copia, almacena ni emite el audio;
+- no forma parte de la emisión de radio, solo de la escucha a la carta, las listas y los votos;
+- el creador declara que la ha creado él y que puede compartirla según las condiciones de Suno;
+- si Suno retira la canción o desactiva su reproductor, dejará de escucharse en la web.

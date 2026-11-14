@@ -57,7 +57,8 @@ CREATE INDEX IF NOT EXISTS ix_estado ON envios(estado);
 COLUMNAS_NUEVAS = {
     "usuarios": {"nick": "TEXT", "pass_hash": "TEXT", "bio": "TEXT", "ciudad": "TEXT", "avatar": "TEXT",
                  "enlaces": "TEXT", "publico": "INTEGER DEFAULT 1", "avisos_email": "INTEGER DEFAULT 1"},
-    "envios": {"usuario_id": "INTEGER", "titularidad": "TEXT"},
+    "envios": {"usuario_id": "INTEGER", "titularidad": "TEXT", "enlace": "TEXT", "suno_id": "TEXT", "letra_texto": "TEXT",
+               "estilo": "TEXT", "solo_enlace": "INTEGER DEFAULT 0"},
     "pedidos": {"clave": "TEXT", "locutor": "TEXT", "fin": "TEXT", "retirado": "TEXT"},
 }
 

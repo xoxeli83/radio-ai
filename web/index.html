@@ -326,6 +326,8 @@ textarea{min-height:90px;resize:vertical}
 .ptxt .a{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pvol{display:flex;align-items:center;gap:8px;color:var(--tx3)}
 .pvol input{width:110px;padding:0;accent-color:var(--a3)}
+.suno-emb{margin:18px 0 6px;max-width:620px}.suno-emb iframe{width:100%;height:240px;border:0;border-radius:14px;background:#000}
+.modos label{align-items:flex-start}
 .prog-carta{width:160px;padding:0;accent-color:var(--a3)}
 @media (max-width:620px){.pvol,.prog-carta{display:none}}
 .live{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;letter-spacing:.06em;color:#ff6b75;white-space:nowrap}
@@ -459,6 +461,13 @@ footer a{color:var(--tx3)}
     <form class="f oculto" id="fEnvio" novalidate>
       <p class="nota" id="comoQuien" style="margin:0"></p>
       <div class="bloque">
+        <h3>¿Cómo la compartes?</h3>
+        <div class="opc modos" id="opcModo">
+          <label><input type="radio" name="modo" value="archivo" checked> <span><b>Subo el archivo.</b> Suena en la radio 24 horas y se escucha a la carta. Necesita un plan que te permita descargarla y usarla.</span></label>
+          <label><input type="radio" name="modo" value="enlace"> <span><b>Solo el enlace de Suno.</b> Se escucha a la carta con el reproductor oficial de Suno, recibe me gusta y votos, pero <b>no suena en la radio</b>. Para canciones que no puedes descargar.</span></label>
+        </div>
+      </div>
+      <div class="bloque">
         <h3>La canción</h3>
         <div class="f2">
           <div><label for="fTitulo">Título</label><input id="fTitulo" required maxlength="120"></div>
@@ -468,7 +477,10 @@ footer a{color:var(--tx3)}
           <div><label for="fGenero">Género</label><select id="fGenero" required><option value="">Elige…</option><option>Pop / Dance</option><option>Rock / Indie / Metal</option><option>Chillout / Electrónica</option><option>Rap / Trap / Urbano</option><option>Humor / Sátira</option><option>Otro</option></select></div>
           <div><label for="fIdioma">Idioma de la letra</label><select id="fIdioma" required><option value="">Elige…</option><option>Español</option><option>Inglés</option><option>Gallego</option><option>Catalán</option><option>Euskera</option><option>Portugués</option><option>Francés</option><option>Instrumental</option><option>Otro</option></select></div>
         </div>
-        <div><label for="fArchivo">Archivo de audio <small>(MP3, WAV, FLAC, M4A u OGG · máximo 25 MB)</small></label><input id="fArchivo" type="file" accept="audio/*,.mp3,.wav,.flac,.m4a,.ogg" required></div>
+        <div><label for="fEnlace">Enlace de la canción en Suno <small id="enlaceOpc">(opcional, pero recomendado: pondremos un botón «Escúchala en Suno»)</small></label><input id="fEnlace" type="url" maxlength="300" placeholder="https://suno.com/song/… o https://suno.com/s/…"></div>
+        <div><label for="fEstilo">Estilo <small>(cópialo de Suno: ayuda a la IA a elegir el programa)</small></label><input id="fEstilo" maxlength="200" placeholder="reggaeton, trap, dark, male vocals"></div>
+        <div><label for="fLetraTexto">Letra <small>(cópiala de Suno: la IA la lee para el lenguaje y el programa)</small></label><textarea id="fLetraTexto" maxlength="6000" rows="6"></textarea></div>
+        <div id="bqArchivo"><label for="fArchivo">Archivo de audio <small>(MP3, WAV, FLAC, M4A u OGG · máximo 25 MB)</small></label><input id="fArchivo" type="file" accept="audio/*,.mp3,.wav,.flac,.m4a,.ogg" required></div>
         <div class="f2">
           <div><label for="fOrigen">Desde dónde <small>(opcional)</small></label><input id="fOrigen" maxlength="60" placeholder="Vigo, España"></div>
           <div><label for="fLetra">¿Quién escribió la letra?</label><select id="fLetra" required><option value="">Elige…</option><option>La escribí yo</option><option>Generada por la IA</option><option>Mixta (yo + IA)</option><option>Es de otra persona, con su permiso</option><option>Instrumental, sin letra</option></select></div>
@@ -476,7 +488,7 @@ footer a{color:var(--tx3)}
         <div><label for="fNotas">Sobre la canción <small>(opcional · se verá en su ficha y la puede leer el locutor)</small></label><textarea id="fNotas" maxlength="600"></textarea></div>
       </div>
 
-      <div class="bloque">
+      <div class="bloque" id="bqDerechos">
         <h3>Derechos: ¿de quién es la canción?</h3>
         <p class="nota" style="margin:0">Las herramientas de IA deciden en sus condiciones a quién pertenece cada canción. Solo podemos emitir las que son tuyas.</p>
         <div class="f2">
@@ -496,9 +508,9 @@ footer a{color:var(--tx3)}
 
       <div class="bloque">
         <h3>Autorizaciones</h3>
-        <label class="chk"><input type="checkbox" id="c1"> Declaro que la canción es mía según las condiciones de la herramienta, que no contiene material de terceros sin permiso y que no imita la voz de personas reales.</label>
-        <label class="chk"><input type="checkbox" id="c2"> La descargué por el canal oficial de la herramienta (no con programas de terceros).</label>
-        <label class="chk"><input type="checkbox" id="c3"> Autorizo gratis su emisión en la radio online y en sus programas, y que se mencione mi nombre artístico.</label>
+        <label class="chk"><input type="checkbox" id="c1"> Declaro que la canción la he creado yo<span class="solo-archivo"> y es mía según las condiciones de la herramienta</span>, que no contiene material de terceros sin permiso y que no imita la voz de personas reales.</label>
+        <label class="chk solo-archivo"><input type="checkbox" id="c2"> La descargué por el canal oficial de la herramienta (no con programas de terceros).</label>
+        <label class="chk solo-archivo"><input type="checkbox" id="c3"> Autorizo gratis su emisión en la radio online y en sus programas, y que se mencione mi nombre artístico.</label>
         <label class="chk"><input type="checkbox" id="c4"> Autorizo que se pueda escuchar a la carta en la web y en la app, y que reciba me gusta y votos.</label>
         <label class="chk"><input type="checkbox" id="c5"> Soy mayor de 18 años o cuento con autorización de mi padre, madre o tutor.</label>
         <label class="chk"><input type="checkbox" id="c6"> Acepto las <a href="#info">condiciones de participación y la política de privacidad</a>.</label>
@@ -814,7 +826,14 @@ if ("mediaSession" in navigator){
 const CACHE_C = new Map();
 document.addEventListener("click", e => {
   const b = e.target.closest("[data-play]"); if (!b) return;
-  e.preventDefault(); escucharCancion(CACHE_C.get(+b.dataset.play));
+  e.preventDefault();
+  const c = CACHE_C.get(+b.dataset.play);
+  if (c && !c.audio && c.suno_id){
+    if (location.hash === `#cancion-${c.id}`){ const fr = $("#sunoFrame"); if (fr) fr.scrollIntoView({behavior:"smooth", block:"center"}); }
+    else location.hash = `#cancion-${c.id}`;
+    return;
+  }
+  escucharCancion(c);
 });
 
 /* ================================================================ en directo */
@@ -904,11 +923,13 @@ async function cargarCancion(id){
       <h1>${esc(c.titulo)}${c.adultos ? '<span class="adult">+18</span>' : ""}</h1>
       <div class="a" style="font-size:17px">${c.nick ? `<a href="#artista-${esc(c.nick)}">${esc(c.artista)}</a>` : esc(c.artista)}${c.origen ? " · " + esc(c.origen) : ""}</div>
       <div class="acciones">
-        <button class="btn pri" type="button" data-play="${c.id}">▶ Escuchar</button>
+        ${c.audio || !c.suno_id ? `<button class="btn pri" type="button" data-play="${c.id}">▶ Escuchar</button>` : ""}
+        ${c.enlace && /suno\./.test(c.enlace) ? `<a class="btn" href="${esc(c.enlace)}" target="_blank" rel="noopener">Escúchala en Suno ↗</a>` : ""}
         <button class="btn mg ${c.yo_megusta ? "on" : ""}" type="button" id="btnMg">♥ <span id="nMg">${num(c.megusta)}</span></button>
         ${c.es_mia ? "" : `<button class="btn" type="button" id="btnVoto" ${c.yo_votado ? "disabled" : ""}>${c.yo_votado ? "Votada esta semana" : "Votar para el Top 40"}</button>`}
         <button class="btn sec" type="button" id="btnCompartir">Compartir</button>
       </div>
+      ${!c.audio && c.suno_id ? `<div class="suno-emb"><iframe id="sunoFrame" src="https://suno.com/embed/${esc(c.suno_id)}" title="${esc(c.titulo)} en Suno" loading="lazy" allow="autoplay; encrypted-media"></iframe><p class="nota">Suena con el reproductor de Suno. Esta canción se escucha a la carta, no en la radio.</p></div>` : ""}
       <div class="stats" style="max-width:520px"><div class="stat"><b>${num(c.reproducciones)}</b><span>reproducciones</span></div><div class="stat"><b>${num(c.megusta)}</b><span>me gusta</span></div><div class="stat"><b>${num(c.visitas)}</b><span>visitas</span></div></div>
       ${c.sobre ? `<h3 style="margin-top:24px">Sobre la canción</h3><p style="color:var(--tx2);white-space:pre-wrap">${esc(c.sobre)}</p>` : ""}
       ${c.autor ? `<div class="card" style="margin-top:22px;display:flex;gap:14px;align-items:center">${avatarHTML(c.autor.avatar, c.autor.artista)}<div><b>${esc(c.autor.artista)}</b><div class="a">${esc(c.autor.ciudad || "")}</div></div><a class="btn peq" style="margin-left:auto" href="#artista-${esc(c.autor.nick)}">Ver perfil</a></div>` : ""}
@@ -1027,6 +1048,16 @@ $("#fHerr").addEventListener("change", () => {
 });
 ["#fPlan", "#fDescarga"].forEach(s => $(s).addEventListener("change", actualizarDerechos));
 $("#opcTitularidad").addEventListener("change", actualizarDerechos);
+const modoEnvio = () => ($("input[name=modo]:checked") || {}).value || "archivo";
+function aplicarModo(){
+  const enlace = modoEnvio() === "enlace";
+  $("#bqArchivo").classList.toggle("oculto", enlace);
+  $("#bqDerechos").classList.toggle("oculto", enlace);
+  $$(".solo-archivo").forEach(x => x.classList.toggle("oculto", enlace));
+  $("#enlaceOpc").textContent = enlace ? "(obligatorio)" : "(opcional, pero recomendado: pondremos un botón «Escúchala en Suno»)";
+  $("#btnEnviar").textContent = enlace ? "Enviar enlace" : "Enviar canción";
+}
+$("#opcModo").addEventListener("change", aplicarModo);
 function prepararEnvio(){
   $("#puertaEnvio").classList.toggle("oculto", !!YO);
   $("#fEnvio").classList.toggle("oculto", !YO);
@@ -1036,20 +1067,27 @@ function prepararEnvio(){
 $("#fEnvio").addEventListener("submit", e => {
   e.preventDefault();
   const f = e.target, res = $("#resEnvio");
-  const faltan = ["#fTitulo","#fArtista","#fGenero","#fIdioma","#fArchivo","#fLetra","#fHerr","#fPlan","#fDescarga"].filter(s => !$(s).value);
+  const enlace = modoEnvio() === "enlace";
+  const req = enlace ? ["#fTitulo","#fArtista","#fGenero","#fIdioma","#fLetra","#fEnlace"] : ["#fTitulo","#fArtista","#fGenero","#fIdioma","#fArchivo","#fLetra","#fHerr","#fPlan","#fDescarga"];
+  const faltan = req.filter(s => !$(s).value);
   if (faltan.length){ toast("Completa todos los campos obligatorios."); $(faltan[0]).focus(); return; }
+  if ($("#fEnlace").value && !/^https:\/\/(www\.|app\.)?suno\.(com|ai)\/(song|s|embed)\//i.test($("#fEnlace").value.trim()) && enlace){ toast("Pega el enlace de la canción en Suno."); $("#fEnlace").focus(); return; }
   const tit = $("input[name=tit]:checked");
-  if (!tit){ toast("Indica de quién es la canción."); return; }
-  const regla = reglaDerechos(); if (regla){ toast(regla); return; }
-  if (!["#c1","#c2","#c3","#c4","#c5","#c6"].every(s => $(s).checked)){ toast("Marca todas las autorizaciones."); return; }
-  const archivo = $("#fArchivo").files[0];
-  if (archivo.size > 25 * 1024 * 1024){ toast("El archivo supera 25 MB."); return; }
+  if (!enlace){
+    if (!tit){ toast("Indica de quién es la canción."); return; }
+    const regla = reglaDerechos(); if (regla){ toast(regla); return; }
+  }
+  const casillas = enlace ? ["#c1","#c4","#c5","#c6"] : ["#c1","#c2","#c3","#c4","#c5","#c6"];
+  if (!casillas.every(s => $(s).checked)){ toast("Marca todas las autorizaciones."); return; }
+  const archivo = enlace ? null : $("#fArchivo").files[0];
+  if (archivo && archivo.size > 25 * 1024 * 1024){ toast("El archivo supera 25 MB."); return; }
   const fd = new FormData();
-  const v = {titulo:"#fTitulo", artista:"#fArtista", genero:"#fGenero", idioma:"#fIdioma", herramienta:"#fHerr", plan:"#fPlan", fecha_descarga:"#fDescarga", letra_autor:"#fLetra", origen:"#fOrigen", notas:"#fNotas", web:"#fWeb"};
+  const v = {titulo:"#fTitulo", artista:"#fArtista", genero:"#fGenero", idioma:"#fIdioma", herramienta:"#fHerr", plan:"#fPlan", fecha_descarga:"#fDescarga", letra_autor:"#fLetra", origen:"#fOrigen", notas:"#fNotas", web:"#fWeb", enlace:"#fEnlace", estilo:"#fEstilo", letra_texto:"#fLetraTexto"};
   for (const [k, s] of Object.entries(v)) fd.append(k, $(s).value.trim());
-  fd.append("titularidad", tit.value);
-  ["declaracion","descarga_oficial","autorizacion","carta","edad","condiciones"].forEach(k => fd.append(k, "1"));
-  fd.append("archivo", archivo);
+  fd.append("modo", enlace ? "enlace" : "archivo");
+  if (tit && !enlace) fd.append("titularidad", tit.value);
+  (enlace ? ["declaracion","autorizacion","edad","condiciones"] : ["declaracion","descarga_oficial","autorizacion","carta","edad","condiciones"]).forEach(k => fd.append(k, "1"));
+  if (archivo) fd.append("archivo", archivo);
   const btn = $("#btnEnviar"); btn.disabled = true;
   const xhr = new XMLHttpRequest();
   xhr.open("POST", API + "/api/envios");
@@ -1059,8 +1097,8 @@ $("#fEnvio").addEventListener("submit", e => {
     btn.disabled = false; $("#progreso").textContent = "";
     let d = {}; try { d = JSON.parse(xhr.responseText); } catch(_){}
     if (xhr.status !== 200 || !d.codigo){ res.innerHTML = `<div class="aviso ko">${esc(d.error || "No se pudo enviar. Inténtalo de nuevo.")}</div>`; return; }
-    res.innerHTML = `<div class="aviso ok"><b>¡Recibida!</b> La IA está analizando «${esc($("#fTitulo").value)}». En unos minutos verás el informe en <a href="#panel">tu panel</a>, y te avisaremos por correo cuando la revisemos.</div>`;
-    f.reset(); $("#fArtista").value = YO ? YO.artista : ""; actualizarDerechos(); cargarYo();
+    res.innerHTML = `<div class="aviso ok"><b>¡Recibida!</b> La IA está revisando «${esc($("#fTitulo").value)}». En unos minutos verás el informe en <a href="#panel">tu panel</a>, y te avisaremos por correo cuando la revisemos.</div>`;
+    f.reset(); $("#fArtista").value = YO ? YO.artista : ""; actualizarDerechos(); aplicarModo(); cargarYo();
   };
   xhr.onerror = () => { btn.disabled = false; $("#progreso").textContent = ""; toast("Sin conexión con la radio. Inténtalo de nuevo."); };
   xhr.send(fd);

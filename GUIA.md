@@ -136,6 +136,16 @@ La web **no muestra precios**. En **Anúnciate** se presentan los formatos (bann
 
 Cada anunciante tiene un **informe CSV** de impresiones y clics para justificar la campaña. No se usan cookies.
 
+## 8 bis. Cargar tus canciones de golpe
+
+Copia la carpeta al servidor (por ejemplo, con WinSCP a `/home/ubuntu/canciones`) y ejecuta:
+```
+cd ~/radio-ai
+sudo -u czyradio /opt/czyradio/venv/bin/python servidor/importar_canciones.py /home/ubuntu/canciones TU_CORREO_DE_LA_CUENTA
+sudo systemctl restart czyradio-plataforma
+```
+Extrae el audio de los MP4 de Suno, salta los duplicados («… (1).mp4») y los vídeos grandes, y deja las canciones en el panel con el análisis de la IA para que las admitas.
+
 ## 9. Derechos de las canciones
 
 Al enviar una canción, el creador indica **con qué herramienta la hizo, con qué plan y de quién es**, y marca seis casillas obligatorias (es suya, descarga oficial, autoriza la emisión y la escucha a la carta, se hace responsable, es mayor de edad, acepta las condiciones). La plataforma aplica estas reglas antes de analizarla:
@@ -148,6 +158,8 @@ Al enviar una canción, el creador indica **con qué herramienta la hizo, con qu
 | Hecha por el creador / otras | Revisión manual | Titularidad de la plataforma o desconocida |
 
 En el panel cada canción muestra su **titularidad**, y puedes **retirarla** de la radio en cualquier momento.
+
+**Canciones solo con enlace de Suno.** Si el creador no puede descargarla (por ejemplo, plan gratuito), puede enviar solo el enlace. Se escucha a la carta con el **reproductor oficial de Suno** dentro de la ficha (el mismo que usa Suno para insertar canciones en otras webs), recibe me gusta y votos, pero **no suena en la radio**: el audio nunca pasa por nuestro servidor. La IA decide el programa con la letra y el estilo que pega el creador.
 
 ¿Avisar a las plataformas? Si la canción es del usuario según sus condiciones, no hace falta. Aun así, conviene presentarles el proyecto antes de abrir: en `docs/correos-plataformas.md` tienes los correos para **Suno** y **ElevenLabs**, en inglés y listos para enviar.
 
