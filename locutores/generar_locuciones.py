@@ -32,8 +32,8 @@ URL_VOCES = "https://huggingface.co/rhasspy/piper-voices/resolve/main"
 # ----------------------------------------------------------------------------
 COMUNES = {
     "apertura": [
-        "Esto es {P}, en {E}. Soy {L} y durante las próximas horas te acompaño con {G}.",
-        "Buenas, aquí {L}. Arrancamos {P} en {E}. Sube el volumen, que empezamos.",
+        "¡Hola, hola! Esto es {P}, en {E}. Soy {L} y las próximas horas te acompaño con {G}. ¿Te quedas?",
+        "¡Buenas! Aquí {L}. Arrancamos {P} en {E}… ¡Sube el volumen, que empezamos!",
         "Estás escuchando {P}. Al micrófono, {L}. Lo que viene ahora es {G} creado con inteligencia artificial.",
     ],
     "indicativo": [
@@ -44,7 +44,7 @@ COMUNES = {
     ],
     "promo_envia": [
         "¿Creas canciones con inteligencia artificial? Súbela en ce zeta i griega radio punto com. Si pasa la selección, sonará aquí y entrará en el Top 40.",
-        "Tu canción puede ser la próxima. Entra en la web de {E}, pulsa en envía tu canción y cuéntanos de dónde sale.",
+        "Oye… ¿y si la próxima es la tuya? Entra en la web de {E}, pulsa en envía tu canción y cuéntanos de dónde sale.",
     ],
     "promo_top": [
         "Recuerda que el Top 40 lo decides tú. Dale a me gusta y vota tus canciones favoritas en la web. Y no, las posiciones no se pueden comprar.",
@@ -59,30 +59,30 @@ COMUNES = {
 }
 
 ESTILO = {
-    "nova": ["Buenos días a quien se acaba de despertar y a quien ya va en el coche. Café en mano, que empezamos.",
-             "Si estás en un atasco, esto es para ti. Si no, también.",
-             "Mañana de canciones nuevas. Y alguna que te vas a pasar el día tarareando."],
-    "lia":  ["Atención, que lo que viene tiene estribillo para rato.",
-             "Pop del bueno, del que se pega. No digas que no te avisé.",
-             "Si te sabes la letra a la segunda escucha, es que es pop."],
-    "bruno":["Guitarras arriba. Esto es rock.",
-             "Aquí no se baja el volumen. Se sube.",
-             "Clásicos que aún no existían hace un mes. Así es esta radio."],
-    "marea":["Respira. Baja el ritmo. Deja que suene.",
-             "Atardecer, brisa, y esta música de fondo.",
-             "Sin prisa. Aquí el tiempo va más despacio."],
-    "kilo": ["Esto es pa' la calle. Sube eso.",
-             "Barras nuevas, beats nuevos. Vamos.",
-             "Si tienes un tema urbano hecho con IA, mándalo. Aquí suena."],
-    "atlas":["Todo puede pasar en la lista de esta semana. Prepárate.",
-             "Subidas, bajadas y alguna entrada nueva que viene pisando fuerte.",
-             "La comunidad ha votado. Esto es el Top 40."],
-    "eco":  ["Primeras veces: canciones que suenan hoy por primera vez en esta radio.",
-             "Nuevos creadores, nuevos sonidos. Para descubrir sin prisas.",
-             "Si es tu primera canción en antena, enhorabuena. Esto es tuyo."],
-    "sarcasmo": ["Bienvenidos al rincón donde la música se ríe de todo. Menos de ti. Bueno, un poco de ti.",
-                 "Aviso: lo que viene no es apto para menores ni para gente muy seria.",
-                 "Si te ofendes con facilidad, cambia de emisora. Pero vuelve, que te echaremos de menos."],
+    "nova": ["¡Buenos días, buenos días! ¿Todavía con legañas? Normal… Tranqui, que el café te lo pongo yo en forma de canción.",
+             "Si estás en un atasco, esto es para ti. Y si no… ¡también! Sube eso.",
+             "Mañana de canciones nuevas, ¿eh? Y ojo, que alguna te la vas a pasar todo el día tarareando."],
+    "lia":  ["¡Atención, atención! Lo que viene ahora tiene estribillo para rato. Luego no me vengas con quejas, ¿eh?",
+             "Pop del bueno, del que se pega. ¡Avisada quedas! Y avisado, también.",
+             "¿Te sabes la letra a la segunda? Pues eso es pop, amiga. ¡Dale!"],
+    "bruno":["¡Guitarras arriba! Esto es rock, y aquí se viene a sudar.",
+             "Aquí el volumen no se baja… ¡se sube!",
+             "Clásicos que hace un mes ni existían. ¿A que mola? Así es esta radio."],
+    "marea":["Respira… Baja el ritmo… Y deja que suene.",
+             "Atardecer, brisa… y esta música de fondo. ¿Se puede pedir más?",
+             "Sin prisa, ¿vale? Aquí el tiempo va más despacio."],
+    "kilo": ["¡Ey! Esto va pa' la calle. Sube eso, que viene un temazo.",
+             "Barras nuevas, beats nuevos… ¡Vamos!",
+             "¿Tienes un tema urbano hecho con IA? Mándalo, tío. Aquí suena."],
+    "atlas":["¡Esta semana en la lista puede pasar de todo! ¿Preparado? ¿Preparada?",
+             "Subidas, bajadas… ¡y una entrada nueva que viene pisando fortísimo!",
+             "La comunidad ha votado. Y esto… ¡es el Top 40!"],
+    "eco":  ["Primeras veces, ¿eh? Canciones que suenan hoy por primera vez en esta radio. Qué guay.",
+             "Nuevos creadores, nuevos sonidos… ¡y tú de los primeros en oírlos!",
+             "Si es tu primera canción en antena… ¡enhorabuena! Esto es tuyo."],
+    "sarcasmo": ["Bienvenidos al rincón donde la música se ríe de todo. Menos de ti. Bueno… un poquito de ti.",
+                 "Aviso: lo que viene no es apto ni para menores ni para gente muy seria. Tú verás.",
+                 "Si te ofendes con facilidad, cambia de emisora. Pero vuelve, ¿eh?, que te echamos de menos."],
 }
 
 AVISO_ADULTOS = "Atención: el programa que estás escuchando contiene lenguaje explícito y humor para adultos."
@@ -242,7 +242,8 @@ def _uso(motor, n=0):
 def _ssml(texto, loc):
     from xml.sax.saxutils import escape
     voz = loc["voz_azure"]
-    cuerpo = escape(texto)
+    # «…» = pausa corta: da ritmo de locutor de radio en vez de lectura plana
+    cuerpo = escape(texto).replace("…", '<break time="300ms"/>')
     pros = f'<prosody rate="{loc.get("ritmo_azure", "+0%")}" pitch="{loc.get("tono_azure", "+0%")}">{cuerpo}</prosody>'
     if loc.get("estilo_azure"):
         pros = f'<mstts:express-as style="{loc["estilo_azure"]}" styledegree="{loc.get("intensidad_azure", 1.3)}">{pros}</mstts:express-as>'

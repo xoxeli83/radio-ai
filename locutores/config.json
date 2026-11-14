@@ -25,9 +25,8 @@
       "velocidad": 0.95,
       "motor": "azure",
       "voz_azure": "es-ES-XimenaNeural",
-      "ritmo_azure": "+8%",
-      "tono_azure": "+6%",
-      "estilo_azure": "cheerful"
+      "ritmo_azure": "+10%",
+      "tono_azure": "+4%"
     },
     "lia": {
       "nombre": "Lía",
@@ -35,10 +34,9 @@
       "hablante": 0,
       "velocidad": 0.95,
       "motor": "azure",
-      "voz_azure": "es-ES-ArabellaMultilingualNeural",
-      "ritmo_azure": "+6%",
-      "tono_azure": "+8%",
-      "estilo_azure": "excited"
+      "voz_azure": "es-ES-LiaNeural",
+      "ritmo_azure": "+12%",
+      "tono_azure": "+4%"
     },
     "bruno": {
       "nombre": "Bruno Volt",
@@ -46,9 +44,9 @@
       "hablante": 0,
       "velocidad": 1.08,
       "motor": "azure",
-      "voz_azure": "es-ES-DarioNeural",
-      "ritmo_azure": "+4%",
-      "tono_azure": "-2%"
+      "voz_azure": "es-ES-AlvaroNeural",
+      "ritmo_azure": "+10%",
+      "tono_azure": "+0%"
     },
     "marea": {
       "nombre": "Marea",
@@ -56,8 +54,8 @@
       "hablante": 0,
       "velocidad": 1.12,
       "motor": "azure",
-      "voz_azure": "es-ES-VeraNeural",
-      "ritmo_azure": "-6%",
+      "voz_azure": "es-ES-TrianaNeural",
+      "ritmo_azure": "+4%",
       "tono_azure": "+0%"
     },
     "kilo": {
@@ -66,9 +64,9 @@
       "hablante": 0,
       "velocidad": 0.92,
       "motor": "azure",
-      "voz_azure": "es-ES-SaulNeural",
-      "ritmo_azure": "+6%",
-      "tono_azure": "+0%"
+      "voz_azure": "es-ES-ArnauNeural",
+      "ritmo_azure": "+12%",
+      "tono_azure": "+2%"
     },
     "atlas": {
       "nombre": "Atlas",
@@ -76,10 +74,9 @@
       "hablante": 0,
       "velocidad": 1.0,
       "motor": "azure",
-      "voz_azure": "es-ES-TristanMultilingualNeural",
-      "ritmo_azure": "+2%",
-      "tono_azure": "+0%",
-      "estilo_azure": "excited"
+      "voz_azure": "es-ES-DarioNeural",
+      "ritmo_azure": "+12%",
+      "tono_azure": "+2%"
     },
     "eco": {
       "nombre": "Eco",
@@ -88,8 +85,8 @@
       "velocidad": 1.0,
       "motor": "azure",
       "voz_azure": "es-ES-NilNeural",
-      "ritmo_azure": "+5%",
-      "tono_azure": "+6%"
+      "ritmo_azure": "+8%",
+      "tono_azure": "+2%"
     },
     "sarcasmo": {
       "nombre": "Doctor Sarcasmo",
@@ -98,8 +95,8 @@
       "velocidad": 0.9,
       "motor": "azure",
       "voz_azure": "es-ES-EliasNeural",
-      "ritmo_azure": "-2%",
-      "tono_azure": "-3%"
+      "ritmo_azure": "+8%",
+      "tono_azure": "-2%"
     }
   },
   "programas": [
