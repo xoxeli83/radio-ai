@@ -1,0 +1,46 @@
+CRAZY rAdIo · Paquete de marca (versión vectorial)
+=================================================
+
+svg/   ORIGINALES VECTORIALES. Se pueden ampliar a cualquier tamaño sin perder calidad
+       (web, vinilos, lonas, camisetas, imprenta). Para imprenta, pide el archivo en SVG o
+       ábrelo en Illustrator/Inkscape y expórtalo a PDF.
+png/   Las mismas piezas en PNG transparente a 600, 1200 y 2400 px de ancho (iconos a 192, 512 y 1024 px).
+web/   Iconos de la app y del navegador (favicon), icono de iPhone e imagen para compartir.
+redes/ Avatar para redes (1080 px) e imagen para compartir enlaces (1200x630).
+
+QUÉ ES VECTORIAL Y QUÉ NO
+- Vectorial al 100 %: el nombre «crazy rAdIo», el lema, la onda sonora, la antena, el logo
+  horizontal, los iconos de la app (versión antena) y todos los fondos.
+- La mascota (el alien) es una ilustración con sombras y brillos: no se puede pasar a vectorial
+  a mano sin rehacerla. Se ha limpiado (restos del recorte) y ampliado al doble (2644 px), lo que
+  sirve para web, redes y piezas medianas. Para imprimir en grande, ver «Mascota en alta calidad».
+
+TIPOGRAFÍA
+- Nombre: Poppins Bold (Google Fonts, licencia libre OFL), convertida a trazos. La del original
+  es muy parecida (estilo Montserrat ExtraBold). Si se prefiere Montserrat, se cambia en un minuto.
+- Lema y textos: Inter Medium (Google Fonts, licencia libre OFL).
+
+COLORES
+  Navy principal   #0B1026  RGB 11 16 38      fondo oscuro, textos
+  Violeta / IA     #8A00FF  RGB 138 0 255     la «A» y la «I», botones, acentos
+  Violeta claro    #B24DFF  RGB 178 77 255    la «A» y la «I» sobre fondo oscuro
+  Cian digital     #00D4FF  RGB 0 212 255     detalles, ondas, enlaces
+  Gris claro       #E6E8F2  RGB 230 232 242   fondos claros de interfaz
+  Blanco           #FFFFFF
+
+USO
+- Sobre fondo claro: versiones «color». Sobre fondo oscuro: «blanco» o «fondo_oscuro».
+- Iconos pequeños (menos de 128 px): usar la versión con antena; la mascota no se distingue.
+- Dejar alrededor del logo un margen libre de al menos la altura de la «o».
+- No deformar, no cambiar los colores de la «A» y la «I», no poner sombras.
+
+MASCOTA EN ALTA CALIDAD (opcional)
+Para tenerla perfecta a cualquier tamaño hay dos caminos:
+1. Volver a generarla en la misma herramienta con este encargo:
+   «Ilustración de mascota para la radio "crazy rAdIo": alien azul cian (#00D4FF) sonriente con
+   pelo de punta, gafas de sol violetas, auriculares grandes negros con luces violetas (#8A00FF)
+   y onda de sonido en el auricular, sudadera navy (#0B1026) con onda de sonido en el pecho,
+   señalando con ambas manos. Estilo 3D brillante neón. Fondo totalmente transparente (o blanco
+   liso), personaje centrado y completo, sin texto, resolución 4096 x 4096.»
+2. Encargar a un ilustrador la vectorización de la mascota (trabajo de unas horas).
+Con la imagen nueva, se sustituye en un momento en todas las piezas.
