@@ -221,13 +221,57 @@ def pronunciar(texto):
     return texto
 
 
+USO_VOZ = AQUI / "uso_voz.json"
+
+
+def _uso(motor, n=0):
+    """Cuenta los caracteres enviados a cada servicio de voz este mes (para no pasar del plan gratuito)."""
+    mes = datetime.now().strftime("%Y-%m")
+    try:
+        d = json.loads(USO_VOZ.read_text(encoding="utf-8"))
+    except Exception:
+        d = {}
+    if d.get("mes") != mes:
+        d = {"mes": mes}
+    if n:
+        d[motor] = d.get(motor, 0) + n
+        USO_VOZ.write_text(json.dumps(d), encoding="utf-8")
+    return d.get(motor, 0)
+
+
+def _ssml(texto, loc):
+    from xml.sax.saxutils import escape
+    voz = loc["voz_azure"]
+    cuerpo = escape(texto)
+    pros = f'<prosody rate="{loc.get("ritmo_azure", "+0%")}" pitch="{loc.get("tono_azure", "+0%")}">{cuerpo}</prosody>'
+    if loc.get("estilo_azure"):
+        pros = f'<mstts:express-as style="{loc["estilo_azure"]}" styledegree="{loc.get("intensidad_azure", 1.3)}">{pros}</mstts:express-as>'
+    return (f'<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="https://www.w3.org/2001/mstts" '
+            f'xml:lang="es-ES"><voice name="{voz}">{pros}</voice></speak>')
+
+
 def voz_nube(texto, loc, wav):
-    """Voces de pago (opcionales), más naturales que Piper. Se activan en config.json con "motor" en cada locutor:
+    """Voces naturales en la nube. Se activan en config.json con "motor" en cada locutor:
+       "azure" + "voz_azure" (p. ej. es-ES-XimenaNeural) y las variables AZURE_SPEECH_KEY y AZURE_SPEECH_REGION
+       (plan gratuito F0: 500.000 caracteres al mes; se lleva la cuenta en uso_voz.json y se para en AZURE_LIMITE_MES),
        "elevenlabs" + "voz_elevenlabs" (id de voz) y la variable ELEVENLABS_API_KEY, u
        "openai" + "voz_openai" (alloy, nova, onyx…) y la variable OPENAI_API_KEY.
        Si falla, se usa Piper."""
     motor = loc.get("motor", "piper")
     try:
+        if motor == "azure" and os.environ.get("AZURE_SPEECH_KEY") and loc.get("voz_azure"):
+            if _uso("azure") + len(texto) > int(os.environ.get("AZURE_LIMITE_MES", "480000")):
+                print("  (límite mensual gratuito de Azure alcanzado: uso Piper hasta el mes que viene)")
+                return False
+            region = os.environ.get("AZURE_SPEECH_REGION", "westeurope")
+            req = urllib.request.Request(
+                f"https://{region}.tts.speech.microsoft.com/cognitiveservices/v1", data=_ssml(pronunciar(texto), loc).encode("utf-8"),
+                headers={"Ocp-Apim-Subscription-Key": os.environ["AZURE_SPEECH_KEY"], "Content-Type": "application/ssml+xml",
+                         "X-Microsoft-OutputFormat": "riff-24khz-16bit-mono-pcm", "User-Agent": "CrazyRadio"})
+            with urllib.request.urlopen(req, timeout=120) as r:
+                Path(wav).write_bytes(r.read())
+            _uso("azure", len(texto))
+            return True
         if motor == "elevenlabs" and os.environ.get("ELEVENLABS_API_KEY") and loc.get("voz_elevenlabs"):
             req = urllib.request.Request(
                 f"https://api.elevenlabs.io/v1/text-to-speech/{loc['voz_elevenlabs']}?output_format=mp3_44100_128",

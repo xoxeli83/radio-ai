@@ -107,6 +107,9 @@ if [[ ! -f $D/claves.env ]]; then
   cat > $D/claves.env <<'EOF'
 # Clave de AzuraCast (panel → menú de usuario → «Claves API» → crear)
 AZURACAST_API_KEY=
+# Voces de los locutores (Azure, plan gratuito F0): clave y región del recurso «Voz»
+AZURE_SPEECH_KEY=
+AZURE_SPEECH_REGION=westeurope
 # Opcional: Claude escribe los textos de los locutores y opina en el análisis de canciones
 ANTHROPIC_API_KEY=
 EOF
