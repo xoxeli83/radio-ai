@@ -181,6 +181,7 @@ section.vista.on{display:block}
 @media (max-width:900px){.onair .masc{position:static;display:block;width:min(100%,360px);margin:18px auto -10px}}
 .onair .gen{color:var(--tx2);font-weight:500}
 .locline{display:flex;align-items:center;gap:12px;margin-top:20px}
+.locline .avL{width:60px;height:60px;border:3px solid var(--prog,#8A00FF)}
 .bigplay{margin-top:24px;display:inline-flex;align-items:center;gap:12px;border:0;border-radius:999px;padding:14px 26px 14px 18px;background:var(--grad);color:#fff;font-weight:700;font-size:17px;box-shadow:0 10px 30px rgba(138,0,255,.35)}
 .bigplay svg{width:26px;height:26px}
 .side h3{font-size:14px;color:var(--tx2);font-weight:600;font-family:Inter;text-transform:uppercase;letter-spacing:.06em}
@@ -242,9 +243,22 @@ section.vista.on{display:block}
 .prog .n{font-weight:600}.prog .d{color:var(--tx3);font-size:14px}.prog .l{color:var(--tx2);font-size:14px;text-align:right}
 @media (max-width:620px){.prog{grid-template-columns:78px 1fr}.prog .l{grid-column:2;text-align:left}}
 .locs{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
-.loc .av{width:64px;height:64px;font-size:24px;margin-bottom:12px}
-.loc{border-top:4px solid var(--c,var(--violeta));background:linear-gradient(180deg,color-mix(in srgb,var(--c,#8A00FF) 12%,transparent),var(--card) 40%)}
-.loc .hor{color:var(--c)!important;font-weight:600}
+.avL{object-fit:cover;background:#0B1026;padding:0}
+.locs{gap:18px!important}
+.loc{position:relative;border-radius:22px;overflow:hidden;background:var(--card);border:1px solid color-mix(in srgb,var(--c) 45%,var(--line));transition:transform .2s,box-shadow .2s;display:flex;flex-direction:column}
+.loc:hover{transform:translateY(-6px) rotate(-.4deg);box-shadow:0 18px 40px color-mix(in srgb,var(--c) 40%,transparent)}
+.loc-top{position:relative;height:200px;background:radial-gradient(circle at 50% 120%,color-mix(in srgb,var(--c) 85%,#fff 0%),color-mix(in srgb,var(--c) 35%,#0B1026) 70%);display:grid;place-items:center;overflow:hidden}
+.loc-top::before{content:"";position:absolute;inset:0;background:repeating-conic-gradient(from 0deg at 50% 110%,rgba(255,255,255,.10) 0 6deg,transparent 6deg 18deg)}
+.loc-top::after{content:"";position:absolute;left:0;right:0;bottom:0;height:40px;background:linear-gradient(transparent,var(--card))}
+.loc .grande{font-size:56px;position:relative;z-index:2;width:140px;height:140px;margin-top:24px;border:4px solid var(--c);box-shadow:0 0 0 6px rgba(11,16,38,.6),0 12px 30px rgba(0,0,0,.45)}
+.loc-hora{position:absolute;z-index:2;top:12px;right:12px;font-family:var(--f2);font-weight:700;font-size:13px;padding:4px 10px;border-radius:999px;background:rgba(11,16,38,.75);color:#fff;border:1px solid var(--c)}
+.loc-cuerpo{padding:14px 20px 20px;text-align:center;display:flex;flex-direction:column;flex:1}
+.loc h3{margin:0;font-size:24px;letter-spacing:-.01em}
+.loc .rol{color:var(--c);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin:4px 0 12px}
+.loc p{margin:0 0 16px;color:var(--tx2);font-size:14px;flex:1}
+.loc-prog{align-self:center;text-decoration:none;font-weight:700;font-size:14px;color:#0B1026;background:var(--c);padding:8px 16px;border-radius:999px}
+.loc-prog:hover{filter:brightness(1.1)}
+.loc-ia{position:absolute;top:12px;left:12px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 9px;border-radius:999px;background:rgba(46,230,166,.18);color:var(--ok);border:1px solid rgba(46,230,166,.4)}
 .loc h3{margin:0}.loc .rol{color:var(--tx2);font-size:14px;margin:2px 0 10px}.loc p{margin:0;color:var(--tx2);font-size:14px}.loc .hor{margin-top:12px;font-size:13px;color:var(--tx3)}
 
 /* Formularios */
@@ -720,10 +734,13 @@ function horaEmisora(){
 const progActual = () => { const {h} = horaEmisora(); return PROGRAMAS.find(p => h >= p.ini && h < p.fin) || PROGRAMAS[0]; };
 const progSiguiente = p => PROGRAMAS[(PROGRAMAS.indexOf(p) + 1) % PROGRAMAS.length];
 const hh = n => `${String(n % 24).padStart(2,"0")}:00`;
-function avatarLocutor(id){
+// Fotos de los locutores (retratos generados con IA). Añade el id cuando su imagen esté en web/locutores/<id>.jpg
+const FOTOS_LOCUTORES = [];
+function avatarLocutor(id, cls = ""){
   const L = LOCUTORES[id]; if (!L) return "";
+  if (FOTOS_LOCUTORES.includes(id)) return `<img class="av avL ${cls}" src="locutores/${id}.jpg" alt="${esc(L.nombre)}, locutor IA" width="46" height="46" loading="lazy">`;
   const p = PROGRAMAS.find(x => x.locutor === id);
-  return `<div class="av" style="background:linear-gradient(135deg,${p ? p.color : "#8A00FF"},#ffffff55);color:#0B1026">${esc(L.nombre.replace(/^Dr\.\s*/,"").slice(0,1))}</div>`;
+  return `<div class="av avL ${cls}" style="background:linear-gradient(135deg,${p ? p.color : "#8A00FF"},#ffffff55);color:#0B1026">${esc(L.nombre.replace(/^Dr\.\s*/,"").slice(0,1))}</div>`;
 }
 
 /* ================================================================ reproductor (directo y a la carta) */
@@ -964,7 +981,10 @@ function pintarParrilla(){
 }
 function pintarLocutores(){
   $("#locs").innerHTML = Object.entries(LOCUTORES).map(([id, L]) => { const p = PROGRAMAS.find(x => x.locutor === id);
-    return `<div class="card loc" style="--c:${p ? p.color : "#8A00FF"}">${avatarLocutor(id)}<h3>${esc(L.nombre)}<span class="ia-tag">IA</span></h3><div class="rol">${esc(L.rol)}</div><p>${esc(L.estilo)}</p>${p ? `<div class="hor">${esc(p.nombre)} · ${hh(p.ini)}–${hh(p.fin)}</div>` : ""}</div>`; }).join("");
+    return `<article class="loc" style="--c:${p ? p.color : "#8A00FF"}">
+      <div class="loc-top">${avatarLocutor(id, "grande")}${p ? `<span class="loc-hora">${hh(p.ini)}–${hh(p.fin)}</span>` : ""}</div>
+      <div class="loc-cuerpo"><h3>${esc(L.nombre)}</h3><div class="rol">${esc(L.rol)}</div><p>${esc(L.estilo)}</p>
+      ${p ? `<a class="loc-prog" href="#parrilla">${esc(p.nombre)}${p.adultos ? " · +18" : ""}</a>` : ""}<span class="loc-ia">Voz IA</span></div></article>`; }).join("");
 }
 
 /* ================================================================ subir canción (con reglas de derechos) */
