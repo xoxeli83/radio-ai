@@ -47,7 +47,10 @@ foreach ($l in $locutores) {
   $hablantes = 1
   if ((Get-Content "$onnx.json" -Raw -Encoding UTF8) -match '"num_speakers"\s*:\s*(\d+)') { $hablantes = [int]$Matches[1] }
   if ($hablantes -gt 1) { $opts += @("--speaker", [string]$l.hablante) }
-  $l.texto | & $piper.FullName @opts 2>$null
+  $ErrorActionPreference = "Continue"
+  $l.texto | & $piper.FullName @opts 2>&1 | Out-Null
+  $ErrorActionPreference = "Stop"
+  if (-not (Test-Path $wav)) { Write-Host "  No se pudo grabar a $($l.nombre)." -ForegroundColor Yellow }
 }
 
 Write-Host ""
