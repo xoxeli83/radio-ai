@@ -16,7 +16,7 @@ DB = DATOS / "radio.db"
 E = os.environ.get
 SAL = E("SAL_VOTOS", "") or secrets.token_hex(16)
 URL_PUBLICA = E("URL_PUBLICA_API", "").rstrip("/")
-URL_WEB = E("URL_WEB", "https://xoxeli83.github.io/radio-ai/")
+URL_WEB = E("URL_WEB", "https://czyradio.com/")
 
 
 def db():

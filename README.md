@@ -30,7 +30,7 @@ docs/correos-plataformas.md    correos en inglés para Suno y ElevenLabs
 
 Herramientas, todas gratuitas: AzuraCast (emisión), Piper (voces), Whisper (letras), ffmpeg (audio), Caddy (HTTPS), DuckDNS (dominio), Oracle Cloud Always Free (servidor), GitHub Pages (web).
 
-Web publicada: https://xoxeli83.github.io/radio-ai/
+Web publicada: https://czyradio.com
 
 Probar los locutores sin servidor:
 ```
