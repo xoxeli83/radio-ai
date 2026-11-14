@@ -7,6 +7,7 @@ Crea en AzuraCast la estructura de la radio a partir de locutores/config.json:
   musica/<programa>        →    Musica - <programa>       (solo en su franja horaria)
   locuciones/<programa>    →    Locuciones - <programa>   (una locución cada N canciones, en su franja)
   especiales/top40         →    Especial - Top 40 semanal (domingo 18:00, una vez)
+  publicidad               →    Publicidad                (una cuña cada 20 minutos)
 
 Basta con subir canciones a la carpeta de cada programa (desde el panel de AzuraCast,
 por SFTP o con subir_canciones.py) y entran solas en su programa.
@@ -100,6 +101,11 @@ def main():
                     play_per_songs=CFG.get("cada_cuantas_canciones", 3), order="shuffle",
                     schedule_items=franja(p))
         enlazar(f"locuciones/{p['id']}", pid)
+
+    # Cuñas publicitarias: una cada 20 minutos, todo el día (se crean desde el panel → Cuñas de radio)
+    carpeta("publicidad")
+    pid = lista("Publicidad", type="once_per_x_minutes", play_per_minutes=20, order="shuffle")
+    enlazar("publicidad", pid)
 
     top = next(p for p in CFG["programas"] if p["id"] == "top40")
     pid = lista("Especial - Top 40 semanal", order="sequential", weight=25,

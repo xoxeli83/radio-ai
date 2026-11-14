@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Panel de revisión · AI Radio Global</title>
+<title>Panel · AI Radio Global</title>
 <style>
 :root{--bg:#0d0b1a;--card:#1b1735;--bg2:#15122a;--line:#2c2752;--tx:#f4f1ff;--tx2:#b7b0d9;--tx3:#8a83b0;--a3:#ffd60a;--ok:#2ec4b6;--ko:#ff6b75}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 Inter,system-ui,sans-serif}
@@ -33,14 +33,67 @@ details pre{white-space:pre-wrap;background:var(--bg2);padding:10px;border-radiu
 select,input{background:var(--bg2);border:1px solid var(--line);color:var(--tx);border-radius:10px;padding:7px 10px;font:inherit;font-size:14px}
 audio{width:100%;margin-top:6px;height:36px}
 .vacio{color:var(--tx3);padding:40px 0;text-align:center}
+.secs{display:flex;gap:4px;margin-right:auto;flex-wrap:wrap}.secs a{color:var(--tx2);text-decoration:none;padding:7px 12px;border-radius:10px;font-weight:600}
+.secs a.on{background:var(--a3);color:#0d0b1a}
+.sec{display:none}.sec.on{display:block}
+.form{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 0}
+.form label{display:block;font-size:13px;color:var(--tx2);margin-bottom:4px}.form input,.form select,.form textarea{width:100%}
+.form textarea{min-height:90px;background:var(--bg2);border:1px solid var(--line);color:var(--tx);border-radius:10px;padding:8px;font:inherit}
+.full{grid-column:1/-1}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:8px;border-bottom:1px solid var(--line);vertical-align:middle}
+th{color:var(--tx3);font-weight:500}td img{max-width:180px;max-height:60px;border-radius:6px;display:block}
+.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin:12px 0}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px}.kpi b{display:block;font-size:22px}.kpi span{color:var(--tx3);font-size:13px}
+.msg{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:10px 0}.msg.nuevo{border-color:var(--a3)}
+.ok-txt{color:var(--ok)}.ko-txt{color:var(--ko)}
 @media(max-width:600px){.card{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<header><div class="wrap hb"><h1>Panel de revisión</h1><div class="tabs" id="tabs"></div></div></header>
+<header><div class="wrap hb"><h1 style="margin:0 12px 0 0">AI Radio · Panel</h1>
+  <nav class="secs" id="secs"><a href="#canciones" class="on">Canciones</a><a href="#publicidad">Banners</a><a href="#cunas">Cuñas de radio</a><a href="#mensajes">Mensajes</a></nav>
+</div></header>
 <main class="wrap">
+ <section class="sec on" id="s-canciones">
+  <div class="tabs" id="tabs" style="margin-top:14px"></div>
   <p class="nota" id="resumen"></p>
   <div id="lista"></div>
+ </section>
+
+ <section class="sec" id="s-publicidad">
+  <div class="kpis" id="kpisAnuncios"></div>
+  <form class="form" id="fAnuncio">
+    <input type="hidden" name="id">
+    <div><label>Anunciante</label><input name="anunciante" required></div>
+    <div><label>Formato</label><select name="formato" id="formatos"></select></div>
+    <div class="full"><label>Enlace de destino (https://…)</label><input name="url" type="url" required></div>
+    <div><label>Texto alternativo</label><input name="alt" placeholder="Nombre del anunciante"></div>
+    <div><label>Imagen (PNG/JPG/WEBP/GIF, máx. 1 MB)</label><input name="imagen" type="file" accept="image/*"></div>
+    <div><label>Desde</label><input name="inicio" type="date"></div>
+    <div><label>Hasta</label><input name="fin" type="date"></div>
+    <div><label>Máximo de impresiones (0 = sin límite)</label><input name="max_impresiones" type="number" min="0" value="0"></div>
+    <div><label>Peso (1–10: cuántas veces sale frente a otros)</label><input name="peso" type="number" min="1" max="10" value="1"></div>
+    <div class="full"><label>Notas internas (precio pactado, factura…)</label><input name="notas"></div>
+    <div class="full"><button class="btn ok" type="submit" id="btnAnuncio">Crear anuncio</button> <button class="btn" type="reset" id="btnCancelarAnuncio">Limpiar</button> <span id="fAnuncioMsg"></span></div>
+  </form>
+  <p class="nota">Los anuncios salen en la web en los huecos «Publicidad». Se cuentan las impresiones y los clics sin cookies ni datos personales. Descarga el informe CSV para enviárselo al anunciante y facturar.</p>
+  <div id="tablaAnuncios"></div>
+ </section>
+
+ <section class="sec" id="s-cunas">
+  <form class="form" id="fCuna">
+    <div><label>Anunciante</label><input name="anunciante" required></div>
+    <div><label>Nombre de la cuña</label><input name="nombre" placeholder="Campaña de otoño"></div>
+    <div class="full"><label>Opción A · audio del anunciante (MP3/WAV)</label><input name="audio" type="file" accept="audio/*"></div>
+    <div class="full"><label>Opción B · texto para que lo lea un locutor IA (unos 20–30 segundos: 50–75 palabras)</label><textarea name="texto" placeholder="¿Buscas taller en Vigo? En Talleres Ejemplo…"></textarea></div>
+    <div><label>Locutor</label><select name="locutor" id="selLocutor"></select></div>
+    <div class="full"><button class="btn ok" type="submit" id="btnCuna">Crear cuña y enviarla a la radio</button> <span id="fCunaMsg"></span></div>
+  </form>
+  <p class="nota">Las cuñas se guardan en la carpeta «publicidad» de AzuraCast y suenan con la lista «Publicidad» (una cada 20 minutos). Para retirar una, bórrala en AzuraCast → Medios → publicidad.</p>
+  <div id="tablaCunas"></div>
+ </section>
+
+ <section class="sec" id="s-mensajes"><div id="listaMensajes" style="margin-top:14px"></div></section>
 </main>
 <script>
 const $=s=>document.querySelector(s);
@@ -55,7 +108,7 @@ async function cargar(){
   programas=d.programas;
   $("#tabs").innerHTML=ESTADOS.map(([k,t])=>`<button class="${k===estado?"on":""}" data-e="${k}">${t}${d.cuenta[k]?` (${d.cuenta[k]})`:""}</button>`).join("");
   $("#resumen").textContent = estado==="pendiente"
-    ? `Ordenadas por la puntuación de la IA (calidad técnica, claridad de la letra y encaje). ${d.en_cola} en cola de análisis. La IA propone; tú decides.`
+    ? `Ordenadas por la puntuación de la IA (calidad técnica, claridad de la letra y encaje). ${d.en_cola} en cola de análisis · ${d.usuarios} usuarios registrados${d.mensajes?` · ${d.mensajes} mensajes sin leer`:""}. La IA propone; tú decides.`
     : `${d.envios.length} canciones.`;
   $("#lista").innerHTML = d.envios.length ? d.envios.map(tarjeta).join("") : `<div class="vacio">No hay canciones en este estado.</div>`;
 }
@@ -100,7 +153,76 @@ document.addEventListener("click",async ev=>{
   if(!r.ok){ b.disabled=false; b.textContent="Reintentar"; const p=document.createElement("p"); p.style.color="var(--ko)"; p.textContent=d.error||"Error"; b.parentNode.after(p); return; }
   $("#e"+id).remove();
 });
-cargar(); setInterval(()=>{ if(estado!=="todos") cargar(); }, 30000);
+cargar(); setInterval(()=>{ if(estado!=="todos" && (location.hash||"#canciones")==="#canciones") cargar(); }, 30000);
+
+/* ---------- Secciones ---------- */
+function seccion(){
+  const s=(location.hash||"#canciones").slice(1);
+  document.querySelectorAll(".sec").forEach(x=>x.classList.toggle("on",x.id==="s-"+s));
+  document.querySelectorAll("#secs a").forEach(a=>a.classList.toggle("on",a.getAttribute("href")==="#"+s));
+  if(s==="publicidad") cargarAnuncios(); if(s==="cunas") cargarCunas(); if(s==="mensajes") cargarMensajes();
+}
+window.addEventListener("hashchange",seccion);
+
+/* ---------- Banners ---------- */
+let ANUNCIOS=[];
+async function cargarAnuncios(){
+  const d=await (await fetch("api/admin/anuncios",{cache:"no-store"})).json();
+  ANUNCIOS=d.anuncios;
+  $("#formatos").innerHTML=Object.entries(d.formatos).map(([k,v])=>`<option value="${k}">${esc(v)}</option>`).join("");
+  const act=ANUNCIOS.filter(a=>a.activo), imp=ANUNCIOS.reduce((s,a)=>s+a.imp30,0), cl=ANUNCIOS.reduce((s,a)=>s+a.clics30,0);
+  $("#kpisAnuncios").innerHTML=`<div class="kpi"><b>${act.length}</b><span>anuncios activos</span></div><div class="kpi"><b>${imp.toLocaleString("es-ES")}</b><span>impresiones (30 días)</span></div><div class="kpi"><b>${cl.toLocaleString("es-ES")}</b><span>clics (30 días)</span></div><div class="kpi"><b>${imp?(100*cl/imp).toFixed(2).replace(".",","):"0"} %</b><span>CTR (30 días)</span></div>`;
+  $("#tablaAnuncios").innerHTML=ANUNCIOS.length?`<table><tr><th>Anuncio</th><th>Anunciante</th><th>Formato</th><th>Fechas</th><th>Impr. / clics</th><th>Estado</th><th></th></tr>${ANUNCIOS.map(a=>`<tr>
+    <td><img src="api/anuncios/${a.id}/img" alt=""></td><td><b>${esc(a.anunciante)}</b><div class="a" style="font-size:12px">${esc(a.url)}</div>${a.notas?`<div class="a" style="font-size:12px">${esc(a.notas)}</div>`:""}</td>
+    <td>${esc(a.formato)}</td><td>${esc(a.inicio||"—")} → ${esc(a.fin||"—")}</td>
+    <td>${a.imp.toLocaleString("es-ES")}${a.max_impresiones?` / ${a.max_impresiones.toLocaleString("es-ES")}`:""} · ${a.clics}</td>
+    <td class="${a.activo?"ok-txt":"ko-txt"}">${a.activo?"Activo":"Pausado"}</td>
+    <td style="white-space:nowrap"><button class="btn" data-an="${a.activo?"pausar":"activar"}" data-id="${a.id}">${a.activo?"Pausar":"Activar"}</button>
+      <button class="btn" data-editar="${a.id}">Editar</button> <a class="btn" href="api/admin/anuncios/${a.id}/informe">Informe CSV</a>
+      <button class="btn ko" data-an="borrar" data-id="${a.id}">Borrar</button></td></tr>`).join("")}</table>`:`<div class="vacio">Todavía no hay anuncios.</div>`;
+}
+$("#fAnuncio").addEventListener("submit",async e=>{
+  e.preventDefault(); const b=$("#btnAnuncio"); b.disabled=true;
+  const r=await fetch("api/admin/anuncios",{method:"POST",body:new FormData(e.target)}); const d=await r.json().catch(()=>({}));
+  b.disabled=false; $("#fAnuncioMsg").innerHTML=r.ok?'<span class="ok-txt">Guardado.</span>':`<span class="ko-txt">${esc(d.error||"Error")}</span>`;
+  if(r.ok){ e.target.reset(); e.target.id.value=""; b.textContent="Crear anuncio"; cargarAnuncios(); }
+});
+$("#btnCancelarAnuncio").addEventListener("click",()=>{ $("#fAnuncio").id.value=""; $("#btnAnuncio").textContent="Crear anuncio"; });
+
+/* ---------- Cuñas ---------- */
+async function cargarCunas(){
+  const d=await (await fetch("api/admin/cunas",{cache:"no-store"})).json();
+  $("#selLocutor").innerHTML=Object.entries(d.locutores).map(([k,v])=>`<option value="${k}">${esc(v)}</option>`).join("");
+  $("#tablaCunas").innerHTML=d.cunas.length?`<table><tr><th>Anunciante</th><th>Cuña</th><th>Origen</th><th>Archivo en la radio</th><th>Creada</th></tr>${d.cunas.map(c=>`<tr><td>${esc(c.anunciante)}</td><td>${esc(c.nombre)}</td><td>${c.texto?`Locutor IA (${esc(c.locutor)})`:"Audio del anunciante"}</td><td>${esc(c.ruta)}</td><td>${esc((c.creado||"").slice(0,10))}</td></tr>`).join("")}</table>`:`<div class="vacio">Todavía no hay cuñas.</div>`;
+}
+$("#fCuna").addEventListener("submit",async e=>{
+  e.preventDefault(); const b=$("#btnCuna"); b.disabled=true; $("#fCunaMsg").textContent="Generando y subiendo…";
+  const r=await fetch("api/admin/cunas",{method:"POST",body:new FormData(e.target)}); const d=await r.json().catch(()=>({}));
+  b.disabled=false; $("#fCunaMsg").innerHTML=r.ok?'<span class="ok-txt">Cuña creada: ya está en la lista Publicidad.</span>':`<span class="ko-txt">${esc(d.error||"Error")}</span>`;
+  if(r.ok){ e.target.reset(); cargarCunas(); }
+});
+
+/* ---------- Mensajes ---------- */
+async function cargarMensajes(){
+  const d=await (await fetch("api/admin/contactos",{cache:"no-store"})).json();
+  $("#listaMensajes").innerHTML=d.contactos.length?d.contactos.map(m=>`<div class="msg ${m.leido?"":"nuevo"}">
+    <b>${esc(m.tipo)}</b> · ${esc(m.nombre)}${m.empresa?" · "+esc(m.empresa):""} · <a href="mailto:${esc(m.email)}">${esc(m.email)}</a> <span class="a" style="font-size:12px">· ${esc((m.creado||"").replace("T"," ").slice(0,16))}</span>
+    <p style="white-space:pre-wrap;margin:8px 0;color:var(--tx2)">${esc(m.mensaje)}</p>${m.leido?"":`<button class="btn" data-leido="${m.id}">Marcar como leído</button>`}</div>`).join(""):`<div class="vacio">No hay mensajes.</div>`;
+}
+
+document.addEventListener("click",async ev=>{
+  const an=ev.target.closest("[data-an]");
+  if(an){ if(an.dataset.an==="borrar"&&!an.dataset.seguro){ an.dataset.seguro=1; an.textContent="¿Seguro? Pulsa otra vez"; return; }
+    await fetch(`api/admin/anuncios/${an.dataset.id}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({accion:an.dataset.an})}); cargarAnuncios(); return; }
+  const ed=ev.target.closest("[data-editar]");
+  if(ed){ const a=ANUNCIOS.find(x=>x.id==ed.dataset.editar), f=$("#fAnuncio");
+    ["id","anunciante","formato","url","alt","inicio","fin","max_impresiones","peso","notas"].forEach(k=>{ if(f[k]) f[k].value=a[k]??""; });
+    $("#btnAnuncio").textContent="Guardar cambios"; window.scrollTo({top:0,behavior:"smooth"}); return; }
+  const le=ev.target.closest("[data-leido]");
+  if(le){ await fetch("api/admin/contactos",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:+le.dataset.leido})}); cargarMensajes(); }
+});
+seccion();
+
 </script>
 </body>
 </html>

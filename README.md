@@ -10,9 +10,10 @@ web/                         Web de la radio, instalable en el móvil como app (
                                → configuración en el bloque CONFIG del principio
   manifest.webmanifest, sw.js  instalación como app y funcionamiento sin conexión
 plataforma/                  API de la web y panel de revisión (Starlette + SQLite)
-  app.py                       envíos con archivo, seguimiento, votos antifraude, Top 40, panel
+  app.py                       cuentas con verificación por correo, envíos, votos, Top 40, publicidad, panel
+  correo.py                    códigos de verificación y avisos por SMTP
   analisis.py                  análisis IA: calidad, LUFS, ritmo, letra (Whisper), explícito, programa
-  panel.html                   panel de revisión: propuestas ordenadas por la IA, admitir/rechazar
+  panel.html                   panel: canciones (propuestas de la IA), banners, cuñas de radio y mensajes
 locutores/
   config.json                  emisora, programas, locutores y voces
   generar_locuciones.py        textos → voz (Piper) → MP3 normalizado → AzuraCast

@@ -116,8 +116,20 @@ AZURACAST_EMISORA=airadio
 AZURACAST_MEDIA=/var/lib/docker/volumes/azuracast_station_data/_data/airadio/media
 TOP40_LOCUTORES=$D/locutores/top40.json
 ORIGENES_WEB=https://xoxeli83.github.io
+URL_PUBLICA_API=https://$DOMINIO/plataforma
+URL_WEB=https://xoxeli83.github.io/radio-ai/
+NOMBRE_RADIO=AI Radio Global
+LOCUTORES_DIR=$D/locutores
 WHISPER_MODELO=small
 MAX_MB=25
+# Correo (códigos de verificación y avisos). Ver GUIA.md, paso 5 bis.
+SMTP_HOST=
+SMTP_PUERTO=587
+SMTP_USUARIO=
+SMTP_CLAVE=
+CORREO_REMITENTE=
+# Aquí te llegan los mensajes de anunciantes
+CORREO_ADMIN=
 EOF
 fi
 chmod 600 $D/claves.env $D/plataforma.env

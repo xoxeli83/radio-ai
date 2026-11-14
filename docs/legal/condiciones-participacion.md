@@ -8,7 +8,7 @@
 Estas condiciones regulan el envío de canciones a AI Radio Global («la Emisora») para su posible emisión en la radio online, sus programas, sus listas de éxitos y sus canales de promoción.
 
 ## 2. Quién puede participar
-Personas mayores de 18 años, o menores con autorización expresa de quien ejerza su patria potestad o tutela.
+Personas mayores de 18 años, o menores con autorización expresa de quien ejerza su patria potestad o tutela, con una cuenta cuyo correo electrónico se haya verificado. Cada persona puede tener una sola cuenta; las cuentas duplicadas o automatizadas pueden cerrarse y sus votos anularse.
 
 ## 3. Requisitos de las canciones
 El creador declara y garantiza que:

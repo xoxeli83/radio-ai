@@ -194,7 +194,14 @@ section.vista.on{display:block}
 .up{color:var(--ok)}.down{color:#ff6b75}.eqm{color:var(--tx3)}.new{color:var(--a3)}
 .votos{color:var(--tx3);font-size:13px;text-align:right}
 .gtag{font-size:12px;color:var(--tx3);margin-left:6px}
-@media (max-width:620px){.row{grid-template-columns:34px minmax(0,1fr) auto auto!important;gap:8px;padding:10px 12px}.row .votos{display:none}.pos{font-size:20px}.mov{min-width:0}}
+@media (max-width:620px){.row:not(.r2){grid-template-columns:34px minmax(0,1fr) auto auto!important;gap:8px;padding:10px 12px}.row .votos{display:none}.pos{font-size:20px}.mov{min-width:0}}
+.pub{margin:18px auto 0;text-align:center}
+.pub .et{display:block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--tx3);margin-bottom:4px}
+.pub a{display:inline-block;line-height:0}.pub img{max-width:100%;height:auto;border-radius:10px;border:1px solid var(--line)}
+.pub .casa{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;border:1px dashed var(--line);border-radius:12px;padding:14px;color:var(--tx2);font-size:14px;text-decoration:none;line-height:1.4}
+.pub .casa b{color:var(--a3)}
+.pub[data-formato="cuadrado"]{max-width:300px}
+.codigo{font-size:28px;letter-spacing:10px;text-align:center;font-family:"Space Grotesk",Inter,sans-serif}
 .aviso{margin-bottom:14px;padding:10px 14px;border-radius:12px;background:rgba(108,99,255,.12);border:1px solid rgba(108,99,255,.35);color:var(--tx2);font-size:14px}
 
 /* Formulario */
@@ -254,7 +261,8 @@ footer{color:var(--tx3);font-size:13px;padding:30px 0 10px;text-align:center}
       <a href="#locutores">Locutores</a>
       <a href="#top40">Top 40</a>
       <a href="#enviar">Envía tu canción</a>
-      <a href="#seguimiento">Mis envíos</a>
+      <a href="#cuenta" id="navCuenta">Mi cuenta</a>
+      <a href="#anunciate">Anúnciate</a>
       <a href="#info">Información</a>
     </nav>
     <button id="btnInstalar" type="button">Instalar app</button>
@@ -263,6 +271,8 @@ footer{color:var(--tx3);font-size:13px;padding:30px 0 10px;text-align:center}
 
 <main class="wrap">
   <div class="demo" id="demo"><b>Modo demostración.</b> La emisión real se activará cuando el servidor de la radio esté en marcha. Programación, locutores y lista son de ejemplo.</div>
+
+  <div class="pub" data-formato="banner"></div>
 
   <!-- EN DIRECTO -->
   <section class="vista" id="v-directo">
@@ -291,6 +301,7 @@ footer{color:var(--tx3);font-size:13px;padding:30px 0 10px;text-align:center}
       <div class="stat"><b>24/7</b><span>emisión continua</span></div>
       <div class="stat"><b id="stProgs">9</b><span>programas al día</span></div>
     </div>
+    <div class="pub" data-formato="cuadrado"></div>
     <div class="cta">
       <div><h3>¿Creas música con IA?</h3><p>Envía tu canción. Si pasa la selección, sonará en la radio y entrará en el Top 40.</p></div>
       <a class="btn pri" href="#enviar">Envía tu canción</a>
@@ -319,6 +330,7 @@ footer{color:var(--tx3);font-size:13px;padding:30px 0 10px;text-align:center}
     <div class="aviso" id="avisoTop">Lista de <b>ejemplo</b> con canciones y artistas ficticios. Las votaciones reales empezarán cuando se abra la comunidad de creadores.</div>
     <div class="tabs" id="tabs"></div>
     <div class="chart" id="chart"></div>
+    <div class="pub" data-formato="banner"></div>
     <div id="bloqueNov" style="display:none;margin-top:34px">
       <h2>Vota las novedades</h2>
       <p class="sub">Canciones recién admitidas. Tu voto cuenta para el Top 40 de la semana: un voto por canción y semana.</p>
@@ -326,16 +338,64 @@ footer{color:var(--tx3);font-size:13px;padding:30px 0 10px;text-align:center}
     </div>
   </section>
 
-  <!-- MIS ENVÍOS -->
-  <section class="vista" id="v-seguimiento">
-    <h2>Mis envíos</h2>
-    <p class="sub">Con el código que recibiste al enviar tu canción puedes ver en qué punto está y el informe del análisis automático.</p>
-    <form id="fSeg" style="grid-template-columns:1fr auto;display:grid;gap:10px;max-width:560px">
-      <input id="codigo" placeholder="Código de seguimiento" required maxlength="40" autocomplete="off">
-      <button class="btn pri" type="submit">Consultar</button>
+  <!-- MI CUENTA -->
+  <section class="vista" id="v-cuenta">
+    <div id="cuentaFuera">
+      <h2>Entra o regístrate</h2>
+      <p class="sub">Sin contraseñas: te enviamos un código de 6 cifras a tu correo. Así verificamos que el correo es tuyo. Con tu cuenta puedes enviar canciones, seguir su revisión y votar en el Top 40.</p>
+      <form id="fEntrar" novalidate style="max-width:460px">
+        <div><label for="eEmail">Correo electrónico</label><input id="eEmail" type="email" required maxlength="120" autocomplete="email"></div>
+        <div id="bloqueArtista" style="display:none"><label for="eArtista">Es tu primera vez: ¿con qué nombre artístico apareces? <small>(lo podrás cambiar)</small></label><input id="eArtista" maxlength="80"></div>
+        <div><button class="btn pri" type="submit" id="btnCodigo">Enviarme el código</button></div>
+      </form>
+      <form id="fCodigo" novalidate style="max-width:460px;display:none">
+        <p class="sub" id="txtCodigo" style="margin:0"></p>
+        <input id="eCodigo" class="codigo" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="······">
+        <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn pri" type="submit">Entrar</button><button class="btn" type="button" id="btnOtroCorreo">Usar otro correo</button></div>
+      </form>
+    </div>
+    <div id="cuentaDentro" style="display:none">
+      <h2>Mi cuenta</h2>
+      <p class="sub" id="txtCuenta"></p>
+      <form id="fArtistaCuenta" style="display:grid;grid-template-columns:1fr auto;gap:10px;max-width:560px">
+        <input id="cArtista" maxlength="80" aria-label="Nombre artístico"><button class="btn" type="submit">Guardar nombre</button>
+      </form>
+      <h3 style="margin-top:26px">Mis canciones</h3>
+      <div class="chart" id="misEnvios"></div>
+      <div id="estadoEnvio" style="margin-top:18px;max-width:760px"></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:28px">
+        <a class="btn pri" href="#enviar">Enviar otra canción</a>
+        <button class="btn" type="button" id="btnSalir">Cerrar sesión</button>
+        <button class="btn" type="button" id="btnBorrar" style="color:#ff6b75">Borrar mi cuenta</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ANÚNCIATE -->
+  <section class="vista" id="v-anunciate">
+    <h2>Anúnciate en la radio</h2>
+    <p class="sub">Llega a oyentes que descubren música nueva cada día, en la web, en el móvil y en el coche.</p>
+    <div class="info">
+      <div class="card"><h3>Banner en la web</h3><p>Formato horizontal 728×90 (se adapta al móvil) en la portada y en el Top 40. Pagas por periodo o por número de impresiones. Recibes un informe de impresiones y clics.</p></div>
+      <div class="card"><h3>Cuadrado 300×250</h3><p>Junto a la emisión en directo, la zona más vista de la web.</p></div>
+      <div class="card"><h3>Cuña de radio</h3><p>Tu anuncio en antena entre canciones. Nos mandas el audio o el texto y lo graba uno de nuestros locutores virtuales.</p></div>
+      <div class="card"><h3>Patrocinio de programa</h3><p>«AI Rock Station, con el patrocinio de…»: menciones del locutor y presencia en la web durante toda la franja.</p></div>
+    </div>
+    <h3 style="margin-top:28px">Pide información</h3>
+    <form id="fContacto" novalidate style="max-width:760px">
+      <div class="f2">
+        <div><label for="kNombre">Nombre</label><input id="kNombre" required maxlength="80"></div>
+        <div><label for="kEmpresa">Empresa</label><input id="kEmpresa" maxlength="120"></div>
+      </div>
+      <div class="f2">
+        <div><label for="kEmail">Correo electrónico</label><input id="kEmail" type="email" required maxlength="120"></div>
+        <div><label for="kTipo">Me interesa</label><select id="kTipo"><option>Banner en la web</option><option>Cuña de radio</option><option>Patrocinio de programa</option><option>Otra colaboración</option></select></div>
+      </div>
+      <div><label for="kMensaje">Mensaje</label><textarea id="kMensaje" required maxlength="2000"></textarea></div>
+      <div style="position:absolute;left:-9999px" aria-hidden="true"><input id="kWeb" tabindex="-1" autocomplete="off"></div>
+      <div><button class="btn pri" type="submit">Enviar</button></div>
+      <div class="result" id="resContacto"></div>
     </form>
-    <div id="misCodigos" style="margin-top:12px"></div>
-    <div id="estadoEnvio" style="margin-top:18px;max-width:760px"></div>
   </section>
 
   <!-- ENVIAR -->
@@ -349,11 +409,10 @@ footer{color:var(--tx3);font-size:13px;padding:30px 0 10px;text-align:center}
       <div class="paso"><b>4 · En emisión</b>Suena en uno o varios programas.</div>
       <div class="paso"><b>5 · Clasificada</b>Participa en el Top 40.</div>
     </div>
+    <div class="aviso" id="puertaEnvio" style="display:none">Para enviar canciones necesitas una cuenta con el correo verificado. Es gratis y no hay contraseñas. <a href="#cuenta">Entra o regístrate</a>.</div>
     <form id="form" novalidate>
-      <div class="f2">
-        <div><label for="fArtista">Nombre artístico</label><input id="fArtista" required maxlength="80"></div>
-        <div><label for="fEmail">Correo electrónico</label><input id="fEmail" type="email" required maxlength="120"></div>
-      </div>
+      <p class="nota" id="comoQuien" style="margin:0"></p>
+      <div><label for="fArtista">Nombre artístico para esta canción</label><input id="fArtista" required maxlength="80"></div>
       <div class="f2">
         <div><label for="fTitulo">Título de la canción</label><input id="fTitulo" required maxlength="120"></div>
         <div><label for="fGenero">Género</label>
@@ -564,17 +623,23 @@ function pintarLocutores(){
   }).join("");
 }
 
+/* ---------- Sesión ---------- */
+const sesion = { _t:null,
+  get(){ if (this._t) return this._t; try { return this._t = localStorage.getItem("token"); } catch(e){ return null; } },
+  set(t){ this._t = t; try { t ? localStorage.setItem("token", t) : localStorage.removeItem("token"); } catch(e){} } };
+let YO = null;
+
 /* ---------- API ---------- */
 const API_BASE = (CONFIG.api||"").replace(/\/$/,"");
-async function api(ruta, opc){
+async function api(ruta, opc={}){
+  const t = sesion.get();
+  opc.headers = Object.assign({}, opc.headers||{}, t ? {"Authorization": "Bearer " + t} : {});
   const r = await fetch(API_BASE + ruta, opc);
+  if (r.status === 401 && t && ruta.startsWith("/api/cuenta")) { sesion.set(null); YO = null; }
   const d = await r.json().catch(()=>({}));
   if (!r.ok) throw new Error(d.error || `Error ${r.status}`);
   return d;
 }
-const guardados = { leer(){ try{ return JSON.parse(localStorage.getItem("misEnvios")||"[]"); }catch(e){ return []; } },
-  añadir(x){ try{ const l=this.leer().filter(y=>y.codigo!==x.codigo); l.unshift(x); localStorage.setItem("misEnvios", JSON.stringify(l.slice(0,20))); }catch(e){} } };
-
 /* ---------- Top 40 ---------- */
 let filtro = "Todos", TOP = null;
 function movimiento(m){
@@ -591,7 +656,7 @@ async function cargarTop(){
     $("#avisoTop").innerHTML = TOP.length ? `Semana ${esc(d.semana)}. Se actualiza en directo con tus votos.` : "Todavía no hay canciones admitidas. ¡Envía la tuya y sé de los primeros!";
     const nov = await api("/api/novedades");
     $("#bloqueNov").style.display = nov.length ? "block" : "none";
-    $("#novedades").innerHTML = nov.map(x => `<div class="row" style="grid-template-columns:1fr auto"><div><div style="font-weight:600">${esc(x.titulo)}${x.adultos?'<span class="adult">+18</span>':""}</div><div style="color:var(--tx3);font-size:14px">${esc(x.artista)}${x.origen?" · "+esc(x.origen):""}<span class="gtag">· ${esc(x.genero)}</span></div></div>${filaVoto(x)}</div>`).join("");
+    $("#novedades").innerHTML = nov.map(x => `<div class="row r2" style="grid-template-columns:minmax(0,1fr) auto"><div><div style="font-weight:600">${esc(x.titulo)}${x.adultos?'<span class="adult">+18</span>':""}</div><div style="color:var(--tx3);font-size:14px">${esc(x.artista)}${x.origen?" · "+esc(x.origen):""}<span class="gtag">· ${esc(x.genero)}</span></div></div>${filaVoto(x)}</div>`).join("");
   } catch(e) { TOP = []; $("#avisoTop").textContent = "No se pudo cargar la lista ahora mismo."; }
   pintarTop();
 }
@@ -605,6 +670,7 @@ function pintarTop(){
 $("#tabs").addEventListener("click", e => { const b = e.target.closest("button"); if(b){ filtro = b.dataset.g; pintarTop(); }});
 document.addEventListener("click", async e => {
   const b = e.target.closest("[data-votar]"); if (!b) return;
+  if (!sesion.get()) { toast("Para votar entra con tu correo: así cada voto es de una persona real."); location.hash = "#cuenta"; return; }
   b.disabled = true;
   try { await api("/api/votar", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({id:+b.dataset.votar})});
         b.textContent = "¡Votado!"; toast("Gracias. Tu voto cuenta para el Top 40 de esta semana."); setTimeout(cargarTop, 800); }
@@ -622,7 +688,8 @@ $("#form").addEventListener("submit", e => {
   if (archivo && archivo.size > 25*1024*1024){ toast("El archivo supera 25 MB."); return; }
   if (!API_BASE){ res.style.display="block"; res.innerHTML = `<div class="aviso">Modo demostración: el envío se activará cuando la plataforma esté en marcha.</div>`; return; }
   const fd = new FormData();
-  const v = { artista:"#fArtista", email:"#fEmail", titulo:"#fTitulo", genero:"#fGenero", idioma:"#fIdioma", herramienta:"#fHerr",
+  if (!sesion.get()){ location.hash = "#cuenta"; toast("Entra con tu correo para enviar canciones."); return; }
+  const v = { artista:"#fArtista", titulo:"#fTitulo", genero:"#fGenero", idioma:"#fIdioma", herramienta:"#fHerr",
               plan:"#fPlan", fecha_descarga:"#fDescarga", letra_autor:"#fLetra", origen:"#fOrigen", notas:"#fNotas", web:"#fWeb" };
   for (const [k,sel] of Object.entries(v)) fd.append(k, $(sel).value.trim());
   ["declaracion","autorizacion","edad","condiciones"].forEach(k => fd.append(k, "1"));
@@ -630,32 +697,44 @@ $("#form").addEventListener("submit", e => {
   const btn = $("#btnEnviar"); btn.disabled = true;
   const xhr = new XMLHttpRequest();
   xhr.open("POST", API_BASE + "/api/envios");
+  xhr.setRequestHeader("Authorization", "Bearer " + sesion.get());
   xhr.upload.onprogress = ev => { if (ev.lengthComputable) $("#progreso").textContent = `Subiendo… ${Math.round(ev.loaded/ev.total*100)} %`; };
   xhr.onload = () => {
     btn.disabled = false; $("#progreso").textContent = "";
     let d = {}; try { d = JSON.parse(xhr.responseText); } catch(_){}
     if (xhr.status !== 200 || !d.codigo){ toast(d.error || "No se pudo enviar. Inténtalo de nuevo."); return; }
     const titulo = $("#fTitulo").value.trim();
-    guardados.añadir({codigo:d.codigo, titulo, fecha:new Date().toISOString().slice(0,10)});
     res.style.display = "block";
     res.innerHTML = `<div class="aviso" style="background:rgba(46,196,182,.12);border-color:rgba(46,196,182,.4)">
-      <b>¡Recibida!</b> Tu código de seguimiento es <b style="font-size:18px;letter-spacing:.04em">${esc(d.codigo)}</b>. Guárdalo.<br>
-      La IA está analizando «${esc(titulo)}». En unos minutos verás el informe en <a href="#seguimiento" data-cod="${esc(d.codigo)}">Mis envíos</a>.</div>`;
-    f.reset();
+      <b>¡Recibida!</b> La IA está analizando «${esc(titulo)}». En unos minutos verás el informe en <a href="#cuenta">Mi cuenta</a>. Te avisaremos por correo cuando la revisemos.</div>`;
+    f.reset(); if (YO) $("#fArtista").value = YO.artista;
   };
   xhr.onerror = () => { btn.disabled = false; $("#progreso").textContent = ""; toast("Sin conexión con la radio. Inténtalo de nuevo."); };
   xhr.send(fd);
 });
 
-/* ---------- Mis envíos ---------- */
+/* ---------- Mi cuenta ---------- */
 const ESTADO_COLOR = {recibida:"var(--tx2)", analizando:"var(--a3)", pendiente:"var(--a2)", admitida:"var(--ok)", rechazada:"#ff6b75", error:"#ff6b75"};
-function pintarMisCodigos(){
-  const l = guardados.leer();
-  $("#misCodigos").innerHTML = l.length ? `<div class="tabs">${l.map(x=>`<button type="button" data-cod="${esc(x.codigo)}">${esc(x.titulo)} · ${esc(x.fecha)}</button>`).join("")}</div>` : "";
+let emailPendiente = "";
+async function cargarYo(){
+  if (!API_BASE || !sesion.get()) { YO = null; return null; }
+  try { YO = await api("/api/cuenta"); } catch(e) { YO = null; }
+  return YO;
+}
+function pintarNav(){ $("#navCuenta").textContent = YO ? YO.artista : "Mi cuenta"; }
+async function pintarCuenta(){
+  if (!API_BASE){ $("#cuentaFuera").innerHTML = `<h2>Mi cuenta</h2><div class="aviso">Modo demostración: el registro se activará cuando la plataforma esté en marcha.</div>`; return; }
+  await cargarYo(); pintarNav();
+  $("#cuentaFuera").style.display = YO ? "none" : "block";
+  $("#cuentaDentro").style.display = YO ? "block" : "none";
+  if (!YO) return;
+  $("#txtCuenta").textContent = `Has entrado como ${YO.email}. Tu nombre artístico:`;
+  $("#cArtista").value = YO.artista;
+  $("#misEnvios").innerHTML = YO.envios.length ? YO.envios.map(e => `<div class="row r2" style="grid-template-columns:minmax(0,1fr) auto"><div><div style="font-weight:600">${esc(e.titulo)}</div><div style="font-size:14px;color:${ESTADO_COLOR[e.estado]||"var(--tx3)"}">${esc(e.estado_texto)}${e.programa?` · ${esc(e.programa)}`:""}</div><div style="color:var(--tx3);font-size:13px">${esc((e.creado||"").slice(0,10))}</div></div><button class="btn" type="button" data-cod="${esc(e.codigo)}" style="padding:6px 12px;font-size:13px">Ver informe</button></div>`).join("")
+    : `<p class="nota">Aún no has enviado canciones. <a href="#enviar">Envía la primera</a>.</p>`;
 }
 async function consultar(codigo){
   const box = $("#estadoEnvio");
-  if (!API_BASE){ box.innerHTML = `<div class="aviso">Modo demostración: el seguimiento se activará cuando la plataforma esté en marcha.</div>`; return; }
   box.innerHTML = `<p class="nota">Consultando…</p>`;
   try {
     const d = await api("/api/envios/" + encodeURIComponent(codigo));
@@ -671,21 +750,91 @@ async function consultar(codigo){
         ${inf.alertas&&inf.alertas.length?`<ul style="color:var(--tx2);font-size:14px">${inf.alertas.map(a=>`<li>${esc(a)}</li>`).join("")}</ul>`:""}`:""}
       ${["recibida","analizando"].includes(d.estado)?`<p class="nota">Se actualiza solo cada 15 segundos.</p>`:""}
     </div>`;
-    if (["recibida","analizando"].includes(d.estado)) { clearTimeout(consultar._t); consultar._t = setTimeout(()=>{ if(location.hash==="#seguimiento") consultar(codigo); }, 15000); }
+    box.scrollIntoView({behavior:"smooth", block:"nearest"});
+    if (["recibida","analizando"].includes(d.estado)) { clearTimeout(consultar._t); consultar._t = setTimeout(()=>{ if(location.hash==="#cuenta") consultar(codigo); }, 15000); }
   } catch(err){ box.innerHTML = `<div class="aviso">${esc(err.message)}</div>`; }
 }
-$("#fSeg").addEventListener("submit", e => { e.preventDefault(); consultar($("#codigo").value.trim()); });
-document.addEventListener("click", e => { const b = e.target.closest("[data-cod]"); if (!b) return; $("#codigo").value = b.dataset.cod; if (b.tagName==="BUTTON") consultar(b.dataset.cod); else setTimeout(()=>consultar(b.dataset.cod), 50); });
+document.addEventListener("click", e => { const b = e.target.closest("[data-cod]"); if (b) consultar(b.dataset.cod); });
+$("#fEntrar").addEventListener("submit", async e => {
+  e.preventDefault();
+  const email = $("#eEmail").value.trim(), artista = $("#eArtista").value.trim();
+  if (!$("#eEmail").checkValidity() || !email){ toast("Escribe un correo válido."); return; }
+  const btn = $("#btnCodigo"); btn.disabled = true;
+  try {
+    const d = await api("/api/cuenta/codigo", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({email, artista})});
+    if (d.necesita_artista){ $("#bloqueArtista").style.display = "block"; $("#eArtista").focus(); toast("Es tu primera vez: elige tu nombre artístico."); return; }
+    emailPendiente = email;
+    $("#fEntrar").style.display = "none"; $("#fCodigo").style.display = "grid";
+    $("#txtCodigo").innerHTML = `Te hemos enviado un código a <b>${esc(email)}</b>. Caduca en ${d.minutos} minutos. Mira también en la carpeta de spam.` + (d.codigo_pruebas?` <span class="nota">(pruebas: ${esc(d.codigo_pruebas)})</span>`:"");
+    $("#eCodigo").value = ""; $("#eCodigo").focus();
+  } catch(err){ toast(err.message); } finally { btn.disabled = false; }
+});
+$("#fCodigo").addEventListener("submit", async e => {
+  e.preventDefault();
+  try {
+    const d = await api("/api/cuenta/verificar", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({email: emailPendiente, codigo: $("#eCodigo").value})});
+    sesion.set(d.token);
+    $("#fCodigo").style.display = "none"; $("#fEntrar").style.display = "grid"; $("#bloqueArtista").style.display = "none";
+    toast("¡Dentro! Tu correo está verificado.");
+    await pintarCuenta(); prepararEnvio();
+  } catch(err){ toast(err.message); }
+});
+$("#btnOtroCorreo").addEventListener("click", () => { $("#fCodigo").style.display = "none"; $("#fEntrar").style.display = "grid"; });
+$("#fArtistaCuenta").addEventListener("submit", async e => {
+  e.preventDefault();
+  try { await api("/api/cuenta", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({artista: $("#cArtista").value.trim()})}); toast("Nombre guardado."); pintarCuenta(); }
+  catch(err){ toast(err.message); }
+});
+$("#btnSalir").addEventListener("click", async () => { try { await api("/api/cuenta/salir", {method:"POST"}); } catch(e){} sesion.set(null); YO = null; pintarCuenta(); prepararEnvio(); });
+$("#btnBorrar").addEventListener("click", async e => {
+  const b = e.currentTarget;
+  if (!b.dataset.seguro){ b.dataset.seguro = 1; b.textContent = "Se borrarán tu cuenta y tus envíos no admitidos. Pulsa otra vez para confirmar"; return; }
+  try { await api("/api/cuenta/borrar", {method:"POST"}); sesion.set(null); YO = null; toast("Cuenta borrada."); b.dataset.seguro = ""; b.textContent = "Borrar mi cuenta"; pintarCuenta(); }
+  catch(err){ toast(err.message); }
+});
+async function prepararEnvio(){
+  if (!API_BASE) return;
+  if (sesion.get() && !YO) await cargarYo();
+  pintarNav();
+  $("#puertaEnvio").style.display = YO ? "none" : "block";
+  $("#form").style.display = YO ? "grid" : "none";
+  if (YO){ $("#comoQuien").textContent = `Envías como ${YO.email}.`; if (!$("#fArtista").value) $("#fArtista").value = YO.artista; }
+}
+
+/* ---------- Publicidad ---------- */
+async function cargarAnuncios(){
+  for (const hueco of document.querySelectorAll(".vista.on .pub, main > .pub")) {
+    const formato = hueco.dataset.formato;
+    let a = null;
+    if (API_BASE) { try { a = (await api(`/api/anuncios?formato=${formato}`)).anuncio; } catch(e){} }
+    hueco.innerHTML = a
+      ? `<span class="et">Publicidad</span><a href="${esc(a.clic)}" target="_blank" rel="noopener sponsored"><img src="${esc(a.img)}" alt="${esc(a.alt)}" width="${formato==="banner"?728:300}" height="${formato==="banner"?90:250}"></a>`
+      : `<span class="et">Publicidad</span><a class="casa" href="#anunciate"><span>¿Quieres que tu marca suene aquí?</span><b>Anúnciate en ${esc(CONFIG.nombre)} →</b></a>`;
+  }
+}
+$("#fContacto").addEventListener("submit", async e => {
+  e.preventDefault();
+  const f = e.target;
+  if (!f.checkValidity()){ f.reportValidity(); return; }
+  const datos = {nombre:$("#kNombre").value, empresa:$("#kEmpresa").value, email:$("#kEmail").value, tipo:$("#kTipo").value, mensaje:$("#kMensaje").value, web:$("#kWeb").value};
+  const res = $("#resContacto"); res.style.display = "block";
+  if (!API_BASE){ res.innerHTML = `<div class="aviso">Escríbenos a <b>${esc(CONFIG.emailContacto)}</b>.</div>`; return; }
+  try { await api("/api/contacto", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(datos)});
+        res.innerHTML = `<div class="aviso" style="background:rgba(46,196,182,.12);border-color:rgba(46,196,182,.4)">¡Gracias! Te responderemos en breve.</div>`; f.reset(); }
+  catch(err){ res.innerHTML = `<div class="aviso">${esc(err.message)}</div>`; }
+});
 
 /* ---------- Navegación ---------- */
-const VISTAS = ["directo","parrilla","locutores","top40","enviar","seguimiento","info"];
+const VISTAS = ["directo","parrilla","locutores","top40","enviar","cuenta","anunciate","info"];
 function ruta(){
   const v = VISTAS.includes(location.hash.slice(1)) ? location.hash.slice(1) : "directo";
   VISTAS.forEach(x => $("#v-"+x).classList.toggle("on", x===v));
   document.querySelectorAll("#menu a").forEach(a => a.classList.toggle("on", a.getAttribute("href")==="#"+v));
   if (v==="parrilla") pintarParrilla();
   if (v==="top40") cargarTop();
-  if (v==="seguimiento") pintarMisCodigos();
+  if (v==="cuenta") pintarCuenta();
+  if (v==="enviar") prepararEnvio();
+  cargarAnuncios();
   window.scrollTo({top:0});
 }
 window.addEventListener("hashchange", ruta);
@@ -702,6 +851,7 @@ if ("serviceWorker" in navigator && location.protocol === "https:") {
 /* ---------- Arranque ---------- */
 $("#stProgs").textContent = PROGRAMAS.length;
 pintarLocutores(); pintarParrilla(); actualizarAhora(); ruta();
+cargarYo().then(pintarNav);
 setInterval(actualizarAhora, DEMO ? 30000 : 15000);
 setInterval(() => { if ($("#v-parrilla").classList.contains("on")) pintarParrilla(); }, 30000);
 })();
