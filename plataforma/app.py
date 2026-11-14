@@ -870,7 +870,7 @@ async def anuncio_clic(request: Request):
 
 async def contacto(request: Request):
     d = await json_de(request)
-    datos = {k: str(d.get(k, "")).strip()[:lim] for k, lim in {"tipo": 30, "nombre": 80, "empresa": 120, "email": 120, "mensaje": 2000}.items()}
+    datos = {k: str(d.get(k, "")).strip()[:lim] for k, lim in {"tipo": 80, "nombre": 80, "telefono": 30, "empresa": 120, "email": 120, "mensaje": 2000}.items()}
     if d.get("web"):
         return JSONResponse({"ok": True})
     if not RE_EMAIL.match(datos["email"]) or not datos["mensaje"]:
@@ -878,7 +878,9 @@ async def contacto(request: Request):
     if limite("contacto:" + ip_de(request), 5, 3600):
         return error("Has enviado varios mensajes seguidos. Inténtalo más tarde.", 429)
     with db() as c:
-        c.execute("INSERT INTO contactos(creado, tipo, nombre, empresa, email, mensaje) VALUES (?,?,?,?,?,?)", (ahora(), *datos.values()))
+        c.execute("INSERT INTO contactos(creado, tipo, nombre, empresa, email, mensaje) VALUES (?,?,?,?,?,?)",
+                  (ahora(), datos["tipo"], datos["nombre"], datos["empresa"], datos["email"],
+                   (f"Tel.: {datos['telefono']}\n" if datos["telefono"] else "") + datos["mensaje"]))
     correo.aviso_admin(f"[{correo.NOMBRE}] Nuevo contacto: {datos['tipo']} · {datos['empresa'] or datos['nombre']}",
                        "\n".join(f"{k}: {v}" for k, v in datos.items()))
     return JSONResponse({"ok": True})
@@ -890,7 +892,8 @@ async def tarifas(request: Request):
         locs = {k: v["nombre"] for k, v in _locutores().cargar_config()["locutores"].items()}
     except Exception:
         pass
-    return JSONResponse({"tarifas": pagos.tarifas_publicas(), "pago_online": pagos.activo(), "iva": pagos.IVA,
+    productos = [{k: t[k] for k in ("id", "nombre", "tipo", "desc")} for t in pagos.tarifas_publicas()]  # sin precios: se dan por presupuesto
+    return JSONResponse({"productos": productos,
                          "locutores": locs, "programas": {k: v for k, v in analisis.PROGRAMAS.items() if k not in ("general",)}})
 
 

@@ -1,6 +1,6 @@
-# Tarifas de publicidad de Crazy rAdIo
+# Tarifas de publicidad de Crazy rAdIo (uso interno)
 
-Precios de lanzamiento, **sin IVA (21 %)**. Se cambian en `plataforma.env` con `TARIFAS_JSON`, sin tocar código.
+**No se publican en la web**: la publicidad se vende por presupuesto. Estas cifras son solo el **suelo** de referencia del mercado; se consideran bajas para la rentabilidad, así que cada presupuesto debe ir por encima según audiencia, programa, duración y exclusividad. Precios sin IVA (21 %).
 
 | Producto | Precio | Qué incluye |
 |---|---|---|

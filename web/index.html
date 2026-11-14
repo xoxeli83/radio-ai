@@ -46,15 +46,15 @@ const CONFIG = {
 
 // Parrilla diaria (hora de la emisora). fin = 24 significa medianoche.
 const PROGRAMAS = [
-  { ini: 0,  fin: 7,  id: "noche",   nombre: "Noche IA",              genero: "Música continua",       locutor: null,      color: "#3A4BD9", desc: "Selección musical automática de todos los géneros, sin interrupciones." },
-  { ini: 7,  fin: 10, id: "morning", nombre: "AI Morning Show",       genero: "Variado",               locutor: "nova",    color: "#00D4FF", desc: "Para empezar el día: novedades, lo más votado y buen humor." },
-  { ini: 10, fin: 12, id: "pop",     nombre: "AI Pop Hits",           genero: "Pop · Dance",           locutor: "lia",     color: "#B24DFF", desc: "Pop comercial, dance y canciones pegadizas." },
-  { ini: 12, fin: 14, id: "rock",    nombre: "AI Rock Station",       genero: "Rock · Indie · Metal",  locutor: "bruno",   color: "#8A00FF", desc: "Rock clásico, alternativo, metal y nuevas bandas virtuales." },
-  { ini: 14, fin: 16, id: "chill",   nombre: "AI Chill & Electronic", genero: "Chillout · Electrónica",locutor: "marea",   color: "#00B3D6", desc: "Chillout, house, electrónica y ambient para bajar revoluciones." },
-  { ini: 16, fin: 18, id: "urban",   nombre: "AI Urban",              genero: "Rap · Trap · Reguetón", locutor: "kilo",    color: "#6A00D9", desc: "Rap, trap, reguetón y música urbana." },
-  { ini: 18, fin: 20, id: "top40",   nombre: "Top 40 AI",             genero: "Lo más votado",         locutor: "atlas",   color: "#C04DFF", desc: "La lista de éxitos de la comunidad, posición a posición." },
-  { ini: 20, fin: 22, id: "estrenos",nombre: "Estrenos y descubrimientos", genero: "Novedades",        locutor: "eco",     color: "#33DDFF", desc: "Las canciones recién admitidas y los nuevos creadores." },
-  { ini: 22, fin: 24, id: "sinfiltros", nombre: "AI Sin Filtros",     genero: "Humor · Sátira · +18",  locutor: "sarcasmo",color: "#FF3D7F", desc: "Canciones humorísticas, satíricas e irreverentes. Contenido explícito, solo para adultos.", adultos: true },
+  { ini: 0,  fin: 7,  id: "noche",   nombre: "Noche IA",              genero: "Música continua",       locutor: null,      color: "#6c63ff", desc: "Selección musical automática de todos los géneros, sin interrupciones." },
+  { ini: 7,  fin: 10, id: "morning", nombre: "AI Morning Show",       genero: "Variado",               locutor: "nova",    color: "#ffd60a", desc: "Para empezar el día: novedades, lo más votado y buen humor." },
+  { ini: 10, fin: 12, id: "pop",     nombre: "AI Pop Hits",           genero: "Pop · Dance",           locutor: "lia",     color: "#ff3d81", desc: "Pop comercial, dance y canciones pegadizas." },
+  { ini: 12, fin: 14, id: "rock",    nombre: "AI Rock Station",       genero: "Rock · Indie · Metal",  locutor: "bruno",   color: "#ff5a36", desc: "Rock clásico, alternativo, metal y nuevas bandas virtuales." },
+  { ini: 14, fin: 16, id: "chill",   nombre: "AI Chill & Electronic", genero: "Chillout · Electrónica",locutor: "marea",   color: "#2ec4b6", desc: "Chillout, house, electrónica y ambient para bajar revoluciones." },
+  { ini: 16, fin: 18, id: "urban",   nombre: "AI Urban",              genero: "Rap · Trap · Reguetón", locutor: "kilo",    color: "#9b5de5", desc: "Rap, trap, reguetón y música urbana." },
+  { ini: 18, fin: 20, id: "top40",   nombre: "Top 40 AI",             genero: "Lo más votado",         locutor: "atlas",   color: "#ff8a3d", desc: "La lista de éxitos de la comunidad, posición a posición." },
+  { ini: 20, fin: 22, id: "estrenos",nombre: "Estrenos y descubrimientos", genero: "Novedades",        locutor: "eco",     color: "#4cc9f0", desc: "Las canciones recién admitidas y los nuevos creadores." },
+  { ini: 22, fin: 24, id: "sinfiltros", nombre: "AI Sin Filtros",     genero: "Humor · Sátira · +18",  locutor: "sarcasmo",color: "#e63946", desc: "Canciones humorísticas, satíricas e irreverentes. Contenido explícito, solo para adultos.", adultos: true },
 ];
 
 const LOCUTORES = {
@@ -174,6 +174,11 @@ section.vista.on{display:block}
 .onair{position:relative;overflow:hidden;padding:26px}
 .onair::before{content:"";position:absolute;inset:0;background:var(--prog,#ff3d81);opacity:.13;pointer-events:none}
 .onair h1{font-size:clamp(28px,4.6vw,44px);margin:16px 0 6px}
+.onair>*{position:relative;z-index:1}
+.onair .masc{position:absolute;z-index:0;right:-18px;bottom:-10px;width:min(62%,420px);height:auto;pointer-events:none;filter:drop-shadow(0 10px 30px rgba(138,0,255,.45))}
+.masc-info{display:block;width:min(100%,460px);height:auto;margin:0 auto 18px;filter:drop-shadow(0 10px 30px rgba(138,0,255,.4))}
+.masc-caja{display:block;width:220px;height:auto;margin:0 auto 6px}
+@media (max-width:900px){.onair .masc{position:static;display:block;width:min(100%,360px);margin:18px auto -10px}}
 .onair .gen{color:var(--tx2);font-weight:500}
 .locline{display:flex;align-items:center;gap:12px;margin-top:20px}
 .bigplay{margin-top:24px;display:inline-flex;align-items:center;gap:12px;border:0;border-radius:999px;padding:14px 26px 14px 18px;background:var(--grad);color:#fff;font-weight:700;font-size:17px;box-shadow:0 10px 30px rgba(138,0,255,.35)}
@@ -229,13 +234,17 @@ section.vista.on{display:block}
 
 /* Parrilla y locutores */
 .grid-prog{display:grid;gap:10px}
-.prog{display:grid;grid-template-columns:110px 1fr auto;gap:16px;align-items:center;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--c);border-radius:14px;padding:14px 16px}
-.prog.now{background:linear-gradient(90deg,rgba(255,255,255,.06),var(--card));border-color:var(--c)}
+.prog{display:grid;grid-template-columns:110px 1fr auto;gap:16px;align-items:center;background:linear-gradient(90deg,color-mix(in srgb,var(--c) 14%,transparent),var(--card) 45%);border:1px solid var(--line);border-left:6px solid var(--c);border-radius:14px;padding:14px 16px}
+.prog .h{color:var(--c)}
+.prog .n{font-size:17px}
+.prog.now{background:linear-gradient(90deg,color-mix(in srgb,var(--c) 30%,transparent),var(--card) 60%);border-color:var(--c);box-shadow:0 0 0 1px var(--c),0 8px 28px color-mix(in srgb,var(--c) 25%,transparent)}
 .prog .h{font-family:var(--f2);font-weight:700;font-size:18px}
 .prog .n{font-weight:600}.prog .d{color:var(--tx3);font-size:14px}.prog .l{color:var(--tx2);font-size:14px;text-align:right}
 @media (max-width:620px){.prog{grid-template-columns:78px 1fr}.prog .l{grid-column:2;text-align:left}}
 .locs{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
 .loc .av{width:64px;height:64px;font-size:24px;margin-bottom:12px}
+.loc{border-top:4px solid var(--c,var(--violeta));background:linear-gradient(180deg,color-mix(in srgb,var(--c,#8A00FF) 12%,transparent),var(--card) 40%)}
+.loc .hor{color:var(--c)!important;font-weight:600}
 .loc h3{margin:0}.loc .rol{color:var(--tx2);font-size:14px;margin:2px 0 10px}.loc p{margin:0;color:var(--tx2);font-size:14px}.loc .hor{margin-top:12px;font-size:13px;color:var(--tx3)}
 
 /* Formularios */
@@ -354,6 +363,7 @@ footer a{color:var(--tx3)}
         <p class="sub" id="progDesc" style="margin:10px 0 0"></p>
         <div class="locline" id="progLoc"></div>
         <button class="bigplay" id="bigplay" type="button"><svg viewBox="0 0 24 24" fill="currentColor" id="bigicon"><path d="M8 5v14l11-7z"/></svg><span id="bigtxt">Escuchar en directo</span></button>
+        <img class="masc" src="mascota.webp" width="640" height="330" alt="Mascota de Crazy rAdIo: un alien con cascos y gafas de sol">
       </div>
       <div class="card side">
         <h3>Sonando ahora</h3>
@@ -488,6 +498,7 @@ footer a{color:var(--tx3)}
   <!-- ENTRAR / REGISTRO -->
   <section class="vista" id="v-entrar">
     <div class="caja">
+      <img class="masc-caja" src="mascota_320.webp" width="320" height="165" alt="" loading="lazy">
       <div class="tabs" id="tabsEntrar"><button type="button" data-t="entrar" class="on">Entrar</button><button type="button" data-t="registro">Crear cuenta</button></div>
       <form class="f" id="fEntrar" novalidate>
         <h2>Entrar</h2>
@@ -597,43 +608,16 @@ footer a{color:var(--tx3)}
   <!-- ANÚNCIATE -->
   <section class="vista" id="v-anunciate">
     <h2>Anúnciate en Crazy rAdIo</h2>
-    <p class="sub">Llega a oyentes que descubren música nueva cada día, en la web, en el móvil y en el coche. Contrata en dos minutos y paga con tarjeta. Revisamos tu anuncio y lo activamos en menos de 48 horas laborables.</p>
+    <p class="sub">Llega a oyentes que descubren música nueva cada día, en la web, en el móvil y en el coche. Cuéntanos qué te interesa y te preparamos un presupuesto a medida.</p>
     <div class="tarifas" id="tarifas"></div>
-    <p class="nota">Precios de lanzamiento, sin IVA (21 %). Recibes la factura por correo.</p>
-    <form class="f oculto" id="fPedido" novalidate style="margin-top:22px">
-      <h3 id="tituloPedido"></h3>
-      <div class="bloque oculto" id="bqBanner">
-        <div><label for="oUrl">Web a la que llevará el anuncio</label><input id="oUrl" type="url" placeholder="https://"></div>
-        <div><label for="oImagen">Imagen del anuncio <small id="medidas"></small></label><input id="oImagen" type="file" accept="image/png,image/jpeg,image/webp,image/gif"></div>
-      </div>
-      <div class="bloque oculto" id="bqCuna">
-        <div><label for="oAudio">Tu cuña en audio <small>(opcional · MP3/WAV, unos 20 segundos)</small></label><input id="oAudio" type="file" accept="audio/*"></div>
-        <div><label for="oTexto">…o el texto para que lo grabe un locutor <small>(unas 50 palabras)</small></label><textarea id="oTexto" maxlength="600"></textarea></div>
-        <div><label for="oLocutor">Voz</label><select id="oLocutor"></select></div>
-      </div>
-      <div class="bloque oculto" id="bqPatrocinio">
-        <div><label for="oPrograma">Programa que quieres patrocinar</label><select id="oPrograma"></select></div>
-        <div><label for="oUrl2">Tu web</label><input id="oUrl2" type="url" placeholder="https://"></div>
-      </div>
-      <div class="bloque">
-        <h3>Datos de facturación</h3>
-        <div class="f2"><div><label for="oEmpresa">Empresa o nombre</label><input id="oEmpresa" required maxlength="120"></div><div><label for="oNif">NIF / CIF</label><input id="oNif" required maxlength="20"></div></div>
-        <div><label for="oDireccion">Dirección</label><input id="oDireccion" maxlength="200"></div>
-        <div class="f2"><div><label for="oContacto">Persona de contacto</label><input id="oContacto" maxlength="80"></div><div><label for="oTelefono">Teléfono</label><input id="oTelefono" maxlength="30"></div></div>
-        <div><label for="oEmail">Correo</label><input id="oEmail" type="email" required maxlength="120"></div>
-      </div>
-      <label class="chk"><input type="checkbox" id="oAcepto"> Acepto las condiciones de contratación: el anuncio se revisa antes de publicarse (no aceptamos contenidos ilegales, engañosos, de apuestas o para adultos fuera del horario +18) y, si no se aprueba, se devuelve el importe.</label>
-      <div class="oculto-bot" aria-hidden="true"><input id="oWeb" tabindex="-1" autocomplete="off"></div>
-      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><button class="btn pri" type="submit" id="btnPagar">Ir al pago</button><span class="nota" id="resumenPedido"></span></div>
-      <div id="resPedido"></div>
-    </form>
-    <h3 style="margin-top:34px">¿Buscas otra cosa?</h3>
+    <h3 style="margin-top:34px" id="tituloPresupuesto">Pide tu presupuesto</h3>
     <form class="f" id="fContacto" novalidate>
       <div class="f2"><div><label for="kNombre">Nombre</label><input id="kNombre" required maxlength="80"></div><div><label for="kEmpresa">Empresa</label><input id="kEmpresa" maxlength="120"></div></div>
-      <div class="f2"><div><label for="kEmail">Correo</label><input id="kEmail" type="email" required maxlength="120"></div><div><label for="kTipo">Tema</label><select id="kTipo"><option>Campaña a medida</option><option>Colaboración</option><option>Prensa</option><option>Otro</option></select></div></div>
-      <div><label for="kMensaje">Mensaje</label><textarea id="kMensaje" required maxlength="2000"></textarea></div>
+      <div class="f2"><div><label for="kEmail">Correo</label><input id="kEmail" type="email" required maxlength="120"></div><div><label for="kTelefono">Teléfono <small>(opcional)</small></label><input id="kTelefono" type="tel" maxlength="30"></div></div>
+      <div><label for="kTipo">Me interesa</label><select id="kTipo"></select></div>
+      <div><label for="kMensaje">Cuéntanos tu campaña</label><textarea id="kMensaje" required maxlength="2000" placeholder="Qué quieres anunciar, fechas, programa o público que te interesa…"></textarea></div>
       <div class="oculto-bot" aria-hidden="true"><input id="kWeb" tabindex="-1" autocomplete="off"></div>
-      <div><button class="btn" type="submit">Enviar mensaje</button></div>
+      <div><button class="btn pri" type="submit">Pedir presupuesto</button></div>
       <div id="resContacto"></div>
     </form>
   </section>
@@ -649,6 +633,7 @@ footer a{color:var(--tx3)}
 
   <!-- INFORMACIÓN -->
   <section class="vista" id="v-info">
+    <img class="masc-info" src="mascota.webp" width="640" height="330" alt="" loading="lazy">
     <h2>Información</h2>
     <div class="info">
       <div class="card"><h3>Qué es</h3><p>Crazy rAdIo es una radio online que emite las 24 horas canciones creadas con ayuda de inteligencia artificial por creadores de todo el mundo, con programas por géneros, escucha a la carta y una lista de éxitos votada por la comunidad.</p></div>
@@ -738,7 +723,7 @@ const hh = n => `${String(n % 24).padStart(2,"0")}:00`;
 function avatarLocutor(id){
   const L = LOCUTORES[id]; if (!L) return "";
   const p = PROGRAMAS.find(x => x.locutor === id);
-  return `<div class="av" style="background:linear-gradient(135deg,${p ? p.color : "#8A00FF"},#00D4FF)">${esc(L.nombre.replace(/^Dr\.\s*/,"").slice(0,1))}</div>`;
+  return `<div class="av" style="background:linear-gradient(135deg,${p ? p.color : "#8A00FF"},#ffffff55);color:#0B1026">${esc(L.nombre.replace(/^Dr\.\s*/,"").slice(0,1))}</div>`;
 }
 
 /* ================================================================ reproductor (directo y a la carta) */
@@ -979,7 +964,7 @@ function pintarParrilla(){
 }
 function pintarLocutores(){
   $("#locs").innerHTML = Object.entries(LOCUTORES).map(([id, L]) => { const p = PROGRAMAS.find(x => x.locutor === id);
-    return `<div class="card loc">${avatarLocutor(id)}<h3>${esc(L.nombre)}<span class="ia-tag">IA</span></h3><div class="rol">${esc(L.rol)}</div><p>${esc(L.estilo)}</p>${p ? `<div class="hor">${esc(p.nombre)} · ${hh(p.ini)}–${hh(p.fin)}</div>` : ""}</div>`; }).join("");
+    return `<div class="card loc" style="--c:${p ? p.color : "#8A00FF"}">${avatarLocutor(id)}<h3>${esc(L.nombre)}<span class="ia-tag">IA</span></h3><div class="rol">${esc(L.rol)}</div><p>${esc(L.estilo)}</p>${p ? `<div class="hor">${esc(p.nombre)} · ${hh(p.ini)}–${hh(p.fin)}</div>` : ""}</div>`; }).join("");
 }
 
 /* ================================================================ subir canción (con reglas de derechos) */
@@ -1190,70 +1175,37 @@ async function cargarAnuncios(){
     if (API){ try { a = (await api(`/api/anuncios?formato=${formato}`)).anuncio; } catch(e){} }
     hueco.innerHTML = a
       ? `<span class="et">Publicidad</span><a href="${esc(a.clic)}" target="_blank" rel="noopener sponsored"><img src="${esc(a.img)}" alt="${esc(a.alt)}" width="${formato === "banner" ? 728 : 300}" height="${formato === "banner" ? 90 : 250}"></a>`
-      : `<span class="et">Publicidad</span><a class="casa" href="#anunciate"><span>¿Quieres que tu marca suene aquí?</span><b>Anúnciate en Crazy rAdIo desde 49 € →</b></a>`;
+      : `<span class="et">Publicidad</span><a class="casa" href="#anunciate"><span>¿Quieres que tu marca suene aquí?</span><b>Anúnciate en Crazy rAdIo →</b></a>`;
   }
 }
-const TARIFAS_DEMO = [
-  {id:"banner_mes", nombre:"Banner 728×90 · 1 mes", tipo:"banner", base:49, total:59.29, desc:"Arriba de cada página y en el Top 40, en rotación con un máximo de 3 anunciantes. Impresiones sin límite durante 30 días."},
-  {id:"banner_10k", nombre:"Banner 728×90 · 10.000 impresiones", tipo:"banner", base:60, total:72.6, desc:"Pagas solo lo que se ve: 10.000 impresiones garantizadas, con un plazo máximo de 90 días."},
-  {id:"cuadrado_mes", nombre:"Cuadrado 300×250 junto al directo · 1 mes", tipo:"banner", base:69, total:83.49, desc:"La zona más vista: al lado del reproductor en directo. 30 días."},
-  {id:"cuna_mes", nombre:"Cuña de radio 20″ · 1 mes", tipo:"cuna", base:59, total:71.39, desc:"Tu anuncio en antena 3 veces por hora durante 30 días. Grabación con locutor IA incluida."},
-  {id:"patrocinio_mes", nombre:"Patrocinio de un programa · 1 mes", tipo:"patrocinio", base:129, total:156.09, desc:"Menciones del locutor y tu logo en la ficha del programa durante 30 días."}];
-let TARIFAS = TARIFAS_DEMO, PAGO_ONLINE = false, paquete = null;
-async function cargarTarifas(){
-  if (API){ try { const d = await api("/api/publicidad/tarifas"); TARIFAS = d.tarifas; PAGO_ONLINE = d.pago_online;
-    $("#oLocutor").innerHTML = Object.entries(d.locutores).map(([k, v]) => `<option value="${esc(k)}">${esc(v)}</option>`).join("");
-    $("#oPrograma").innerHTML = Object.entries(d.programas).map(([k, v]) => `<option value="${esc(k)}">${esc(v)}</option>`).join(""); } catch(e){} }
-  else {
-    $("#oLocutor").innerHTML = Object.entries(LOCUTORES).map(([k, v]) => `<option value="${k}">${esc(v.nombre)}</option>`).join("");
-    $("#oPrograma").innerHTML = PROGRAMAS.filter(p => p.locutor).map(p => `<option value="${p.id}">${esc(p.nombre)}</option>`).join("");
-  }
-  $("#tarifas").innerHTML = TARIFAS.map(t => `<div class="card tarifa ${paquete && paquete.id === t.id ? "sel" : ""}"><h3 style="margin:0">${esc(t.nombre)}</h3>
-    <div class="precio">${eur(t.base)} <small>+ IVA</small></div><div class="nota" style="margin-top:-6px">Total con IVA: ${eur(t.total)}</div><p>${esc(t.desc)}</p>
-    <button class="btn pri" type="button" data-paquete="${esc(t.id)}">Contratar</button></div>`).join("");
+const PRODUCTOS = [
+  {id:"banner", nombre:"Banner en la web y la app", desc:"Tu anuncio arriba de cada página y en el Top 40, visible en ordenador, móvil y app."},
+  {id:"cuadrado", nombre:"Espacio destacado junto al directo", desc:"La zona más vista: al lado del reproductor en directo."},
+  {id:"cuna", nombre:"Cuña de radio", desc:"Tu anuncio en antena. Si no tienes cuña, la grabamos con uno de nuestros locutores IA."},
+  {id:"patrocinio", nombre:"Patrocinio de un programa", desc:"El locutor menciona tu marca al abrir y cerrar el programa, y tu logo aparece en su ficha."},
+  {id:"medida", nombre:"Campaña a medida", desc:"Combina formatos, programas y fechas para tu lanzamiento o evento."}];
+function cargarTarifas(){
+  $("#tarifas").innerHTML = PRODUCTOS.map(t => `<div class="card tarifa"><h3 style="margin:0">${esc(t.nombre)}</h3><p>${esc(t.desc)}</p>
+    <button class="btn" type="button" data-producto="${esc(t.id)}">Pedir presupuesto</button></div>`).join("");
+  const sel = $("#kTipo"), actual = sel.value;
+  sel.innerHTML = PRODUCTOS.map(t => `<option>${esc(t.nombre)}</option>`).join("") + "<option>Colaboración</option><option>Prensa</option><option>Otro</option>";
+  if (actual) sel.value = actual;
 }
 document.addEventListener("click", e => {
-  const b = e.target.closest("[data-paquete]"); if (!b) return;
-  paquete = TARIFAS.find(t => t.id === b.dataset.paquete);
+  const b = e.target.closest("[data-producto]"); if (!b) return;
+  const t = PRODUCTOS.find(x => x.id === b.dataset.producto);
   $$(".tarifa").forEach(x => x.classList.toggle("sel", x.contains(b)));
-  $("#fPedido").classList.remove("oculto");
-  $("#tituloPedido").textContent = paquete.nombre;
-  $("#bqBanner").classList.toggle("oculto", paquete.tipo !== "banner");
-  $("#bqCuna").classList.toggle("oculto", paquete.tipo !== "cuna");
-  $("#bqPatrocinio").classList.toggle("oculto", paquete.tipo !== "patrocinio");
-  $("#medidas").textContent = paquete.id.startsWith("cuadrado") ? "(300×250 px, PNG/JPG/GIF, máx. 1 MB)" : "(728×90 px, PNG/JPG/GIF, máx. 1 MB)";
-  $("#resumenPedido").textContent = `${eur(paquete.base)} + IVA = ${eur(paquete.total)}`;
-  $("#btnPagar").textContent = PAGO_ONLINE ? `Pagar ${eur(paquete.total)} con tarjeta` : "Enviar pedido";
-  $("#fPedido").scrollIntoView({behavior:"smooth", block:"start"});
-});
-$("#fPedido").addEventListener("submit", async e => {
-  e.preventDefault();
-  if (!paquete) return;
-  if (!API) return toast("La contratación se activará cuando la plataforma esté en marcha. Escríbenos mientras tanto.");
-  if (!$("#oAcepto").checked) return toast("Acepta las condiciones de contratación.");
-  const fd = new FormData();
-  const campos = {paquete:paquete.id, empresa:"#oEmpresa", nif:"#oNif", direccion:"#oDireccion", contacto:"#oContacto", telefono:"#oTelefono", email:"#oEmail", texto:"#oTexto", locutor:"#oLocutor", programa:"#oPrograma", web:"#oWeb"};
-  for (const [k, s] of Object.entries(campos)) fd.append(k, s.startsWith("#") ? $(s).value.trim() : s);
-  fd.append("url", (paquete.tipo === "patrocinio" ? $("#oUrl2") : $("#oUrl")).value.trim());
-  fd.append("condiciones", "1");
-  if ($("#oImagen").files[0]) fd.append("imagen", $("#oImagen").files[0]);
-  if ($("#oAudio").files[0]) fd.append("audio", $("#oAudio").files[0]);
-  const btn = $("#btnPagar"); btn.disabled = true;
-  try {
-    const d = await api("/api/publicidad/pedido", {method:"POST", body:fd});
-    if (d.url_pago){ location.href = d.url_pago; return; }
-    $("#resPedido").innerHTML = `<div class="aviso ok"><b>Pedido n.º ${d.pedido} registrado.</b> Te escribimos en menos de 24 horas laborables con los datos para pagar por transferencia (${eur(d.total)}). Activamos el anuncio en cuanto llegue el pago.</div>`;
-    e.target.reset();
-  } catch(err){ $("#resPedido").innerHTML = `<div class="aviso ko">${esc(err.message)}</div>`; }
-  finally { btn.disabled = false; }
+  $("#kTipo").value = t.nombre;
+  $("#tituloPresupuesto").scrollIntoView({behavior:"smooth", block:"start"});
+  setTimeout(() => $("#kNombre").focus({preventScroll:true}), 400);
 });
 $("#fContacto").addEventListener("submit", async e => {
   e.preventDefault();
   const res = $("#resContacto");
   if (!$("#kEmail").value || !$("#kMensaje").value) return toast("Indica tu correo y el mensaje.");
-  if (!API){ res.innerHTML = `<div class="aviso">Escríbenos a <b>${esc(CONFIG.emailContacto)}</b>.</div>`; return; }
-  try { await api("/api/contacto", {json:{nombre:$("#kNombre").value, empresa:$("#kEmpresa").value, email:$("#kEmail").value, tipo:$("#kTipo").value, mensaje:$("#kMensaje").value, web:$("#kWeb").value}});
-        res.innerHTML = `<div class="aviso ok">¡Gracias! Te responderemos en breve.</div>`; e.target.reset(); }
+  if (!API){ res.innerHTML = `<div class="aviso">Mientras activamos el formulario, escríbenos a <b>${esc(CONFIG.emailContacto)}</b> y te enviamos el presupuesto.</div>`; return; }
+  try { await api("/api/contacto", {json:{nombre:$("#kNombre").value, empresa:$("#kEmpresa").value, email:$("#kEmail").value, telefono:$("#kTelefono").value, tipo:$("#kTipo").value, mensaje:$("#kMensaje").value, web:$("#kWeb").value}});
+        res.innerHTML = `<div class="aviso ok">¡Gracias! Te enviamos el presupuesto en menos de 48 horas laborables.</div>`; e.target.reset(); }
   catch(err){ res.innerHTML = `<div class="aviso ko">${esc(err.message)}</div>`; }
 });
 

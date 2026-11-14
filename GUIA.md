@@ -12,7 +12,7 @@ Lo que va a tu nombre (dominios, cuentas, tarjetas, contratos) tienes que hacerl
 | 5 | Ajustes de AzuraCast | gratis | 10 min |
 | 6 | Correo (Brevo) | gratis hasta 300 correos/día | 10 min |
 | 7 | Web en czyradio.com | gratis (GitHub Pages) | 5 min |
-| 8 | Cobros de publicidad (Stripe) | comisión por pago | 20 min |
+| 8 | Publicidad por presupuesto | — | cuando haya anunciantes |
 | 9 | Derechos de las canciones | gratis | antes de abrir |
 | 10 | En el coche | gratis | 15 min |
 
@@ -123,45 +123,18 @@ Qué tiene la web:
 - **Ficha de cada canción** y **página pública de cada artista** (`#artista-nick`).
 - **Mi cuenta:** resumen con gráfica de 30 días (visitas, escuchas, me gusta, votos, minutos en la radio), mis canciones con estadísticas, perfil (foto, nick, ciudad, bio, enlaces, perfil público), correo, contraseña, avisos, cerrar sesión y borrar cuenta.
 - **Envía tu canción** con la declaración de derechos (punto 9).
-- **Anúnciate** con tarifas y pago online.
+- **Anúnciate** con los formatos y petición de presupuesto.
 
-## 8. Cobrar la publicidad (Stripe)
+## 8. Publicidad: por presupuesto
 
-Tarifas iniciales (sin IVA; detalle y referencias en `docs/tarifas-publicidad.md`):
+La web **no muestra precios**. En **Anúnciate** se presentan los formatos (banner, espacio destacado, cuña de radio, patrocinio y campaña a medida) y la empresa pide presupuesto con un formulario.
 
-| Producto | Precio |
-|---|---|
-| Banner horizontal, 1 mes (máx. 3 anunciantes rotando) | 49 € |
-| Banner, 10.000 impresiones | 60 € |
-| Banner cuadrado destacado, 1 mes | 69 € |
-| Cuña de radio, 1 mes (3 por hora, grabación con voz IA incluida) | 59 € |
-| Patrocinio de un programa, 1 mes | 129 € |
+1. La petición llega a `CORREO_ADMIN` y al panel, pestaña **Mensajes**.
+2. Preparas el presupuesto y lo envías. Referencias de mercado en `docs/tarifas-publicidad.md` (solo para uso interno).
+3. Cobras con factura y transferencia, o con un **enlace de pago de Stripe** (Stripe → *Payment Links*, sin programar nada).
+4. Das de alta el anuncio en el panel: pestaña **Banners** (imagen, enlace, fechas y límite de impresiones) o **Cuñas** (audio del anunciante o texto que graba un locutor IA). Al terminar el periodo se retira solo.
 
-Se cambian sin tocar código con `TARIFAS_JSON` en `plataforma.env`.
-
-Alta en Stripe:
-1. Cuenta en <https://dashboard.stripe.com/register> con los datos fiscales de Besting (o de la sociedad que facture).
-2. **Ajustes → Facturación:** activa las facturas automáticas (la plataforma las pide en cada pago).
-3. **Desarrolladores → Claves API:** copia la *clave secreta* (`sk_live_...`).
-4. **Desarrolladores → Webhooks → Añadir endpoint:**
-   - URL: `https://radio.czyradio.com/plataforma/api/stripe/webhook`
-   - Evento: `checkout.session.completed`
-   - Copia el *secreto de firma* (`whsec_...`).
-5. En `/opt/czyradio/plataforma.env`:
-   ```
-   STRIPE_SECRET_KEY=sk_live_...
-   STRIPE_WEBHOOK_SECRET=whsec_...
-   IVA=0.21
-   ```
-6. `sudo systemctl restart czyradio-plataforma`
-
-Cómo funciona:
-1. La empresa elige producto en **Anúnciate**, sube su banner o su audio (o escribe el texto de la cuña) y paga con tarjeta.
-2. Stripe confirma el pago, le envía la factura y el pedido queda **Pagado** en el panel, pestaña **Pedidos**.
-3. Revisas el material y pulsas **Activar**: el banner empieza a salir o la cuña entra en la lista Publicidad (con voz IA si mandó texto). Al terminar el periodo se retira sola.
-4. Sin Stripe configurado, el pedido queda como **pendiente de transferencia**: cobras tú y pulsas **Marcar pagado**.
-
-Banners y cuñas también se pueden dar de alta a mano en las pestañas **Banners** y **Cuñas**. Cada anunciante tiene un **informe CSV** de impresiones y clics. No se usan cookies.
+Cada anunciante tiene un **informe CSV** de impresiones y clics para justificar la campaña. No se usan cookies.
 
 ## 9. Derechos de las canciones
 
